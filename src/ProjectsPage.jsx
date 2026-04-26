@@ -1,52 +1,54 @@
-export default function ProjectsPage() {
-  return (
-    <div style={{ 
-      flex: 1, 
-      background: 'linear-gradient(135deg, #fef3c7 0%, #ffffff 50%, #fce7f3 100%)',
-      padding: '40px',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      position: 'relative'
-    }}>
-      <p style={{ marginTop: '50px', fontSize: '16px', color: '#555' }}>Hi jui!</p>
-      <h1 style={{ fontSize: '48px', fontWeight: 'bold', textAlign: 'center', maxWidth: '600px', lineHeight: '1.2', marginTop: '10px' }}>
-        My Projects
-      </h1>
-      <p style={{ color: '#666', marginTop: '20px', fontSize: '16px' }}>
-        Manage and view all your projects here.
-      </p>
+import { useState } from 'react';
 
-      <div style={{ 
-        background: 'white', 
-        padding: '30px', 
-        borderRadius: '12px', 
-        boxShadow: '0 4px 15px rgba(0,0,0,0.05)', 
-        width: '100%', 
-        maxWidth: '700px', 
-        marginTop: '40px',
-        minHeight: '300px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>
-        <div style={{ fontSize: '48px', marginBottom: '20px' }}>🚀</div>
-        <h2 style={{ fontSize: '24px', color: '#333', marginBottom: '10px' }}>No Projects Yet</h2>
-        <p style={{ color: '#666', textAlign: 'center' }}>Create your first project to get started!</p>
-        <button style={{ 
-          background: '#3b82f6', 
-          color: 'white', 
-          border: 'none', 
-          padding: '12px 24px', 
-          borderRadius: '8px', 
-          cursor: 'pointer', 
-          marginTop: '20px',
-          fontSize: '16px',
-          fontWeight: 'bold'
-        }}>
-          + New Project
+export default function ProjectsPage() {
+  const [books, setBooks] = useState(['Clean Code', 'The Pragmatic Programmer']);
+  const [bookInput, setBookInput] = useState('');
+
+  const addBook = () => {
+    if (bookInput.trim() !== '') {
+      setBooks([...books, bookInput]);
+      setBookInput('');
+    }
+  };
+
+  const deleteBook = (index) => {
+    const updatedList = books.filter((_, i) => i !== index);
+    setBooks(updatedList);
+  };
+
+  // আপনি এই return অংশটি দিতে ভুলে গিয়েছিলেন!
+  return (
+    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <p style={{ marginTop: '50px', fontSize: '16px', color: '#555' }}>Hi jui!</p>
+      <h1 style={{ fontSize: '42px', fontWeight: 'bold', color: '#333' }}>Book Library</h1>
+      
+      <div style={{ background: 'white', padding: '20px', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', width: '100%', maxWidth: '500px', marginTop: '30px', display: 'flex', gap: '10px' }}>
+        <input 
+          type="text" 
+          placeholder="Enter book name..." 
+          value={bookInput}
+          onChange={(e) => setBookInput(e.target.value)}
+          style={{ flex: 1, padding: '10px', borderRadius: '6px', border: '1px solid #ddd', outline: 'none' }} 
+        />
+        <button onClick={addBook} style={{ background: '#3b82f6', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>
+          Add
         </button>
+      </div>
+
+      <div style={{ width: '100%', maxWidth: '500px', marginTop: '30px' }}>
+        <h3 style={{ marginBottom: '15px', color: '#555' }}>Your Book Collection:</h3>
+        {books.length === 0 ? (
+          <p style={{ color: '#888' }}>No books added yet.</p>
+        ) : (
+          <ul style={{ listStyle: 'none', padding: 0 }}>
+            {books.map((book, index) => (
+              <li key={index} style={{ background: 'white', marginBottom: '10px', padding: '12px 15px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 2px 5px rgba(0,0,0,0.03)' }}>
+                <span>{book}</span>
+                <button onClick={() => deleteBook(index)} style={{ background: 'none', border: 'none', color: '#ff4d4d', cursor: 'pointer' }}>Delete</button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

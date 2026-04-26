@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import ProjectsPage from './ProjectsPage';
+import UpdatesPage from './UpdatesPage';
 
 export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -39,35 +41,34 @@ export default function Dashboard() {
           {isSidebarOpen && <span style={{ fontWeight: '500' }}>My Project Space</span>}
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', flex: 1 }}>
-          <p style={{ fontSize: '12px', color: '#888', marginLeft: '10px', display: isSidebarOpen ? 'block' : 'none' }}>MENU</p>
-          
-          {/* ২. মেনু আইটেমগুলোতে onClick এবং active লজিক যোগ করা হলো */}
-          <MenuItem 
-            icon="🏠" 
-            text="Dashboard" 
-            isOpen={isSidebarOpen} 
-            active={activeMenu === 'Dashboard'} 
-            onClick={() => setActiveMenu('Dashboard')} 
-          />
-          <MenuItem 
-            icon="🚀" 
-            text="Projects" 
-            isOpen={isSidebarOpen} 
-            active={activeMenu === 'Projects'} 
-            onClick={() => setActiveMenu('Projects')} 
-          />
-          <MenuItem 
-            icon="🌿" 
-            text="Updates" 
-            isOpen={isSidebarOpen} 
-            active={activeMenu === 'Updates'} 
-            onClick={() => setActiveMenu('Updates')} 
-          />
-          
-          <p style={{ fontSize: '12px', color: '#888', marginLeft: '10px', marginTop: '20px', display: isSidebarOpen ? 'block' : 'none' }}>HELP</p>
-          <MenuItem icon="📚" text="Knowledgebase" isOpen={isSidebarOpen} />
-        </div>
+       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', flex: 1 }}>
+  <p style={{ fontSize: '12px', color: '#888', marginLeft: '10px', display: isSidebarOpen ? 'block' : 'none' }}>MENU</p>
+  
+  <MenuItem 
+    icon="🏠" 
+    text="Dashboard" 
+    isOpen={isSidebarOpen} 
+    active={activeMenu === 'Dashboard'} 
+    onClick={() => setActiveMenu('Dashboard')} 
+  />
+  <MenuItem 
+    icon="🚀" 
+    text="Projects" 
+    isOpen={isSidebarOpen} 
+    active={activeMenu === 'Projects'} 
+    onClick={() => setActiveMenu('Projects')} /* <-- শুধু 'Projects' লিখুন */
+  />
+  <MenuItem 
+    icon="🌿" 
+    text="Updates" 
+    isOpen={isSidebarOpen} 
+    active={activeMenu === 'Updates'} 
+    onClick={() => setActiveMenu('Updates')} /* <-- শুধু 'Updates' লিখুন */
+  />
+  
+  <p style={{ fontSize: '12px', color: '#888', marginLeft: '10px', marginTop: '20px', display: isSidebarOpen ? 'block' : 'none' }}>HELP</p>
+  <MenuItem icon="📚" text="Knowledgebase" isOpen={isSidebarOpen} />
+</div>
 
         <div style={{ padding: '10px', borderTop: '1px solid #ddd', marginTop: 'auto', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
            <span style={{ fontSize: '20px' }}>👑</span>
@@ -129,12 +130,8 @@ export default function Dashboard() {
         )}
 
         {/* Dashboard বাদে অন্য মেনুতে ক্লিক করলে এই মেসেজটি দেখাবে */}
-        {activeMenu !== 'Dashboard' && (
-          <div style={{ marginTop: '100px', textAlign: 'center' }}>
-            <h1 style={{ fontSize: '36px', fontWeight: 'bold' }}>Welcome to {activeMenu} Screen!</h1>
-            <p style={{ color: '#666', marginTop: '20px', fontSize: '18px' }}>আপনার {activeMenu} এর ডিজাইন এখানে বসাবেন।</p>
-          </div>
-        )}
+        {activeMenu === 'Projects' && <ProjectsPage />}  {activeMenu === 'Updates' && <UpdatesPage />}
+       
 
         {/* এই ফ্লোটিং আপডেট বারটি সব পেজেই থাকবে */}
         <div style={{ position: 'absolute', bottom: '30px', right: '30px', background: 'white', padding: '12px 20px', borderRadius: '30px', boxShadow: '0 4px 15px rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
