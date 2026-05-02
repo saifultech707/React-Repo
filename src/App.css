@@ -1,3 +1,4 @@
+
 .counter {
   font-size: 16px;
   padding: 5px 10px;
@@ -167,7 +168,7 @@
 
   &::before,
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     top: -4.5px;
     border: 5px solid transparent;
@@ -181,4 +182,178 @@
     right: 0;
     border-right-color: var(--border);
   }
+  .dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* হালকা কালো ব্যাকগ্রাউন্ড */
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* একদম নিচে রাখার জন্য */
+    z-index: 1000;
+
+    /* ওভারলে আসার অ্যানিমেশন */
+    animation: fadeIn 0.3s ease-out;
+  }
+  .dialog-box {
+    width: 100%;
+    max-width: 500px;
+    background-color: white;
+    border-radius: 20px 20px 0 0; /* শুধু উপরের দুই কোণায় রাউন্ড */
+    padding: 30px;
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+
+    /* নিচ থেকে স্লাইড করে ওঠার অ্যানিমেশন */
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes slideUp {
+    from {
+      transform: translateY(
+        100%
+      ); /* শুরুতে একদম নিচে (স্ক্রিনের বাইরে) থাকবে */
+    }
+    to {
+      transform: translateY(0); /* এরপর তার আসল জায়গায় আসবে */
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* ক্লোজ বাটন ডিজাইন */
+  .close-btn {
+    background: #f1f5f9;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: right;
+    transition: 0.2s;
+  }
+
+  .close-btn:hover {
+    background: #e2e8f0;
+  }
+}
+.box {
+  width: 120px;
+  height: 120px;
+  background: #00e5a0;
+  transition: 4s;
+}
+
+.box1:hover {
+  transform: translateX(400px);
+}
+.box2:hover {
+  transform: rotate(180deg);
+}
+.box3:hover {
+  transform: rotateX(360deg);
+}
+.box4:hover {
+  transform: rotateY(360deg);
+}
+.box5:hover {
+  transform: scale(1.2);
+}
+.box6:hover {
+  transform: scaleX(1.5);
+}
+
+/* {//napbar//} */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #e8f0fe;
+}
+
+.menu {
+  background: white;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  display: flex;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 20px;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.link {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 14px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  height: 44px;
+  gap: 4px;
+  position: relative;
+}
+
+.link svg {
+  width: 22px;
+  height: 22px;
+  color: #888;
+}
+
+.link-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #888;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+/* active item */
+.link.active {
+  background: #3b82f6;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.link.active svg {
+  color: white;
+}
+
+.link.active .link-title {
+  opacity: 1;
+  transform: translateX(0);
+  color: white;
+}
+
+/* hover এ title দেখাবে */
+.link:focus-visible .link-title {
+  opacity: 1;
+  transform: translateX(0);
 }
