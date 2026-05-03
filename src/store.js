@@ -1,11 +1,12 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
+import defultpicture from "./assets/IMG_20260206_154654.jpg";
 
 const profileSlice = createSlice({
   name: "profile",
   initialState: {
-    name: "",
-    mobile: "",
-    picture: null,
+    name: "vc",
+    mobile: "v",
+    picture: defultpicture,
   },
   reducers: {
     setProfile: (state, action) => {
