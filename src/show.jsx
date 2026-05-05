@@ -90,9 +90,14 @@ export default function Show() {
         {errorMsg}
       </p>
     );
+  if (!profile)
+    return (
+      <p style={{ padding: "40px", textAlign: "center" }}>কোনো profile নেই!</p>
+    );
 
-  if (!profile) return <p style={{ padding: "40px" }}>কোনো profile নেই!</p>;
-
+  // ডাটাবেস থেকে পাওয়া সিভির লিংকটি পিডিএফ নাকি ছবি তা চেক করার জন্য
+  const isPdf =
+    profile.cvLink && profile.cvLink.startsWith("data:application/pdf");
   return (
     <div
       style={{
@@ -178,54 +183,80 @@ export default function Show() {
             marginTop: "10px",
           }}
         >
+          {/* যদি সিভি থাকে, তবে তা দেখাবে */}
           {profile.cvLink && (
-            <a
-              href={profile.cvLink}
-              target="_blank"
-              rel="noopener noreferrer"
+            <div
               style={{
-                flex: 1,
-                padding: "12px",
-                background: "#10b981",
-                color: "white",
-                textAlign: "center",
-                textDecoration: "none",
-                borderRadius: "8px",
-                fontWeight: "bold",
-                boxShadow: "0 2px 5px rgba(16, 185, 129, 0.3)",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "8px",
+                background: "white",
+                padding: "15px",
+                borderRadius: "12px",
+                boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
               }}
             >
-              📄 View CV
-            </a>
-          )}
+              <h4 style={{ margin: "0 0 10px 0", color: "#1e293b" }}>My CV:</h4>
 
+              {/* যদি পিডিএফ হয়, তবে ডাউনলোডের বাটন দেখাবে (কারণ Data URL এ পিডিএফ সরাসরি দেখানো কঠিন) */}
+              {isPdf ? (
+                <a
+                  href={profile.cvLink}
+                  download="My_CV.pdf"
+                  style={{
+                    display: "inline-block",
+                    padding: "10px 20px",
+                    background: "#10b981",
+                    color: "white",
+                    textDecoration: "none",
+                    borderRadius: "8px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  📥 Download CV (PDF)
+                </a>
+              ) : (
+                /* যদি ছবি হয়, তবে সরাসরি দেখিয়ে দেবে */
+                <img
+                  src={profile.cvLink}
+                  alt="CV"
+                  style={{
+                    width: "100%",
+                    borderRadius: "8px",
+                    border: "1px solid #ddd",
+                  }}
+                />
+              )}
+            </div>
+          )}
           {profile.certificateLink && (
-            <a
-              href={profile.certificateLink}
-              target="_blank"
-              rel="noopener noreferrer"
+            <div
               style={{
-                flex: 1,
-                padding: "12px",
-                background: "#f59e0b",
-                color: "white",
-                textAlign: "center",
-                textDecoration: "none",
-                borderRadius: "8px",
-                fontWeight: "bold",
-                boxShadow: "0 2px 5px rgba(245, 158, 11, 0.3)",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "8px",
+                background: "white",
+                padding: "15px",
+                borderRadius: "12px",
+                boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
               }}
             >
-              🎓 Certificate
-            </a>
+              <h4 style={{ margin: "0 0 10px 0", color: "#1e293b" }}>
+                Certificate:
+              </h4>
+              <a
+                href={profile.certificateLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "10px 20px",
+                  background: "#f59e0b",
+                  color: "white",
+                  textDecoration: "none",
+                  borderRadius: "8px",
+                  fontWeight: "bold",
+                }}
+              >
+                🎓 View Certificate
+              </a>
+            </div>
           )}
         </div>
         {!profile.cvLink && !profile.certificateLink && (

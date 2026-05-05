@@ -8,22 +8,19 @@ import { doc, setDoc } from "firebase/firestore";
 export default function Profile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
   const [preview, setPreview] = useState(null);
   const [email, setEmail] = useState("");
   const [certificateLink, setCertificateLink] = useState("");
-  const [cvLink, setCvLink] = useState("");
+  const [cvLink, setCvLink] = useState(""); // সিভির ডেটা এখানে সেভ হবে
   const [isSaving, setIsSaving] = useState(false);
 
+  // ছবি সিলেক্ট করার ফাংশন
   const handleImage = (e) => {
     const file = e.target.files[0];
-    console.log("আপনার সিলেক্ট করা ছবি:", file);
-
-    if (!file) {
-      console.log("কোনো ছবি সিলেক্ট করা হয়নি!");
-      return;
-    }
+    if (!file) return;
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreview(reader.result);
@@ -31,9 +28,32 @@ export default function Profile() {
     reader.readAsDataURL(file);
   };
 
+  // সিভি সিলেক্ট করার ফাংশন (সরাসরি ডাটাবেসের জন্য)
+  const handleCV = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // যেহেতু ডাটাবেসে সেভ হবে, তাই ফাইল ১ এমবির (1MB) ছোট হতে হবে
+    if (file.size > 1048576) {
+      alert(
+        "দয়া করে ১ মেগাবাইটের (1MB) চেয়ে ছোট সাইজের সিভি (PDF/Image) সিলেক্ট করুন!",
+      );
+      e.target.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setCvLink(reader.result); // ফাইলের ডেটা সরাসরি স্টেটে সেভ
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSave = async () => {
     try {
       setIsSaving(true);
+
+      // ফায়ারবেস ডাটাবেসে সেভ করা হচ্ছে
       await setDoc(doc(db, "profiles", "user1"), {
         name,
         mobile,
@@ -42,6 +62,7 @@ export default function Profile() {
         certificateLink,
         cvLink,
       });
+
       dispatch(
         setProfile({
           name,
@@ -60,24 +81,7 @@ export default function Profile() {
       setIsSaving(false);
     }
   };
-  // সিভি সিলেক্ট করার নতুন ফাংশন
-  const handleCV = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
 
-    // ফায়ারবেস ডাটাবেসের লিমিট আছে, তাই ১ এমবির (1MB) চেয়ে বড় ফাইল হলে ওয়ার্নিং দেবে
-    if (file.size > 1048576) {
-      alert("দয়া করে ১ মেগাবাইটের (1MB) চেয়ে ছোট সাইজের সিভি সিলেক্ট করুন!");
-      e.target.value = ""; // ইনপুট খালি করে দেওয়া হলো
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setCvLink(reader.result); // লিংকের বদলে ফাইলের ডেটাটাই এখানে সেভ হয়ে যাবে
-    };
-    reader.readAsDataURL(file);
-  };
   const inputStyle = {
     padding: "12px",
     borderRadius: "8px",
@@ -102,6 +106,7 @@ export default function Profile() {
       {preview ? (
         <img
           src={preview}
+          alt="Preview"
           style={{
             width: "100px",
             height: "100px",
@@ -126,54 +131,72 @@ export default function Profile() {
         </div>
       )}
 
-      <input type="file" accept="image/*" onChange={handleImage} />
+      <div style={{ width: "100%", maxWidth: "400px" }}>
+        <label
+          style={{
+            fontSize: "14px",
+            color: "#666",
+            marginBottom: "5px",
+            display: "block",
+          }}
+        >
+          Upload Profile Picture:
+        </label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImage}
+          style={inputStyle}
+        />
+      </div>
 
       <input
         type="text"
-        placeholder="your  name"
+        placeholder="your name"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        style={{
-          padding: "10px",
-          borderRadius: "8px",
-          border: "1px solid #ddd",
-          width: "300px",
-          fontSize: "16px",
-        }}
+        style={inputStyle}
       />
-
       <input
         type="text"
         placeholder="your mobile"
         value={mobile}
         onChange={(e) => setMobile(e.target.value)}
-        style={{
-          padding: "10px",
-          borderRadius: "8px",
-          border: "1px solid #ddd",
-          width: "300px",
-          fontSize: "16px",
-        }}
+        style={inputStyle}
       />
       <input
-        type="text"
+        type="email"
         placeholder="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         style={inputStyle}
       />
+
+      <div style={{ width: "100%", maxWidth: "400px" }}>
+        <label
+          style={{
+            fontSize: "14px",
+            color: "#666",
+            marginBottom: "5px",
+            display: "block",
+          }}
+        >
+          Upload CV (PDF or Image under 1MB):
+        </label>
+        <input
+          type="file"
+          accept=".pdf, image/*"
+          onChange={handleCV}
+          style={inputStyle}
+        />
+      </div>
+
       <input
-        type="file"
-        placeholder="cv"
-        value={cvLink}
-        onChange={(e) => handleCV(e.target.value)}
-        style={inputStyle}
-      />
-      <input
-        type="file"
-        placeholder="certifiacate"
+        type="url"
+        placeholder="Certificate Link (must include https://)"
         value={certificateLink}
         onChange={(e) => setCertificateLink(e.target.value)}
+        style={inputStyle}
       />
 
       <button

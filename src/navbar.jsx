@@ -6,7 +6,7 @@ const items = [
   { id: 2, icon: "📁", label: "Files", path: "/profile" },
   { id: 3, icon: "💬", label: "Messages", path: "/transition" },
   { id: 4, icon: "⚙️", label: "Settings", path: "/show" },
-  { id: 5, icon: "↪", label: "Logout", path: "/" },
+  { id: 5, icon: "↪", label: "Logout", path: "/navbars" },
 ];
 
 export default function Navbar() {

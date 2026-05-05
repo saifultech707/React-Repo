@@ -1,0 +1,72 @@
+.navigation {
+  position: relative;
+  width: 600px;
+  height: 70px;
+  background: linear-gradient(155deg, #00fffc, #eee);
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  border-radius: 10px;
+}
+
+.navigation ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 0;
+  position: relative;
+}
+
+.navigation ul li {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  list-style: none;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.navigation ul li span.icon {
+  font-size: 22px;
+  transition: 0.5s;
+  color: #333;
+}
+
+.navigation ul li span.label {
+  font-size: 11px;
+  color: #333;
+  opacity: 0;
+  transition: 0.5s;
+  transform: translateY(10px);
+}
+
+/* active হলে */
+.navigation ul li.active span.icon {
+  transform: translateY(-28px);
+  color: #00fffc;
+}
+
+.navigation ul li.active span.label {
+  opacity: 1;
+  transform: translateY(-18px);
+}
+
+/* গোল indicator */
+.indicator {
+  position: absolute;
+  top: -45%;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(0deg, #eee, #00fffc);
+  border: 6px solid #06021b;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.5s;
+}
