@@ -8,7 +8,7 @@ const items = [
   { id: 3, icon: "💬", label: "Message", path: "/counterCard" },
   { id: 4, icon: "📷", label: "Camera", path: "/updates" },
   { id: 5, icon: "⚙️", label: "Settings", path: "/show" },
-  { id: 6, icon: "🔒", label: "Lock", path: "/transition" },
+  { id: 6, icon: "🔒", label: "Lock", path: "/productcard" },
   { id: 7, icon: "📁", label: "Files", path: "/generadata" },
 ];
 export default function Navbars() {

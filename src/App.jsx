@@ -3,12 +3,13 @@ import { Route, Routes } from "react-router-dom";
 import ProjectsPage from "./ProjectsPage";
 import UpdatesPage from "./UpdatesPage";
 import Transsition from "./trasnsiotion";
-import Navbar from "./navbar";
 import Profile from "./profile";
 import Show from "./show";
 import Navbars from "./navbars";
 import CounterCard from "./CounterCard";
 import GenerateData from "./generateData";
+import AuthForm from "./AuthForm";
+import ProductCard from "./Productcard";
 
 function App() {
   return (
@@ -23,12 +24,13 @@ function App() {
           width: "100%",
         }}
       >
-        {/* <Navbar></Navbar>{" "} */}
         <Navbars></Navbars>
       </div>
       <div style={{ flex: 1, overflow: "auto", margin: "0", padding: "0" }}>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          {/* 🟢 ২. ওয়েবসাইট ওপেন করলেই এখন লগইন/সাইন-আপ পেজ (AuthForm) দেখাবে */}
+          <Route path="/" element={<AuthForm />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/projects" element={<ProjectsPage />} />
           <Route path="/updates" element={<UpdatesPage />} />
 
@@ -39,6 +41,7 @@ function App() {
           <Route path="/counterCard" element={<CounterCard />} />
 
           <Route path="generadata" element={<GenerateData />} />
+          <Route path="productcard" element={<ProductCard/>}/>
         </Routes>
       </div>
     </div>

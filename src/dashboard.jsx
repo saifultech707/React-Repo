@@ -135,7 +135,7 @@ export default function Dashboard() {
             isOpen={isSidebarOpen}
             active={activeMenu === "Projects"}
             onClick={() =>
-              setActiveMenu("Projects")
+              setActiveMenu("productcard")
             } /* <-- শুধু 'Projects' লিখুন */
           />
           <MenuItem

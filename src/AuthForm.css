@@ -1,0 +1,172 @@
+/* AuthForm.css */
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #e2e8f0; /* পেজের পেছনের ব্যাকগ্রাউন্ড */
+  padding: 20px;
+}
+
+.auth-container {
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  display: flex;
+  width: 1200px;
+  max-width: 100%;
+  min-height: 480px;
+  overflow: hidden;
+}
+
+/* বাম দিকের Sign In অংশ */
+.sign-in-container {
+  width: 50%;
+  padding: 40px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.sign-in-container h1 {
+  font-size: 32px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.social-container {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.social-btn {
+  border: 1px solid #dddddd;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  cursor: pointer;
+  font-weight: bold;
+  color: #333;
+  transition: 0.3s;
+}
+
+.social-btn:hover {
+  background: #f3f4f6;
+}
+
+.sign-in-container span {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 15px;
+}
+
+.input-field {
+  background-color: #f3f4f6;
+  border: none;
+  padding: 12px 15px;
+  margin: 8px 0;
+  width: 100%;
+  border-radius: 8px;
+  outline: none;
+  font-size: 14px;
+}
+
+.forgot-password {
+  color: #333;
+  font-size: 13px;
+  text-decoration: none;
+  margin: 15px 0;
+}
+
+.primary-btn {
+  border-radius: 25px;
+  border: none;
+  background-color: #3b2063; /* গাঢ় বেগুনি রঙ */
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: transform 0.2s;
+}
+
+.primary-btn:active {
+  transform: scale(0.95);
+}
+
+/* ডান দিকের বেগুনি অংশ (Overlay) */
+.overlay-container {
+  width: 50%;
+  background-color: #3b2063; /* গাঢ় বেগুনি রঙ */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  text-align: center;
+  /* এই লাইনটি দিয়ে বাম দিকের বড় বাঁকা শেপটি তৈরি করা হয়েছে */
+  border-radius: 150px 0 0 150px;
+}
+.reverseoverlay-container {
+  width: 50%;
+  background-color: #3b2063; /* গাঢ় বেগুনি রঙ */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  text-align: center;
+  /* এই লাইনটি দিয়ে বাম দিকের বড় বাঁকা শেপটি তৈরি করা হয়েছে */
+  border-radius: 0 150px 150px 0;
+}
+
+.reverseoverlay-container h1 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+.overlay-container h1 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.reverseoverlay-container p {
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 30px;
+  padding: 0 20px;
+}
+.overlay-container p {
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 30px;
+  padding: 0 20px;
+}
+.ghost-btn {
+  background-color: transparent;
+  border: 1px solid #ffffff;
+  border-radius: 25px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.ghost-btn:active {
+  transform: scale(0.95);
+}

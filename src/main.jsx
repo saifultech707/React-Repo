@@ -7,8 +7,7 @@ import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    {" "}
-    // ← যোগ করো
+
     <BrowserRouter>
       <App />
     </BrowserRouter>

@@ -1,10 +1,7 @@
 import { useState } from "react";
 
 export default function CounterCard() {
-  // ১. State (ডেটা ধরে রাখার জন্য)
-  const [count, setCount] = useState(0);
-
-  // ২. Functions (লজিক বা কাজ করার জন্য)
+  const [count, setCount] = useState(7);
   const handleIncrease = () => {
     setCount(count + 1);
   };
@@ -16,17 +13,13 @@ export default function CounterCard() {
   };
 
   const handleReset = () => {
-    setCount(0);
+    setCount(7);
   };
-
-  // ৩. UI (স্ক্রিনে যা দেখা যাবে)
   return (
     <div style={containerStyle}>
       <div style={cardStyle}>
-        
         <h2>Product Quantity</h2>
-        
-        {/* ডায়নামিক ডেটা দেখাচ্ছে */}
+
         <h1 style={{ fontSize: "60px", color: "#06021b", margin: "20px 0" }}>
           {count}
         </h1>
@@ -35,12 +28,11 @@ export default function CounterCard() {
           Select how many items you want to buy.
         </p>
 
-        {/* ফাংশনগুলো বাটনের সাথে কানেক্ট করা হয়েছে */}
         <div style={{ display: "flex", gap: "15px", justifyContent: "center" }}>
           <button style={btnStyle} onClick={handleDecrease}>
             ➖ Decrease
           </button>
-          
+
           <button style={resetBtnStyle} onClick={handleReset}>
             🔄 Reset
           </button>
@@ -49,36 +41,76 @@ export default function CounterCard() {
             ➕ Increase
           </button>
         </div>
-
+      </div>
+      <div style={cardStyle}>
+        <h2>product Quantity</h2>
+        <h1 style={{ fontSize: "60px", color: "#06021b", margin: "20px 0" }}>
+          {count}
+        </h1>{" "}
+        <p>slelle</p>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: "15px",
+            justifyContent: "center",
+          }}
+        >
+          <button style={btnStyle} onClick={handleDecrease}>
+            {" "}
+            ➖Descrease
+          </button>
+          <button style={resetBtnStyle} onClick={handleReset}>
+            Reset
+          </button>
+          <button style={btnStyle} onClick={handleIncrease}>
+            increase
+          </button>
+        </div>
+      </div>
+      <div style={cardStyle}>
+        <h1>hu</h1>{" "}
+      </div>
+      <div style={cardStyle}>
+        <h1>hu</h1>{" "}
+      </div>
+      <div style={cardStyle}>
+        <h1>hu</h1>{" "}
       </div>
     </div>
   );
 }
 
-// UI ডিজাইনের স্টাইলগুলো
 const containerStyle = {
   minHeight: "100vh",
   display: "flex",
+  // padding: "20px 40px",
   justifyContent: "center",
-  alignItems: "center",
-  background: "#e0f2fe", // হালকা নীল ব্যাকগ্রাউন্ড
+  alignItems: "flex-start",
+  paddingTop: "12px",
+  background: "#da2d2d",
+  gap: "12px",
 };
 
 const cardStyle = {
   background: "white",
+
   padding: "40px",
-  borderRadius: "20px",
+  borderRadius: "15px",
   boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
   textAlign: "center",
   width: "100%",
+  minHeight: "100px",
   maxWidth: "400px",
+  flexDirection: "column",
+  justifyContent: "center",
 };
 
 const btnStyle = {
   padding: "12px 20px",
   background: "#06021b",
   color: "white",
-  border: "none",
+  border: "1px",
   borderRadius: "10px",
   cursor: "pointer",
   fontWeight: "bold",
@@ -87,5 +119,5 @@ const btnStyle = {
 
 const resetBtnStyle = {
   ...btnStyle,
-  background: "#ef4444", // লাল রঙের বাটন
+  background: "#ee0e0e",
 };
