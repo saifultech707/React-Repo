@@ -6,7 +6,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #131313; /* পেছনের ডার্ক ব্যাকগ্রাউন্ড */
+  background: #131313;
   font-family: "Poppins", sans-serif;
 }
 
@@ -70,7 +70,7 @@
   left: 50%;
   transform: translate(-50%, -50%) rotate(-25deg);
   width: 120px;
-  border-radius: 35px;
+  border-radius: 30px;
 }
 
 /* নিচের সাইজ, কালার ও বাটনের অংশ */

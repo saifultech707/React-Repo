@@ -7,7 +7,7 @@ import Profile from "./profile";
 import Show from "./show";
 import Navbars from "./navbars";
 import CounterCard from "./CounterCard";
-import GenerateData from "./generateData";
+import AboutUsPage from "./aboutUsPage";
 import AuthForm from "./AuthForm";
 import ProductCard from "./Productcard";
 
@@ -40,7 +40,7 @@ function App() {
           <Route path="/navbars" element={<Navbars />} />
           <Route path="/counterCard" element={<CounterCard />} />
 
-          <Route path="generadata" element={<GenerateData />} />
+          <Route path="/aboutUsPage" element={<AboutUsPage />} />
           <Route path="productcard" element={<ProductCard/>}/>
         </Routes>
       </div>

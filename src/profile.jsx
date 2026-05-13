@@ -4,6 +4,7 @@ import { setProfile } from "./store";
 import { useNavigate } from "react-router-dom";
 import { db } from "./firebase";
 import { doc, setDoc } from "firebase/firestore";
+import Component, { Props } from "./component";
 
 export default function Profile() {
   const dispatch = useDispatch();
@@ -14,8 +15,15 @@ export default function Profile() {
   const [preview, setPreview] = useState(null);
   const [email, setEmail] = useState("");
   const [certificateLink, setCertificateLink] = useState("");
-  const [cvLink, setCvLink] = useState(""); // সিভির ডেটা এখানে সেভ হবে
+  const [cvLink, setCvLink] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const user = [
+    { id: "user1", title: "John Doe", age: 19 },
+    { id: "user2", title: "Jane Smith", age: 25 },
+    { id: "user3", title: "Alice Johnson", age: 30 },
+    { id: "user4", title: "Bob Brown", age: 22 },
+    { id: "user5", title: "Charlie Davis", age: 28 },
+  ]; // ডেমো ইউজার ডেটা (ডাটাবেস থেকে আসবে)
 
   // ছবি সিলেক্ট করার ফাংশন
   const handleImage = (e) => {
@@ -101,6 +109,44 @@ export default function Profile() {
         gap: "20px",
       }}
     >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          padding: "40px",
+          gap: "20px",
+          flexWrap: "wrap",
+        }}
+      >
+        {/* {" "}
+        <Props title="Welcome to Your Profile!" age={19} />{" "}
+        <Props title="Welcome to Your Profile!" age={19} />
+        <Props title="Welcome to Your Profile!" age={19} /> */}
+        {user.map((user, index) => (
+          <div key={user.id}>
+            <Props title={user.title} age={user.age} />
+            {index === 0 && (
+              <button
+                style={{
+                  flexDirection: "row",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid #e545",
+                  borderRadius: "12px",
+                  padding: "15px 20px",
+                  backgroundColor: "#000000",
+                }}
+              >
+                add
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+      <Props title="Welcome to Your Profile!" age={19} />
+      <Component />
       <h2>Profile Setup</h2>
 
       {preview ? (
