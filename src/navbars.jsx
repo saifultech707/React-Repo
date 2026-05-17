@@ -5,10 +5,7 @@ import { useNavigate } from "react-router-dom";
 const items = [
   { id: 1, icon: "🏠", label: "Home", path: "/" },
   { id: 2, icon: "👤", label: "Profile", path: "/profile" },
-  { id: 3, icon: "💬", label: "Message", path: "/counterCard" },
-  { id: 4, icon: "📷", label: "Camera", path: "/updates" },
   { id: 5, icon: "⚙️", label: "Settings", path: "/show" },
-  { id: 6, icon: "🔒", label: "Lock", path: "/productcard" },
   { id: 7, icon: "📁", label: "Files", path: "/aboutUsPage" },
 ];
 export default function Navbars() {
