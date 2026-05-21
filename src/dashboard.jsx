@@ -1,19 +1,39 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ProjectsPage from "./ProjectsPage";
+import ProjectsPage from "./Classes";
 import AboutUsPage from "./aboutUsPage";
 import ContactUsPage from "./contactus";
-import showimage from "./assets/note-thanun-CYlPykF-qAM-unsplash.jpg";
+import AdmissionPage from "./AdmissionPage";
 
-// 🟢 আপনার পাঠানো খেলার ৪টি ইমেজ
+// ================= আপনার পাঠানো নতুন ছবিগুলো =================
+import campusBg from "./assets/quilia-1-aA2Fadydc-unsplash.jpg";
+import scienceLab from "./assets/brooke-cagle--uHVRvDr7pg-unsplash.jpg";
+import studentLife from "./assets/national-cancer-institute-N_aihp118p8-unsplash.jpg";
+
+// পুরনো খেলার ৪টি ইমেজ
 import playImg1 from "./assets/marcus-wallis-mUtQXjjLPbw-unsplash.jpg";
 import playImg2 from "./assets/aksh-yadav-bY4cqxp7vos-unsplash.jpg";
 import playImg3 from "./assets/mudassir-ali-DvreeyPXQww-unsplash.jpg";
 import playImg4 from "./assets/vicky-adams-gywHscPZwMM-unsplash.jpg";
 
 export default function Dashboard() {
-  // এখানে ডিফল্ট স্টেট "Dashboard"
   const [activeMenu, setActiveMenu] = useState("Dashboard");
+  const navigate = useNavigate();
+
+  // 🟢 নোটিশ এডিট করার জন্য State
+  const [noticeText, setNoticeText] = useState(
+    "📢 আমাদের এখানে ২০২৬ শিক্ষাবর্ষে প্লে থেকে পঞ্চম শ্রেণী পর্যন্ত সীমিত আসনে ভর্তি চলছে! 🎒 আগামী সপ্তাহে স্কুল প্রাঙ্গণে বার্ষিক ক্রীড়া প্রতিযোগিতা অনুষ্ঠিত হতে যাচ্ছে। বিস্তারিত জানতে 'Contact Us' পেজে যোগাযোগ করুন। 📞",
+  );
+  const [isEditingNotice, setIsEditingNotice] = useState(false);
+  const [tempNotice, setTempNotice] = useState(noticeText);
+
+  // 🟢 AuthForm থেকে সেভ করা রোলটি এখানে চেক করা হচ্ছে
+  const userRole = localStorage.getItem("userRole") || "user";
+
+  const saveNotice = () => {
+    setNoticeText(tempNotice);
+    setIsEditingNotice(false);
+  };
 
   return (
     <div
@@ -33,45 +53,127 @@ export default function Dashboard() {
           flexDirection: "column",
         }}
       >
+        {/* 📢 ১. টপ হরাইজন্টাল অটো স্ক্রোলিং নোটিশ বার (Admin Edit Feature সহ) */}
         <div
           style={{
-            background: "#103741", // স্কুলের গাঢ় নীল থিম কালার
+            background: "#103741",
             color: "white",
-            padding: "15px 20px",
-            textAlign: "center",
-            overflow: "hidden",
-            whiteSpace: "nowrap",
+            padding: "8px 20px",
             position: "relative",
             display: "flex",
             alignItems: "center",
-            borderBottom: "2px solid #FE5D37", // নিচে চিকন কমলা বর্ডার
-            fontSize: "17px",
+            borderBottom: "2px solid #FE5D37",
             zIndex: 101,
+            minHeight: "40px",
           }}
         >
-          {/* রিঅ্যাক্টের ভেতরে সিএসএস অ্যানিমেশন ইনজেক্ট করার উপায় */}
-          <style>{`
-            @keyframes scrollNotice {
-              0% { transform: translateX(100%); }
-              100% { transform: translateX(-100%); }
-            }
-          `}</style>
+          {isEditingNotice ? (
+            // 🟢 অ্যাডমিন যখন Edit বাটনে ক্লিক করবে তখন এই ইনপুট ফিল্ডটি আসবে
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                gap: "10px",
+                alignItems: "center",
+              }}
+            >
+              <input
+                type="text"
+                value={tempNotice}
+                onChange={(e) => setTempNotice(e.target.value)}
+                style={{
+                  flex: 1,
+                  padding: "8px 12px",
+                  borderRadius: "5px",
+                  border: "none",
+                  outline: "none",
+                  fontFamily: "inherit",
+                }}
+              />
+              <button
+                onClick={saveNotice}
+                style={{
+                  background: "#10b981",
+                  color: "white",
+                  border: "none",
+                  padding: "8px 20px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  fontWeight: "bold",
+                }}
+              >
+                Save
+              </button>
+              <button
+                onClick={() => setIsEditingNotice(false)}
+                style={{
+                  background: "#ef4444",
+                  color: "white",
+                  border: "none",
+                  padding: "8px 15px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  fontWeight: "bold",
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            // 🟢 সাধারণ অবস্থায় স্ক্রোলিং নোটিশ দেখাবে
+            <>
+              <div
+                style={{
+                  flex: 1,
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  position: "relative",
+                }}
+              >
+                <style>{`
+                  @keyframes scrollNotice {
+                    0% { transform: translateX(100%); }
+                    100% { transform: translateX(-100%); }
+                  }
+                `}</style>
+                <div
+                  style={{
+                    display: "inline-block",
+                    animation: "scrollNotice 25s linear infinite",
+                    fontWeight: "500",
+                    letterSpacing: "0.5px",
+                    fontSize: "14px",
+                  }}
+                >
+                  {noticeText}
+                </div>
+              </div>
 
-          <div
-            style={{
-              display: "inline-block",
-              animation: "scrollNotice 25s linear infinite", // ২৫ সেকেন্ড পর পর লুপ হবে, স্পীড বাড়াতে চাইলে সেকেন্ড কমিয়ে দিন
-              fontWeight: "500",
-              letterSpacing: "0.5px",
-            }}
-          >
-            📢 আমাদের এখানে ২০২৬ শিক্ষাবর্ষে প্লে থেকে পঞ্চম শ্রেণী পর্যন্ত
-            সীমিত আসনে ভর্তি চলছে! 🎒 আগামী সপ্তাহে স্কুল প্রাঙ্গণে বার্ষিক
-            ক্রীড়া প্রতিযোগিতা অনুষ্ঠিত হতে যাচ্ছে। বিস্তারিত জানতে "Contact Us"
-            পেজে যোগাযোগ করুন। 📞
-          </div>
+              {/* 🟢 শুধুমাত্র Admin লগইন করলেই এই এডিট বাটনটি দেখাবে */}
+              {userRole === "admin" && (
+                <button
+                  onClick={() => setIsEditingNotice(true)}
+                  style={{
+                    background: "#FE5D37",
+                    color: "white",
+                    border: "none",
+                    padding: "5px 15px",
+                    borderRadius: "20px",
+                    marginLeft: "20px",
+                    cursor: "pointer",
+                    fontSize: "12px",
+                    fontWeight: "bold",
+                    flexShrink: 0,
+                  }}
+                >
+                  ✏️ Edit Notice
+                </button>
+              )}
+            </>
+          )}
         </div>
-        {/* ১. টপ নেভিগেশন (সব পেজেই এটি ওপরে ফিক্সড থাকবে) */}
+
+        {/* টপ নেভিগেশন */}
         <div
           style={{
             display: "flex",
@@ -124,6 +226,16 @@ export default function Dashboard() {
               Classes
             </span>
             <span
+              onClick={() => setActiveMenu("Admission")}
+              style={{
+                color: activeMenu === "Admission" ? "#FE5D37" : "#555",
+                cursor: "pointer",
+                fontWeight: activeMenu === "Admission" ? "bold" : "500",
+              }}
+            >
+              Admission
+            </span>
+            <span
               onClick={() => setActiveMenu("ContactUs")}
               style={{
                 color: activeMenu === "ContactUs" ? "#FE5D37" : "#555",
@@ -135,7 +247,7 @@ export default function Dashboard() {
             </span>
           </div>
           <button
-            onClick={() => setActiveMenu("ContactUs")}
+            onClick={() => navigate("/auth")}
             style={{
               background: "#FE5D37",
               color: "white",
@@ -150,43 +262,45 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {/* ২. ডাইনামিক কন্টেন্ট এরিয়া */}
+        {/* 🟢 ৩. ডাইনামিক কন্টেন্ট এরিয়া */}
         <div style={{ flex: 1 }}>
           {/* ================= প্রধান হোম ভিউ ================= */}
           {activeMenu === "Dashboard" && (
             <>
-              {/* হিরো সেকশন */}
+              {/* 🟢 হিরো সেকশন */}
               <div
                 style={{
                   display: "flex",
-                  flexDirection: "row",
-                  padding: "60px 40px",
+                  padding: "100px 40px",
                   alignItems: "center",
-                  justifyContent: "space-between",
-                  background: "#fff",
+                  backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.70), rgba(255, 255, 255, 0.70)), url(${campusBg})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                  minHeight: "500px",
+                  boxSizing: "border-box",
                   gap: "40px",
                   width: "100%",
-                  boxSizing: "border-box",
                 }}
               >
+                {/* বাম পাশ: টেক্সট কন্টেন্ট */}
                 <div style={{ flex: 1.2, maxWidth: "600px" }}>
                   <h1
                     style={{
-                      fontSize: "52px",
+                      fontSize: "56px",
                       color: "#103741",
                       lineHeight: "1.2",
                       marginBottom: "20px",
-                      fontWeight: "bold",
                     }}
                   >
                     The Best Kindergarten School For Your Child
                   </h1>
                   <p
                     style={{
-                      color: "#666",
+                      color: "#333",
                       fontSize: "18px",
                       marginBottom: "30px",
-                      lineHeight: "1.6",
+                      fontWeight: "500",
                     }}
                   >
                     Vero elitr justo clita lorem. Rebum gubergren ea est ipsum
@@ -224,6 +338,7 @@ export default function Dashboard() {
                   </div>
                 </div>
 
+                {/* 🟢 ডান পাশ: রি-অ্যাড করা এবং ছোট সাইজের গোল ছবি */}
                 <div
                   style={{
                     flex: 1,
@@ -232,22 +347,31 @@ export default function Dashboard() {
                     alignItems: "center",
                   }}
                 >
-                  <img
-                    src={showimage}
-                    alt="Kindergarten Children"
+                  <div
                     style={{
-                      width: "100%",
-                      maxWidth: "480px",
-                      height: "380px",
-                      objectFit: "cover",
-                      borderRadius: "24px",
+                      width: "450px",
+                      height: "450px",
+                      background: "#eee",
+                      borderRadius: "50%",
+                      display: "inline-block",
+                      overflow: "hidden",
                       boxShadow: "0 15px 35px rgba(16, 55, 65, 0.12)",
                     }}
-                  />
+                  >
+                    <img
+                      src={studentLife}
+                      alt="Child"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
 
-              {/* ৩. স্কুল ফ্যাসিলিটি সেকশন (সবগুলোতে ক্লিকের ব্যবস্থা করা হয়েছে) */}
+              {/* ফ্যাসিলিটি সেকশন (SCALE-ON-HOVER ইফেক্টযুক্ত কার্ড) */}
               <div
                 style={{
                   padding: "60px 40px",
@@ -300,12 +424,19 @@ export default function Dashboard() {
                     textColor="#0D6EFD"
                     onClick={() => setActiveMenu("Arts")}
                   />
+                  <FacilityCard
+                    icon="🔬"
+                    title="Study Center"
+                    color="#FFE0EB"
+                    textColor="#E91E63"
+                    onClick={() => setActiveMenu("ScienceLab")}
+                  />
                 </div>
               </div>
             </>
           )}
 
-          {/* ================= 🚌 BUS SERVICE DETAILS ================= */}
+          {/* ================= অন্যান্য ফ্যাসিলিটি পেজগুলো ================= */}
           {activeMenu === "BusService" && (
             <div style={facilityPageWrapper}>
               <div style={facilityHeader}>
@@ -345,7 +476,6 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* ================= ⚽ PLAYGROUND GALLERY ================= */}
           {activeMenu === "Playground" && (
             <div style={facilityPageWrapper}>
               <div style={facilityHeader}>
@@ -401,7 +531,6 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* ================= 🍱 HEALTHY CANTEEN DETAILS ================= */}
           {activeMenu === "Canteen" && (
             <div style={facilityPageWrapper}>
               <div style={facilityHeader}>
@@ -413,10 +542,6 @@ export default function Dashboard() {
                   ← Back to Home
                 </button>
               </div>
-              <p style={{ color: "#666" }}>
-                Our school canteen serves 100% hygienic and nutritious food
-                curated by nutritionists.
-              </p>
               <table
                 style={{
                   width: "100%",
@@ -443,17 +568,11 @@ export default function Dashboard() {
                     <td style={tdStyle}>Homemade Roti & Vegetables</td>
                     <td style={tdStyle}>Chicken Khichuri (Low Oil)</td>
                   </tr>
-                  <tr style={trStyle}>
-                    <td style={tdStyle}>Tuesday</td>
-                    <td style={tdStyle}>Egg & Toast with Fruit Juice</td>
-                    <td style={tdStyle}>Vegetable Pasta & Noodles</td>
-                  </tr>
                 </tbody>
               </table>
             </div>
           )}
 
-          {/* ================= 🎨 CREATIVE ARTS DETAILS ================= */}
           {activeMenu === "Arts" && (
             <div style={facilityPageWrapper}>
               <div style={facilityHeader}>
@@ -465,10 +584,6 @@ export default function Dashboard() {
                   ← Back to Home
                 </button>
               </div>
-              <p style={{ color: "#666" }}>
-                We foster child creativity through daily drawing, origami, and
-                music lessons.
-              </p>
               <div
                 style={{
                   display: "flex",
@@ -501,9 +616,55 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* বাকি প্রধান পেজগুলোর রেন্ডারিং */}
+          {activeMenu === "ScienceLab" && (
+            <div style={facilityPageWrapper}>
+              <div style={facilityHeader}>
+                <h2>🔬 Study Center & Science Lab</h2>
+                <button
+                  onClick={() => setActiveMenu("Dashboard")}
+                  style={backBtnStyle}
+                >
+                  ← Back to Home
+                </button>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "30px",
+                  alignItems: "center",
+                  marginBottom: "30px",
+                }}
+              >
+                <img
+                  src={scienceLab}
+                  alt="Lab"
+                  style={{
+                    width: "200px",
+                    height: "150px",
+                    objectFit: "cover",
+                    borderRadius: "12px",
+                    boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
+                  }}
+                />
+                <p
+                  style={{
+                    color: "#666",
+                    flex: 1,
+                    fontSize: "16px",
+                    lineHeight: "1.6",
+                  }}
+                >
+                  We provide a modern Science Lab and a quiet Study Center to
+                  cultivate child curiosity and academic focus.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* 🟢 আপনার আগের তৈরি করা অরিজিনাল পেজগুলো এখানে রেন্ডার হচ্ছে */}
           {activeMenu === "Projects" && <ProjectsPage />}
           {activeMenu === "AboutUs" && <AboutUsPage />}
+          {activeMenu === "Admission" && <AdmissionPage />}
           {activeMenu === "ContactUs" && <ContactUsPage />}
         </div>
 
@@ -585,16 +746,17 @@ function FacilityCard({ icon, title, color, textColor, onClick }) {
         cursor: "pointer",
         transition: "transform 0.2s",
       }}
-      onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.06)")}
+      onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.08)")}
       onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
     >
       <div style={{ fontSize: "40px", marginBottom: "10px" }}>{icon}</div>
-      <h4 style={{ color: textColor, margin: 0 }}>{title}</h4>
+      <h4 style={{ color: textColor, margin: 0, fontWeight: "600" }}>
+        {title}
+      </h4>
     </div>
   );
 }
 
-// কমন পেজ লেআউট স্টাইলস
 const facilityPageWrapper = {
   padding: "40px",
   maxWidth: "1100px",
@@ -608,7 +770,7 @@ const facilityHeader = {
   color: "#103741",
 };
 const backBtnStyle = {
-  background: "#103741",
+  background: "#FE5D37",
   color: "white",
   border: "none",
   padding: "10px 20px",

@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore"; 
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth"; // 🟢 Auth ইম্পোর্ট করুন
 
 const firebaseConfig = {
   apiKey: "AIzaSyCf6cTD0ku6rLwO8Plg4hDdfHJ82xhoaO4",
@@ -11,5 +12,5 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app); 
-// storage মুছে দিয়েছি, কারণ এটা আমাদের আর লাগছে না!
+export const db = getFirestore(app);
+export const auth = getAuth(app); // 🟢 Auth এক্সপোর্ট করুন

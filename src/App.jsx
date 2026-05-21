@@ -1,12 +1,14 @@
 import Dashboard from "./Dashboard";
 import { Route, Routes } from "react-router-dom";
-import ProjectsPage from "./ProjectsPage";
+
+import Classes from "./Classes";
 import Profile from "./profile";
-import Show from "./show";
+import Show from "./AdmissionPage";
 import Navbars from "./navbars";
 import AboutUsPage from "./aboutUsPage";
 import AuthForm from "./AuthForm";
 import ContactUsPage from "./contactus";
+import AdmissionPage from "./AdmissionPage";
 
 function App() {
   return (
@@ -21,20 +23,22 @@ function App() {
           width: "100%",
         }}
       >
-        <Navbars></Navbars>
+        {/* <Navbars></Navbars> */}
       </div>
       <div style={{ flex: 1, overflow: "auto", margin: "0", padding: "0" }}>
         <Routes>
           {/* 🟢 ২. ওয়েবসাইট ওপেন করলেই এখন লগইন/সাইন-আপ পেজ (AuthForm) দেখাবে */}
-          <Route path="/" element={<AuthForm />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/" element={<Dashboard />} />
+
+          {/* 🟢 ২. Join Us এ ক্লিক করলে এই AuthForm পেজে আসবে */}
+          <Route path="/auth" element={<AuthForm />} />
+          <Route path="/classes" element={<Classes />} />
           <Route path="/show" element={<Show />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/navbars" element={<Navbars />} />
-
           <Route path="/aboutUsPage" element={<AboutUsPage />} />
           <Route path="/contactUsPage" element={<ContactUsPage />} />
+          <Route path="/admission" element={<AdmissionPage />} />
         </Routes>
       </div>
     </div>
