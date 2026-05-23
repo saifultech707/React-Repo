@@ -1,6 +1,13 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { collection, addDoc, getDocs, query, orderBy } from "firebase/firestore";
+import { db } from "./firebase";
 
 export default function ContactUsPage() {
+  const userRole = localStorage.getItem("userRole") || "user";
+  const [showInbox, setShowInbox] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     fullName: "",
     company: "",
@@ -14,31 +21,117 @@ export default function ContactUsPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Message Sent Successfully! Thank you.");
-    setFormData({ fullName: "", company: "", email: "", phone: "", address: "", message: "" });
+    setLoading(true);
+    try {
+      await addDoc(collection(db, "messages"), {
+        ...formData,
+        createdAt: new Date().toISOString()
+      });
+      alert("Message Sent Successfully! Thank you.");
+      setFormData({ fullName: "", company: "", email: "", phone: "", address: "", message: "" });
+    } catch (error) {
+      console.error("Error sending message: ", error);
+      alert("Failed to send message. Please check your internet connection.");
+    }
+    setLoading(false);
   };
 
+  const fetchMessages = async () => {
+    try {
+      const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
+      const querySnapshot = await getDocs(q);
+      const msgs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setMessages(msgs);
+    } catch (error) {
+      console.error("Error fetching messages: ", error);
+    }
+  };
+
+  useEffect(() => {
+    if (userRole === "admin" && showInbox) {
+      fetchMessages();
+    }
+  }, [userRole, showInbox]);
+
+  // ================= ADMIN INBOX VIEW =================
+  if (showInbox && userRole === "admin") {
+    return (
+      <div style={{ padding: "40px", maxWidth: "1000px", margin: "0 auto", fontFamily: "'Poppins', sans-serif" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "30px" }}>
+          <h2 style={{ color: "#103741", margin: 0, fontSize: "32px" }}>Admin Inbox</h2>
+          <button onClick={() => setShowInbox(false)} style={backBtnStyle}>
+            ← Back to Contact Form
+          </button>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+          {messages.length === 0 ? (
+            <p style={{ textAlign: "center", color: "#666", fontSize: "18px", marginTop: "40px" }}>No messages found in the inbox.</p>
+          ) : (
+            messages.map((msg) => (
+              <div key={msg.id} style={messageCardStyle}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "15px", flexWrap: "wrap", gap: "10px" }}>
+                  <div>
+                    <h3 style={{ margin: "0 0 5px 0", color: "#1d1c22", fontSize: "20px" }}>
+                      {msg.fullName} <span style={{ fontWeight: "normal", fontSize: "16px", color: "#666" }}>{msg.company && `(${msg.company})`}</span>
+                    </h3>
+                    <p style={{ margin: 0, color: "#444", fontSize: "14px", fontWeight: "500" }}>
+                      ✉️ {msg.email} &nbsp;|&nbsp; 📞 {msg.phone}
+                    </p>
+                    <p style={{ margin: "5px 0 0 0", color: "#888", fontSize: "12px" }}>
+                      📍 {msg.address} &nbsp;•&nbsp; 🕒 {new Date(msg.createdAt).toLocaleString()}
+                    </p>
+                  </div>
+                  <a 
+                    href={`mailto:${msg.email}?subject=Reply from Our School`} 
+                    style={replyBtnStyle}
+                  >
+                    Reply via Email
+                  </a>
+                </div>
+                <div style={{ background: "#f9fafb", padding: "20px", borderRadius: "8px", border: "1px solid #eaeaea", color: "#333", whiteSpace: "pre-wrap", fontSize: "15px", lineHeight: "1.6" }}>
+                  <strong>Message:</strong><br />
+                  {msg.message}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ================= NORMAL CONTACT FORM VIEW =================
   return (
     <div style={containerStyle}>
+      {/* Admin Inbox Toggle Button at the top */}
+      {userRole === "admin" && (
+        <div style={{ position: "absolute", top: "20px", right: "40px", zIndex: 10 }}>
+          <button onClick={() => setShowInbox(true)} style={inboxToggleBtnStyle}>
+            📥 Open Admin Inbox
+          </button>
+        </div>
+      )}
+
       <div style={contentWrapperStyle}>
         
         {/* ================= বাম পাশ (Contact Info) ================= */}
         <div style={leftColumnStyle}>
           <h1 style={mainTitleStyle}>Contact Us</h1>
           <p style={subTextStyle}>
-            Not sure what you need? The team at Square Events will be happy to listen to you and suggest event ideas you hadn't considered.
+            Not sure what you need? Our team will be happy to listen to you and suggest the best learning path for your child.
           </p>
           
           <div style={infoListStyle}>
             <div style={infoItemStyle}>
               <span style={iconStyle}>✉️</span>
-              <a href="mailto:info@squareevents.com" style={linkStyle}>info@squareevents.com</a>
+              <a href="mailto:info@ourschool.com" style={linkStyle}>info@ourschool.com</a>
             </div>
             <div style={infoItemStyle}>
               <span style={iconStyle}>📞</span>
-              <span style={linkStyle}>Support: (+21) 123 456 586</span>
+              <span style={linkStyle}>Support: (+880) 123 456 789</span>
             </div>
           </div>
         </div>
@@ -47,60 +140,56 @@ export default function ContactUsPage() {
         <div style={rightColumnStyle}>
           <div style={cardStyle}>
             
-            {/* কোণায় থাকা ডেকোরেটিভ সার্কেল ব্যাকগ্রাউন্ড */}
             <div style={circleDecorStyle}></div>
 
             <h2 style={cardTitleStyle}>We'd love to hear from you!</h2>
             <p style={cardSubTitleStyle}>Let's get in touch</p>
 
             <form onSubmit={handleSubmit} style={formStyle}>
-              {/* রো ১: Full Name & Company */}
               <div style={rowStyle}>
                 <div style={inputGroupStyle}>
                   <label style={labelStyle}>Full Name</label>
                   <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Your name" style={inputStyle} required />
                 </div>
                 <div style={inputGroupStyle}>
-                  <label style={labelStyle}>Company</label>
-                  <input type="text" name="company" value={formData.company} onChange={handleChange} placeholder="Company name" style={inputStyle} />
+                  <label style={labelStyle}>Subject / Grade</label>
+                  <input type="text" name="company" value={formData.company} onChange={handleChange} placeholder="Class 1" style={inputStyle} />
                 </div>
               </div>
 
-              {/* রো ২: Email & Phone number */}
               <div style={rowStyle}>
                 <div style={inputGroupStyle}>
                   <label style={labelStyle}>Email</label>
                   <div style={inputIconWrapperStyle}>
                     <span style={inputInsideIconStyle}>✉️</span>
-                    <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="olivia@untitledui.com" style={inputWithIconStyle} required />
+                    <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="example@email.com" style={inputWithIconStyle} required />
                   </div>
                 </div>
                 <div style={inputGroupStyle}>
                   <label style={labelStyle}>Phone number</label>
                   <div style={phoneWrapperStyle}>
                     <select style={selectStyle}>
-                      <option>US ⌵</option>
                       <option>BD ⌵</option>
+                      <option>US ⌵</option>
                     </select>
-                    <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="+1 (555) 000-0000" style={phoneInputStyle} />
+                    <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="+880 1XXX-XXXXXX" style={phoneInputStyle} required />
                   </div>
                 </div>
               </div>
 
-              {/* রো ৩: Address */}
               <div style={inputGroupFullStyle}>
                 <label style={labelStyle}>Address</label>
                 <input type="text" name="address" value={formData.address} onChange={handleChange} placeholder="Your address" style={inputStyle} />
               </div>
 
-              {/* রো ৪: Your Message */}
               <div style={inputGroupFullStyle}>
                 <label style={labelStyle}>Your Message</label>
                 <textarea name="message" value={formData.message} onChange={handleChange} placeholder="Type your message here..." style={textareaStyle} rows="4" required></textarea>
               </div>
 
-              {/* সাবমিট বাটন */}
-              <button type="submit" style={buttonStyle}>Send Message</button>
+              <button type="submit" disabled={loading} style={{ ...buttonStyle, opacity: loading ? 0.7 : 1 }}>
+                {loading ? "Sending..." : "Send Message"}
+              </button>
             </form>
 
           </div>
@@ -113,13 +202,14 @@ export default function ContactUsPage() {
 
 // ================= CSS-in-JS Styles =================
 const containerStyle = {
-  background: "#43365d", // ছবির মতো চমৎকার ডার্ক পার্পল ব্যাকগ্রাউন্ড
-  minHeight: "calc(100vh - 70px)", // টপ নববার বাদে পুরো স্ক্রিন কভার করবে
+  background: "#103741", // Matches the school dashboard theme color
+  minHeight: "calc(100vh - 70px)",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  padding: "40px 20px",
-  boxSizing: "border-box"
+  padding: "60px 20px",
+  boxSizing: "border-box",
+  position: "relative"
 };
 
 const contentWrapperStyle = {
@@ -128,7 +218,8 @@ const contentWrapperStyle = {
   maxWidth: "1100px",
   gap: "50px",
   flexWrap: "wrap",
-  alignItems: "center"
+  alignItems: "center",
+  zIndex: 1
 };
 
 const leftColumnStyle = {
@@ -147,7 +238,7 @@ const mainTitleStyle = {
 const subTextStyle = {
   fontSize: "16px",
   lineHeight: "1.6",
-  color: "#c3bcda",
+  color: "#e2e8f0",
   marginBottom: "40px"
 };
 
@@ -320,14 +411,54 @@ const textareaStyle = {
 };
 
 const buttonStyle = {
-  background: "#43365d",
+  background: "#FE5D37", // Matches the school brand color
   color: "white",
   border: "none",
-  padding: "12px",
+  padding: "14px",
   borderRadius: "8px",
   fontSize: "16px",
   fontWeight: "bold",
   cursor: "pointer",
   marginTop: "10px",
   transition: "background 0.2s"
+};
+
+const inboxToggleBtnStyle = {
+  background: "#FE5D37",
+  color: "white",
+  border: "2px solid white",
+  padding: "10px 20px",
+  borderRadius: "30px",
+  fontWeight: "bold",
+  cursor: "pointer",
+  boxShadow: "0 4px 10px rgba(0,0,0,0.2)"
+};
+
+const backBtnStyle = {
+  background: "#103741",
+  color: "white",
+  border: "none",
+  padding: "10px 20px",
+  borderRadius: "30px",
+  fontWeight: "bold",
+  cursor: "pointer",
+};
+
+const messageCardStyle = {
+  background: "white",
+  padding: "25px",
+  borderRadius: "12px",
+  boxShadow: "0 5px 20px rgba(0,0,0,0.05)",
+  border: "1px solid #eee",
+};
+
+const replyBtnStyle = {
+  background: "#0d6efd",
+  color: "white",
+  padding: "8px 16px",
+  borderRadius: "20px",
+  textDecoration: "none",
+  fontSize: "14px",
+  fontWeight: "bold",
+  display: "inline-block"
 };

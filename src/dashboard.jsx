@@ -4,6 +4,8 @@ import ProjectsPage from "./Classes";
 import AboutUsPage from "./aboutUsPage";
 import ContactUsPage from "./contactus";
 import AdmissionPage from "./AdmissionPage";
+import ClassRoutinePage from "./ClassRoutine";
+import ResultPage from "./ResultPage";
 
 // ================= আপনার পাঠানো নতুন ছবিগুলো =================
 import campusBg from "./assets/quilia-1-aA2Fadydc-unsplash.jpg";
@@ -226,6 +228,26 @@ export default function Dashboard() {
               Classes
             </span>
             <span
+              onClick={() => setActiveMenu("ClassRoutine")}
+              style={{
+                color: activeMenu === "ClassRoutine" ? "#FE5D37" : "#555",
+                cursor: "pointer",
+                fontWeight: activeMenu === "ClassRoutine" ? "bold" : "500",
+              }}
+            >
+              Class Routine
+            </span>
+            <span
+              onClick={() => setActiveMenu("Result")}
+              style={{
+                color: activeMenu === "Result" ? "#FE5D37" : "#555",
+                cursor: "pointer",
+                fontWeight: activeMenu === "Result" ? "bold" : "500",
+              }}
+            >
+              Result
+            </span>
+            <span
               onClick={() => setActiveMenu("Admission")}
               style={{
                 color: activeMenu === "Admission" ? "#FE5D37" : "#555",
@@ -246,20 +268,69 @@ export default function Dashboard() {
               Contact Us
             </span>
           </div>
-          <button
-            onClick={() => navigate("/auth")}
-            style={{
-              background: "#FE5D37",
-              color: "white",
-              border: "none",
-              padding: "10px 25px",
-              borderRadius: "30px",
-              fontWeight: "bold",
-              cursor: "pointer",
-            }}
-          >
-            Join Us ›
-          </button>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button
+              onClick={() => navigate("/teachers")}
+              style={{
+                background: "#FE5D37",
+                color: "white",
+                border: "none",
+                padding: "10px 20px",
+                borderRadius: "30px",
+                fontWeight: "bold",
+                cursor: "pointer",
+              }}
+            >
+              Teachers
+            </button>
+            <button
+              onClick={() => navigate("/profile")}
+              style={{
+                background: "#3b82f6",
+                color: "white",
+                border: "none",
+                padding: "10px 20px",
+                borderRadius: "30px",
+                fontWeight: "bold",
+                cursor: "pointer",
+              }}
+            >
+              My Profile
+            </button>
+            {userRole === "admin" && (
+              <button
+                onClick={() => navigate("/")}
+                style={{
+                  background: "#103741",
+                  color: "white",
+                  border: "none",
+                  padding: "10px 25px",
+                  borderRadius: "30px",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
+              >
+                + Create Teacher Auth
+              </button>
+            )}
+            <button
+              onClick={() => {
+                localStorage.removeItem("userRole");
+                navigate("/");
+              }}
+              style={{
+                background: "#dc3545",
+                color: "white",
+                border: "none",
+                padding: "10px 25px",
+                borderRadius: "30px",
+                fontWeight: "bold",
+                cursor: "pointer",
+              }}
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
         {/* 🟢 ৩. ডাইনামিক কন্টেন্ট এরিয়া */}
@@ -665,6 +736,8 @@ export default function Dashboard() {
           {activeMenu === "Projects" && <ProjectsPage />}
           {activeMenu === "AboutUs" && <AboutUsPage />}
           {activeMenu === "Admission" && <AdmissionPage />}
+          {activeMenu === "ClassRoutine" && <ClassRoutinePage />}
+          {activeMenu === "Result" && <ResultPage />}
           {activeMenu === "ContactUs" && <ContactUsPage />}
         </div>
 
@@ -788,3 +861,4 @@ const infoCardStyle = {
 const thStyle = { padding: "12px" };
 const tdStyle = { padding: "12px" };
 const trStyle = { borderBottom: "1px solid #eee" };
+;

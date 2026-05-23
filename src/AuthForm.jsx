@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "./firebase"; // আপনার firebase.js থেকে
+import { auth } from "./firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -11,9 +11,9 @@ export default function AuthForm() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("user");
+  const [role, setRole] = useState("teacher"); // Default role to teacher
 
-  // 🟢 User নাকি Admin, সেটি ট্র্যাক করার জন্য State
+  const loggedInRole = localStorage.getItem("userRole");
 
   // লগইন করার জন্য:
   const handleLogin = async () => {
@@ -27,32 +27,90 @@ export default function AuthForm() {
 
       // 🟢 রোল সেভ করা এবং নেভিগেট করা
       localStorage.setItem("userRole", role);
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       alert("লগইন ভুল হয়েছে: " + error.message);
     }
   };
 
-  // সাইন আপ করার জন্য:
+  // সাইন আপ করার জন্য (Only accessible if already logged in as Admin):
   const handleSignUp = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      alert("সাইন-আপ সফল! এখন লগইন করুন।");
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Create an initial empty profile document for the new teacher
+      const { doc, setDoc } = await import("firebase/firestore");
+      const { db } = await import("./firebase");
+      await setDoc(doc(db, "profiles", userCredential.user.uid), {
+        email: email,
+        name: "",
+        mobile: "",
+        picture: null,
+        certificateLink: "",
+        cvLink: ""
+      });
+      alert("Teacher account created successfully!");
+      setEmail("");
+      setPassword("");
     } catch (error) {
       alert("সাইন-আপ ভুল হয়েছে: " + error.message);
     }
   };
+
+  // If Admin is already logged in, show the Create Teacher Account form
+  if (loggedInRole === "admin") {
+    return (
+      <div className="auth-wrapper">
+        <div className="auth-container">
+          <div className="sign-in-container" style={{ width: "100%", padding: "40px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <h1 style={{ marginBottom: "15px", fontSize: "28px" }}>Create Teacher Account</h1>
+            <p style={{ marginBottom: "20px", color: "#666" }}>Enter email and password to register a new teacher.</p>
+            
+            <input
+              type="email"
+              placeholder="Teacher Email"
+              className="input-field"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={{ maxWidth: "400px" }}
+            />
+            <input
+              type="password"
+              placeholder="Teacher Password"
+              className="input-field"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              style={{ maxWidth: "400px" }}
+            />
+            
+            <button className="primary-btn" onClick={handleSignUp} style={{ maxWidth: "400px", marginTop: "10px" }}>
+              Create Account
+            </button>
+
+            <button 
+              className="ghost-btn" 
+              onClick={() => navigate("/dashboard")}
+              style={{ color: "#FE5D37", borderColor: "#FE5D37", marginTop: "20px", maxWidth: "400px" }}
+            >
+              Return to Dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Regular Login View (For logged out users)
   return (
     <div className="auth-wrapper">
       <div className="auth-container">
         <div className="sign-in-container">
-          {/* 🟢 User / Admin সিলেকশন বাটন (Toggle) */}
+          {/* 🟢 Teacher / Admin সিলেকশন বাটন (Toggle) */}
           <div style={toggleContainerStyle}>
             <button
-              style={role === "user" ? activeBtnStyle : inactiveBtnStyle}
-              onClick={() => setRole("user")}
+              style={role === "teacher" ? activeBtnStyle : inactiveBtnStyle}
+              onClick={() => setRole("teacher")}
             >
-              User
+              Teacher
             </button>
             <button
               style={role === "admin" ? activeBtnStyle : inactiveBtnStyle}
@@ -63,11 +121,10 @@ export default function AuthForm() {
           </div>
 
           {/* 🟢 রোল অনুযায়ী টাইটেল পরিবর্তন হবে */}
-          <h1 style={{ marginBottom: "15px" }}>
-            {role === "admin" ? "Admin Sign In" : "User Sign In"}
+          <h1 style={{ marginBottom: "15px", fontSize: "28px" }}>
+            {role === "admin" ? "Admin Sign In" : "Teacher Sign In"}
           </h1>
 
-          {/* 🟢 input গুলোতে value এবং onChange যোগ করা হয়েছে */}
           <input
             type="email"
             placeholder="Email"
@@ -94,21 +151,12 @@ export default function AuthForm() {
 
         {/* ডানপাশের ওভারলে অংশ */}
         <div className="overlay-container">
-          <h1 style={{ color: "white" }}>Hello, Friend!</h1>
-          <p>Register with your personal details to use all of site features</p>
-
-          <button className="ghost-btn" onClick={() => handleSignUp()}>
-            sIGN UP
-          </button>
-        </div>
-
-        {/* আপনি আগের কোডে একটি reverseoverlay-container রেখেছিলেন, সেটি যদি স্লাইড অ্যানিমেশনের জন্য হয় তবে থাকুক */}
-        <div className="reverseoverlay-container" style={{ display: "none" }}>
-          <h1 style={{ color: "white" }}>Welcome Back!</h1>
-          <p>To keep connected with us please login with your personal info</p>
-          <button className="ghost-btn" onClick={() => handleLogin()}>
-            log in
-          </button>
+          <h1 style={{ color: "white" }}>Welcome!</h1>
+          <p>
+            {role === "admin" 
+              ? "Sign in as an Admin to manage the school portal and register teachers."
+              : "Sign in to view and edit your profile. Contact an Admin if you don't have an account."}
+          </p>
         </div>
       </div>
     </div>

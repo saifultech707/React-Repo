@@ -9,6 +9,7 @@ import AboutUsPage from "./aboutUsPage";
 import AuthForm from "./AuthForm";
 import ContactUsPage from "./contactus";
 import AdmissionPage from "./AdmissionPage";
+import Teachers from "./Teachers";
 
 function App() {
   return (
@@ -28,13 +29,14 @@ function App() {
       <div style={{ flex: 1, overflow: "auto", margin: "0", padding: "0" }}>
         <Routes>
           {/* 🟢 ২. ওয়েবসাইট ওপেন করলেই এখন লগইন/সাইন-আপ পেজ (AuthForm) দেখাবে */}
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<AuthForm />} />
 
-          {/* 🟢 ২. Join Us এ ক্লিক করলে এই AuthForm পেজে আসবে */}
-          <Route path="/auth" element={<AuthForm />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/classes" element={<Classes />} />
           <Route path="/show" element={<Show />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/:uid" element={<Profile />} />
+          <Route path="/teachers" element={<Teachers />} />
           <Route path="/navbars" element={<Navbars />} />
           <Route path="/aboutUsPage" element={<AboutUsPage />} />
           <Route path="/contactUsPage" element={<ContactUsPage />} />
