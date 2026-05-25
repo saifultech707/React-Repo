@@ -1,6 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { db } from "./firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export default function ClassRoutine() {
+  const userRole = localStorage.getItem("userRole") || "guest";
+  const isAdmin = userRole === "admin";
+
   const initialData = [
     { id: 1, name: "Ms. Fatema Khatun", subject: "English" },
     { id: 2, name: "Ms. Sadia Islam", subject: "Science" },
@@ -16,29 +21,65 @@ export default function ClassRoutine() {
 
   const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"];
   
-  // Generating default routine (5 slots per day for each teacher)
+  // Generating default routine
   const generateDefaultRoutine = () => {
     const routine = {};
     initialData.forEach(t => {
       routine[t.id] = days.map(day => ({
-        day,
-        s1: "Class 5", // 10:00 - 11:00 AM
-        s2: "Class 4", // 11:00 - 12:00 PM
-        s3: "Class 3", // 12:00 - 01:00 PM
-        s4: "Class 2", // 02:00 - 03:00 PM
-        s5: "Class 1", // 03:00 - 04:00 PM
+        day, s1: "Class 5", s2: "Class 4", s3: "Class 3", s4: "Class 2", s5: "Class 1",
       }));
     });
     return routine;
   };
 
-  const [teachers, setTeachers] = useState(initialData);
-  const [routines, setRoutines] = useState(generateDefaultRoutine());
+  const [teachers, setTeachers] = useState([]);
+  const [routines, setRoutines] = useState({});
+  const [loading, setLoading] = useState(true);
   const [isEditMode, setIsEditMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
   
   const teacherRefs = useRef({});
+
+  // 🟢 Load data from Firebase
+  useEffect(() => {
+    const fetchRoutine = async () => {
+      try {
+        const docSnap = await getDoc(doc(db, "classRoutine", "main"));
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setTeachers(data.teachers || []);
+          setRoutines(data.routines || {});
+        } else {
+          // If no data exists in firebase, set to default
+          setTeachers(initialData);
+          setRoutines(generateDefaultRoutine());
+        }
+      } catch (error) {
+        console.error("Error fetching routine:", error);
+      }
+      setLoading(false);
+    };
+
+    if (userRole !== "guest" && userRole !== "user") {
+      fetchRoutine();
+    }
+  }, [userRole]);
+
+  // Block Guest/User Access
+  if (userRole === "guest" || userRole === "user") {
+    return (
+      <div style={{ padding: "100px", textAlign: "center", color: "#103741" }}>
+        <h2>🚫 Access Denied</h2>
+        <p>You must be logged in as a Teacher or Admin to view the Class Routine.</p>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return <div style={{ padding: "40px", textAlign: "center" }}>Loading Routine...</div>;
+  }
 
   const handleTeacherChange = (id, field, value) => {
     setTeachers(teachers.map(t => t.id === id ? { ...t, [field]: value } : t));
@@ -55,7 +96,7 @@ export default function ClassRoutine() {
     const newId = teachers.length > 0 ? Math.max(...teachers.map(t => t.id)) + 1 : 1;
     const newTeacher = { id: newId, name: "New Teacher Name", subject: "Subject" };
     
-    setTeachers([newTeacher, ...teachers]); // Add to the top for easy editing
+    setTeachers([newTeacher, ...teachers]); // Add to the top
     
     setRoutines(prev => ({
       ...prev,
@@ -63,9 +104,17 @@ export default function ClassRoutine() {
         day, s1: "", s2: "", s3: "", s4: "", s5: ""
       }))
     }));
+  };
 
-    // Optionally turn on edit mode so they can start typing right away
-    if (!isEditMode) setIsEditMode(true);
+  const handleRemoveTeacher = (id) => {
+    if (window.confirm("Are you sure you want to remove this teacher and their routine?")) {
+      setTeachers(teachers.filter(t => t.id !== id));
+      setRoutines(prev => {
+        const newRoutines = { ...prev };
+        delete newRoutines[id];
+        return newRoutines;
+      });
+    }
   };
 
   const handleSearch = () => {
@@ -82,14 +131,25 @@ export default function ClassRoutine() {
     }
   };
 
-  const handleRemoveTeacher = (id) => {
-    if (window.confirm("Are you sure you want to remove this teacher and their routine?")) {
-      setTeachers(teachers.filter(t => t.id !== id));
-      setRoutines(prev => {
-        const newRoutines = { ...prev };
-        delete newRoutines[id];
-        return newRoutines;
-      });
+  // 🟢 Save to Firebase Function
+  const handleSaveToFirebase = async () => {
+    setIsSaving(true);
+    try {
+      await setDoc(doc(db, "classRoutine", "main"), { teachers, routines });
+      alert("Routine successfully saved to Firebase!");
+      setIsEditMode(false);
+    } catch (error) {
+      console.error("Error saving routine:", error);
+      alert("Failed to save routine. Check console for details.");
+    }
+    setIsSaving(false);
+  };
+
+  const toggleEditMode = () => {
+    if (isEditMode) {
+      handleSaveToFirebase();
+    } else {
+      setIsEditMode(true);
     }
   };
 
@@ -132,29 +192,34 @@ export default function ClassRoutine() {
           </button>
         </div>
 
-        <button 
-          onClick={() => setIsEditMode(!isEditMode)}
-          style={{
-            padding: "10px 20px", 
-            background: isEditMode ? "#4CAF50" : "#FE5D37", 
-            color: "white", 
-            border: "none", 
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontWeight: "bold",
-            fontSize: "16px"
-          }}
-        >
-          {isEditMode ? "Save Changes" : "Admin Edit Mode"}
-        </button>
+        {/* 🟢 Only Admin Can Edit/Save */}
+        {isAdmin && (
+          <button 
+            onClick={toggleEditMode}
+            disabled={isSaving}
+            style={{
+              padding: "10px 20px", 
+              background: isEditMode ? "#4CAF50" : "#FE5D37", 
+              color: "white", 
+              border: "none", 
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontWeight: "bold",
+              fontSize: "16px",
+              opacity: isSaving ? 0.7 : 1
+            }}
+          >
+            {isSaving ? "Saving..." : (isEditMode ? "Save Changes" : "Admin Edit Mode")}
+          </button>
+        )}
       </div>
       
       <p style={{ color: "#666", marginBottom: "20px", fontSize: "16px" }}>
         Weekly schedule for our teachers (10:00 AM to 4:00 PM).
       </p>
 
-      {/* Add Teacher Button (Only visible in Edit Mode) */}
-      {isEditMode && (
+      {/* 🟢 Add Teacher Button (Only visible to Admin in Edit Mode) */}
+      {isAdmin && isEditMode && (
         <div style={{ marginBottom: "40px" }}>
            <button 
             onClick={handleAddTeacher}
@@ -172,7 +237,7 @@ export default function ClassRoutine() {
               gap: "8px"
             }}
           >
-            ➕ Add New Teacher
+            ➕ Add New Teacher / Time Slot
           </button>
         </div>
       )}
@@ -186,7 +251,7 @@ export default function ClassRoutine() {
           <div style={{ borderBottom: "2px solid #FE5D37", paddingBottom: "15px", marginBottom: "20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
               <span style={{ fontSize: "24px" }}>👨‍🏫</span>
-              {isEditMode ? (
+              {isAdmin && isEditMode ? (
                 <>
                   <input 
                     value={teacher.name} 
@@ -210,7 +275,7 @@ export default function ClassRoutine() {
                 </h3>
               )}
             </div>
-            {isEditMode && (
+            {isAdmin && isEditMode && (
               <button 
                 onClick={() => handleRemoveTeacher(teacher.id)}
                 style={{
@@ -253,7 +318,7 @@ export default function ClassRoutine() {
                       { key: "s3", val: row.s3 }
                     ].map(slot => (
                       <td key={slot.key} style={{ padding: "10px", border: "1px solid #ddd" }}>
-                        {isEditMode ? (
+                        {isAdmin && isEditMode ? (
                           <input 
                             value={slot.val} 
                             onChange={(e) => handleRoutineChange(teacher.id, idx, slot.key, e.target.value)}
@@ -270,7 +335,7 @@ export default function ClassRoutine() {
                       { key: "s5", val: row.s5 }
                     ].map(slot => (
                       <td key={slot.key} style={{ padding: "10px", border: "1px solid #ddd" }}>
-                        {isEditMode ? (
+                        {isAdmin && isEditMode ? (
                           <input 
                             value={slot.val} 
                             onChange={(e) => handleRoutineChange(teacher.id, idx, slot.key, e.target.value)}
@@ -287,7 +352,7 @@ export default function ClassRoutine() {
         </div>
       ))}
 
-      {/* Teacher Profile Modal */}
+      {/* Teacher Profile Modal (Simplified View) */}
       {selectedTeacher && (
         <div style={{
           position: "fixed", top: 0, left: 0, width: "100%", height: "100%", 
@@ -306,9 +371,7 @@ export default function ClassRoutine() {
             <h2 style={{ color: "#103741", margin: "0 0 10px 0" }}>{selectedTeacher.name}</h2>
             <p style={{ color: "#FE5D37", fontSize: "18px", margin: "0 0 20px 0", fontWeight: "bold" }}>{selectedTeacher.subject}</p>
             <div style={{ textAlign: "left", background: "#f9f9f9", padding: "15px", borderRadius: "8px", border: "1px solid #eee" }}>
-              <p style={{ margin: "10px 0", fontSize: "16px" }}><strong>ID:</strong> {selectedTeacher.id}</p>
-              <p style={{ margin: "10px 0", fontSize: "16px" }}><strong>Email:</strong> {selectedTeacher.name.split(' ').pop().toLowerCase()}@school.edu</p>
-              <p style={{ margin: "10px 0", fontSize: "16px" }}><strong>Phone:</strong> +880 1234-567890</p>
+              <p style={{ margin: "10px 0", fontSize: "16px" }}><strong>Routine ID:</strong> {selectedTeacher.id}</p>
             </div>
             <button 
               onClick={() => setSelectedTeacher(null)}

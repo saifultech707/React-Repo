@@ -2,83 +2,42 @@
 
 import React, { useState, useEffect } from "react";
 import { db } from "./firebase";
-import { collection, getDocs, addDoc, updateDoc, doc } from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 export default function AboutUsPage() {
   const [teachers, setTeachers] = useState([]);
+  const [headTeacher, setHeadTeacher] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   
   // Auth State from localStorage
-  const [role, setRole] = useState(localStorage.getItem("userRole") || "guest"); // admin, teacher, guest
-  const [currentTeacherId, setCurrentTeacherId] = useState(""); // Optionally link to Firebase auth UID later
+  const [userRole, setUserRole] = useState(localStorage.getItem("userRole") || "guest"); // admin, teacher, guest
 
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editFormData, setEditFormData] = useState({ id: "", name: "", sub: "", edu: "", img: "" });
-
-  const fetchTeachers = async () => {
+  const fetchProfiles = async () => {
     setLoading(true);
     try {
-      const querySnapshot = await getDocs(collection(db, "teachers"));
-      const teachersList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setTeachers(teachersList);
+      const querySnapshot = await getDocs(collection(db, "profiles"));
+      const profilesList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      
+      // Separate Admin (Head Teacher) and Teachers
+      const admins = profilesList.filter(p => p.role === "admin" || p.email === "admin@gmail.com"); // Fallback to email if role not set
+      const regularTeachers = profilesList.filter(p => p.role !== "admin" && p.email !== "admin@gmail.com");
+
+      if (admins.length > 0) {
+        setHeadTeacher(admins[0]);
+      }
+      setTeachers(regularTeachers);
+
     } catch (error) {
-      console.error("Error fetching teachers:", error);
+      console.error("Error fetching profiles:", error);
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchTeachers();
+    fetchProfiles();
   }, []);
-
-  const handleOpenEdit = (teacher) => {
-    setEditFormData(teacher || { id: "", name: "", sub: "", edu: "", img: "https://i.pravatar.cc/150" });
-    setIsEditModalOpen(true);
-  };
-
-  const handleSaveTeacher = async () => {
-    try {
-      if (editFormData.id) {
-        // Update existing teacher
-        const teacherRef = doc(db, "teachers", editFormData.id);
-        await updateDoc(teacherRef, {
-          name: editFormData.name,
-          sub: editFormData.sub,
-          edu: editFormData.edu,
-          img: editFormData.img,
-        });
-      } else {
-        // Add new teacher
-        await addDoc(collection(db, "teachers"), {
-          name: editFormData.name,
-          sub: editFormData.sub,
-          edu: editFormData.edu,
-          img: editFormData.img,
-        });
-      }
-      setIsEditModalOpen(false);
-      fetchTeachers();
-    } catch (error) {
-      console.error("Error saving teacher:", error);
-      alert("Failed to save. Check console for details.");
-    }
-  };
-
-  const canEdit = (teacherId) => {
-    return role === "admin" || (role === "teacher" && currentTeacherId === teacherId);
-  };
-
-  // Seed dummy data if empty (for testing)
-  const seedData = async () => {
-    const dummyTeachers = [
-      { name: "Ms. Fatema Khatun", sub: "English", edu: "M.A in English, DU", img: "https://i.pravatar.cc/150?u=f1", gender: "mam" },
-      { name: "Mr. Rafiqul Islam", sub: "Mathematics", edu: "M.Sc in Math, BUET", img: "https://i.pravatar.cc/150?u=m1", gender: "sir" }
-    ];
-    for (let t of dummyTeachers) {
-      await addDoc(collection(db, "teachers"), t);
-    }
-    fetchTeachers();
-  };
 
   // সেরা ১০ ছাত্রের ডাটা
   const topStudents = Array.from({ length: 10 }, (_, i) => ({
@@ -93,22 +52,29 @@ export default function AboutUsPage() {
       
       {/* ১. হেড টিচার সেকশন */}
       <div style={{ textAlign: "center", marginBottom: "60px", background: "#FFF5F3", padding: "40px", borderRadius: "20px" }}>
-        <img src="https://i.pravatar.cc/150?u=head" style={{ width: "150px", height: "150px", borderRadius: "50%", border: "5px solid #FE5D37" }} alt="Head Teacher" />
-        <h2 style={{ color: "#103741", marginTop: "15px" }}>Mr. Abdur Rahman</h2>
+        <img 
+          src={headTeacher?.picture || "https://i.pravatar.cc/150?u=head"} 
+          style={{ width: "150px", height: "150px", borderRadius: "50%", border: "5px solid #FE5D37", objectFit: "cover" }} 
+          alt={headTeacher?.name || "Head Teacher"} 
+        />
+        <h2 style={{ color: "#103741", marginTop: "15px" }}>{headTeacher?.name || "Mr. Abdur Rahman"}</h2>
         <p style={{ color: "#FE5D37", fontWeight: "bold" }}>Head Teacher</p>
         <p style={{ maxWidth: "600px", margin: "10px auto", color: "#666" }}>
           "আমাদের লক্ষ্য শিক্ষার্থীদের নৈতিক ও মানসম্মত শিক্ষায় গড়ে তোলা।"
         </p>
+        {userRole === "admin" && headTeacher && (
+          <button 
+            onClick={() => navigate(`/profile/${headTeacher.id}`)}
+            style={{ marginTop: "10px", padding: "5px 15px", background: "#103741", color: "white", borderRadius: "5px", border: "none", cursor: "pointer" }}
+          >
+            Edit Profile
+          </button>
+        )}
       </div>
 
       {/* ২. শিক্ষকদের তালিকা (Grid) */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "30px" }}>
         <h2 style={{ color: "#103741", borderLeft: "5px solid #FE5D37", paddingLeft: "15px", margin: 0 }}>Our Expert Teachers</h2>
-        {role === "admin" && (
-          <button onClick={() => handleOpenEdit(null)} style={{ padding: "10px 20px", background: "#103741", color: "white", borderRadius: "8px", border: "none", cursor: "pointer", fontWeight: "bold" }}>
-            ➕ Add Teacher
-          </button>
-        )}
       </div>
 
       {loading ? (
@@ -116,24 +82,31 @@ export default function AboutUsPage() {
       ) : teachers.length === 0 ? (
         <div>
           <p>No teachers found in database.</p>
-          {role === "admin" && <button onClick={seedData} style={{ padding: "10px", cursor: "pointer" }}>Seed Dummy Data</button>}
         </div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "25px", marginBottom: "60px" }}>
           {teachers.map((t) => (
             <div key={t.id} style={{ background: "#f9f9f9", padding: "20px", borderRadius: "15px", textAlign: "center", boxShadow: "0 4px 10px rgba(0,0,0,0.05)", position: "relative" }}>
-              {canEdit(t.id) && (
+              <img src={t.picture || "https://i.pravatar.cc/150"} style={{ width: "80px", height: "80px", borderRadius: "50%", marginBottom: "10px", objectFit: "cover" }} alt={t.name} />
+              <h4 style={{ margin: "5px 0", color: "#103741" }}>{t.name || "Unnamed Teacher"}</h4>
+              <p style={{ margin: "0", color: "#FE5D37", fontSize: "14px", fontWeight: "bold" }}>{t.email}</p>
+              
+              <div style={{ marginTop: "15px", display: "flex", justifyContent: "center", gap: "10px" }}>
                 <button 
-                  onClick={() => handleOpenEdit(t)} 
-                  style={{ position: "absolute", top: "10px", right: "10px", background: "#FE5D37", color: "white", border: "none", borderRadius: "4px", padding: "5px 10px", cursor: "pointer", fontSize: "12px" }}
+                  onClick={() => navigate(`/profile/${t.id}?view=true`)} 
+                  style={{ background: "#FE5D37", color: "white", border: "none", borderRadius: "4px", padding: "5px 10px", cursor: "pointer", fontSize: "12px" }}
                 >
-                  ✏️ Edit
+                  View
                 </button>
-              )}
-              <img src={t.img || "https://i.pravatar.cc/150"} style={{ width: "80px", height: "80px", borderRadius: "50%", marginBottom: "10px", objectFit: "cover" }} alt={t.name} />
-              <h4 style={{ margin: "5px 0", color: "#103741" }}>{t.name}</h4>
-              <p style={{ margin: "0", color: "#FE5D37", fontSize: "14px", fontWeight: "bold" }}>{t.sub}</p>
-              <p style={{ margin: "5px 0", color: "#888", fontSize: "12px" }}>{t.edu}</p>
+                {userRole === "admin" && (
+                  <button 
+                    onClick={() => navigate(`/profile/${t.id}`)} 
+                    style={{ background: "#103741", color: "white", border: "none", borderRadius: "4px", padding: "5px 10px", cursor: "pointer", fontSize: "12px" }}
+                  >
+                    Edit
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
@@ -171,40 +144,6 @@ export default function AboutUsPage() {
           ))}
         </tbody>
       </table>
-
-      {/* Teacher Edit/Add Modal */}
-      {isEditModalOpen && (
-        <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0,0,0,0.6)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 1000 }}>
-          <div style={{ background: "white", padding: "30px", borderRadius: "12px", width: "90%", maxWidth: "400px" }}>
-            <h3 style={{ marginTop: 0, color: "#103741" }}>{editFormData.id ? "Edit Teacher" : "Add Teacher"}</h3>
-            
-            <div style={{ marginBottom: "15px" }}>
-              <label style={{ display: "block", marginBottom: "5px", color: "#666" }}>Name</label>
-              <input type="text" value={editFormData.name} onChange={(e) => setEditFormData({...editFormData, name: e.target.value})} style={{ width: "100%", padding: "8px", border: "1px solid #ccc", borderRadius: "4px" }} />
-            </div>
-            
-            <div style={{ marginBottom: "15px" }}>
-              <label style={{ display: "block", marginBottom: "5px", color: "#666" }}>Subject</label>
-              <input type="text" value={editFormData.sub} onChange={(e) => setEditFormData({...editFormData, sub: e.target.value})} style={{ width: "100%", padding: "8px", border: "1px solid #ccc", borderRadius: "4px" }} />
-            </div>
-            
-            <div style={{ marginBottom: "15px" }}>
-              <label style={{ display: "block", marginBottom: "5px", color: "#666" }}>Education</label>
-              <input type="text" value={editFormData.edu} onChange={(e) => setEditFormData({...editFormData, edu: e.target.value})} style={{ width: "100%", padding: "8px", border: "1px solid #ccc", borderRadius: "4px" }} />
-            </div>
-
-            <div style={{ marginBottom: "20px" }}>
-              <label style={{ display: "block", marginBottom: "5px", color: "#666" }}>Image URL</label>
-              <input type="text" value={editFormData.img} onChange={(e) => setEditFormData({...editFormData, img: e.target.value})} style={{ width: "100%", padding: "8px", border: "1px solid #ccc", borderRadius: "4px" }} />
-            </div>
-
-            <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
-              <button onClick={() => setIsEditModalOpen(false)} style={{ padding: "10px 15px", border: "none", background: "#ccc", borderRadius: "4px", cursor: "pointer" }}>Cancel</button>
-              <button onClick={handleSaveTeacher} style={{ padding: "10px 15px", border: "none", background: "#FE5D37", color: "white", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>Save</button>
-            </div>
-          </div>
-        </div>
-      )}
 
     </div>
   );

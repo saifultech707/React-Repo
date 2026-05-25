@@ -227,16 +227,18 @@ export default function Dashboard() {
             >
               Classes
             </span>
-            <span
-              onClick={() => setActiveMenu("ClassRoutine")}
-              style={{
-                color: activeMenu === "ClassRoutine" ? "#FE5D37" : "#555",
-                cursor: "pointer",
-                fontWeight: activeMenu === "ClassRoutine" ? "bold" : "500",
-              }}
-            >
-              Class Routine
-            </span>
+            {userRole !== "guest" && userRole !== "user" && (
+              <span
+                onClick={() => setActiveMenu("ClassRoutine")}
+                style={{
+                  color: activeMenu === "ClassRoutine" ? "#FE5D37" : "#555",
+                  cursor: "pointer",
+                  fontWeight: activeMenu === "ClassRoutine" ? "bold" : "500",
+                }}
+              >
+                Class Routine
+              </span>
+            )}
             <span
               onClick={() => setActiveMenu("Result")}
               style={{
