@@ -10,7 +10,7 @@ export default function DashboardPage() {
       position: 'relative'
     }}>
       <p style={{ marginTop: '50px', fontSize: '16px', color: '#555' }}>Hi jui!</p>
-      <h1 style={{ fontSize: '48px', fontWeight: 'bold', textAlign: 'center', maxWidth: '600px', lineHeight: '1.2', marginTop: '10px' }}>
+      <h1 style={{ fontWeight: 'bold', textAlign: 'center', maxWidth: '600px', lineHeight: '1.2', marginTop: '10px' }}>
         What startup are you validating today?
       </h1>
       <p style={{ color: '#666', marginTop: '20px', fontSize: '16px' }}>
@@ -20,7 +20,7 @@ export default function DashboardPage() {
       <div style={{ background: 'white', padding: '15px', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', width: '100%', maxWidth: '700px', marginTop: '40px' }}>
         <input 
           type="text" 
-          placeholder="Describe tewwwwwwwwwwwwwwwwwwwwwwwwwhe app you want to create..." 
+          placeholder="Describe the app you want to create..." 
           style={{ width: '100%', border: 'none', outline: 'none', fontSize: '16px', padding: '10px 5px', marginBottom: '15px' }} 
         />
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

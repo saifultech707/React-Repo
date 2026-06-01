@@ -13,10 +13,17 @@
   border-radius: 20px;
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
   display: flex;
-  width: 1200px;
-  max-width: 100%;
+  width: 100%;
+  max-width: 1200px;
   min-height: 480px;
   overflow: hidden;
+  flex-direction: row;
+}
+
+@media (max-width: 768px) {
+  .auth-container {
+    flex-direction: column;
+  }
 }
 
 /* বাম দিকের Sign In অংশ */
@@ -28,6 +35,16 @@
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+
+@media (max-width: 768px) {
+  .sign-in-container,
+  .overlay-container,
+  .reverseoverlay-container {
+    width: 100%;
+    padding: 30px 20px;
+    border-radius: 0;
+  }
 }
 
 .sign-in-container h1 {
@@ -169,4 +186,17 @@
 
 .ghost-btn:active {
   transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+  .sign-in-container h1,
+  .overlay-container h1,
+  .reverseoverlay-container h1 {
+    font-size: 24px;
+  }
+  .overlay-container p,
+  .reverseoverlay-container p {
+    font-size: 12px;
+    padding: 0;
+  }
 }

@@ -17,9 +17,11 @@ import playImg1 from "./assets/marcus-wallis-mUtQXjjLPbw-unsplash.jpg";
 import playImg2 from "./assets/aksh-yadav-bY4cqxp7vos-unsplash.jpg";
 import playImg3 from "./assets/mudassir-ali-DvreeyPXQww-unsplash.jpg";
 import playImg4 from "./assets/vicky-adams-gywHscPZwMM-unsplash.jpg";
+import "./dashboard.css";
 
 export default function Dashboard() {
   const [activeMenu, setActiveMenu] = useState("Dashboard");
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const navigate = useNavigate();
 
   // 🟢 নোটিশ এডিট করার জন্য State
@@ -36,6 +38,90 @@ export default function Dashboard() {
     setNoticeText(tempNotice);
     setIsEditingNotice(false);
   };
+
+  const navLinksList = (
+    <>
+      <span
+        onClick={() => { setActiveMenu("Dashboard"); setIsDrawerOpen(false); }}
+        style={{ color: activeMenu === "Dashboard" ? "#FE5D37" : "#555", cursor: "pointer", fontWeight: activeMenu === "Dashboard" ? "bold" : "500" }}
+      >
+        Home
+      </span>
+      <span
+        onClick={() => { setActiveMenu("AboutUs"); setIsDrawerOpen(false); }}
+        style={{ color: activeMenu === "AboutUs" ? "#FE5D37" : "#555", cursor: "pointer", fontWeight: activeMenu === "AboutUs" ? "bold" : "500" }}
+      >
+        About Us
+      </span>
+      <span
+        onClick={() => { setActiveMenu("Projects"); setIsDrawerOpen(false); }}
+        style={{ color: activeMenu === "Projects" ? "#FE5D37" : "#555", cursor: "pointer", fontWeight: activeMenu === "Projects" ? "bold" : "500" }}
+      >
+        Classes
+      </span>
+      {userRole !== "guest" && userRole !== "user" && (
+        <span
+          onClick={() => { setActiveMenu("ClassRoutine"); setIsDrawerOpen(false); }}
+          style={{ color: activeMenu === "ClassRoutine" ? "#FE5D37" : "#555", cursor: "pointer", fontWeight: activeMenu === "ClassRoutine" ? "bold" : "500" }}
+        >
+          Class Routine
+        </span>
+      )}
+      <span
+        onClick={() => { setActiveMenu("Result"); setIsDrawerOpen(false); }}
+        style={{ color: activeMenu === "Result" ? "#FE5D37" : "#555", cursor: "pointer", fontWeight: activeMenu === "Result" ? "bold" : "500" }}
+      >
+        Result
+      </span>
+      <span
+        onClick={() => { setActiveMenu("Admission"); setIsDrawerOpen(false); }}
+        style={{ color: activeMenu === "Admission" ? "#FE5D37" : "#555", cursor: "pointer", fontWeight: activeMenu === "Admission" ? "bold" : "500" }}
+      >
+        Admission
+      </span>
+      <span
+        onClick={() => { setActiveMenu("ContactUs"); setIsDrawerOpen(false); }}
+        style={{ color: activeMenu === "ContactUs" ? "#FE5D37" : "#555", cursor: "pointer", fontWeight: activeMenu === "ContactUs" ? "bold" : "500" }}
+      >
+        Contact Us
+      </span>
+    </>
+  );
+
+  const navActionsList = (
+    <>
+      <button
+        onClick={() => { navigate("/teachers"); setIsDrawerOpen(false); }}
+        style={{ background: "#FE5D37", color: "white", border: "none", padding: "10px 20px", borderRadius: "30px", fontWeight: "bold", cursor: "pointer" }}
+      >
+        Teachers
+      </button>
+      <button
+        onClick={() => { navigate("/profile"); setIsDrawerOpen(false); }}
+        style={{ background: "#3b82f6", color: "white", border: "none", padding: "10px 20px", borderRadius: "30px", fontWeight: "bold", cursor: "pointer" }}
+      >
+        My Profile
+      </button>
+      {userRole === "admin" && (
+        <button
+          onClick={() => { navigate("/"); setIsDrawerOpen(false); }}
+          style={{ background: "#103741", color: "white", border: "none", padding: "10px 25px", borderRadius: "30px", fontWeight: "bold", cursor: "pointer" }}
+        >
+          + Create Teacher Auth
+        </button>
+      )}
+      <button
+        onClick={() => {
+          localStorage.removeItem("userRole");
+          setIsDrawerOpen(false);
+          navigate("/");
+        }}
+        style={{ background: "#dc3545", color: "white", border: "none", padding: "10px 25px", borderRadius: "30px", fontWeight: "bold", cursor: "pointer" }}
+      >
+        Logout
+      </button>
+    </>
+  );
 
   return (
     <div
@@ -176,162 +262,38 @@ export default function Dashboard() {
         </div>
 
         {/* টপ নেভিগেশন */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            padding: "20px 40px",
-            alignItems: "center",
-            borderBottom: "1px solid #eee",
-            background: "#fff",
-            position: "sticky",
-            top: 0,
-            zIndex: 100,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              gap: "30px",
-              fontWeight: "500",
-              color: "#555",
-            }}
-          >
-            <span
-              onClick={() => setActiveMenu("Dashboard")}
-              style={{
-                color: activeMenu === "Dashboard" ? "#FE5D37" : "#555",
-                cursor: "pointer",
-                fontWeight: activeMenu === "Dashboard" ? "bold" : "500",
-              }}
-            >
-              Home
-            </span>
-            <span
-              onClick={() => setActiveMenu("AboutUs")}
-              style={{
-                color: activeMenu === "AboutUs" ? "#FE5D37" : "#555",
-                cursor: "pointer",
-                fontWeight: activeMenu === "AboutUs" ? "bold" : "500",
-              }}
-            >
-              About Us
-            </span>
-            <span
-              onClick={() => setActiveMenu("Projects")}
-              style={{
-                color: activeMenu === "Projects" ? "#FE5D37" : "#555",
-                cursor: "pointer",
-                fontWeight: activeMenu === "Projects" ? "bold" : "500",
-              }}
-            >
-              Classes
-            </span>
-            {userRole !== "guest" && userRole !== "user" && (
-              <span
-                onClick={() => setActiveMenu("ClassRoutine")}
-                style={{
-                  color: activeMenu === "ClassRoutine" ? "#FE5D37" : "#555",
-                  cursor: "pointer",
-                  fontWeight: activeMenu === "ClassRoutine" ? "bold" : "500",
-                }}
-              >
-                Class Routine
-              </span>
-            )}
-            <span
-              onClick={() => setActiveMenu("Result")}
-              style={{
-                color: activeMenu === "Result" ? "#FE5D37" : "#555",
-                cursor: "pointer",
-                fontWeight: activeMenu === "Result" ? "bold" : "500",
-              }}
-            >
-              Result
-            </span>
-            <span
-              onClick={() => setActiveMenu("Admission")}
-              style={{
-                color: activeMenu === "Admission" ? "#FE5D37" : "#555",
-                cursor: "pointer",
-                fontWeight: activeMenu === "Admission" ? "bold" : "500",
-              }}
-            >
-              Admission
-            </span>
-            <span
-              onClick={() => setActiveMenu("ContactUs")}
-              style={{
-                color: activeMenu === "ContactUs" ? "#FE5D37" : "#555",
-                cursor: "pointer",
-                fontWeight: activeMenu === "ContactUs" ? "bold" : "500",
-              }}
-            >
-              Contact Us
-            </span>
+        <div className="top-nav-wrapper">
+          <button className="hamburger-btn" onClick={() => setIsDrawerOpen(true)}>
+            ☰
+          </button>
+
+          <div className="nav-links-container">
+            {navLinksList}
           </div>
-          <div style={{ display: "flex", gap: "10px" }}>
-            <button
-              onClick={() => navigate("/teachers")}
-              style={{
-                background: "#FE5D37",
-                color: "white",
-                border: "none",
-                padding: "10px 20px",
-                borderRadius: "30px",
-                fontWeight: "bold",
-                cursor: "pointer",
-              }}
-            >
-              Teachers
-            </button>
-            <button
-              onClick={() => navigate("/profile")}
-              style={{
-                background: "#3b82f6",
-                color: "white",
-                border: "none",
-                padding: "10px 20px",
-                borderRadius: "30px",
-                fontWeight: "bold",
-                cursor: "pointer",
-              }}
-            >
-              My Profile
-            </button>
-            {userRole === "admin" && (
-              <button
-                onClick={() => navigate("/")}
-                style={{
-                  background: "#103741",
-                  color: "white",
-                  border: "none",
-                  padding: "10px 25px",
-                  borderRadius: "30px",
-                  fontWeight: "bold",
-                  cursor: "pointer",
-                }}
-              >
-                + Create Teacher Auth
-              </button>
-            )}
-            <button
-              onClick={() => {
-                localStorage.removeItem("userRole");
-                navigate("/");
-              }}
-              style={{
-                background: "#dc3545",
-                color: "white",
-                border: "none",
-                padding: "10px 25px",
-                borderRadius: "30px",
-                fontWeight: "bold",
-                cursor: "pointer",
-              }}
-            >
-              Logout
-            </button>
+
+          <div className="nav-actions-container">
+            {navActionsList}
+          </div>
+        </div>
+
+        {/* 🟢 Drawer Overlay */}
+        <div 
+          className={`drawer-overlay ${isDrawerOpen ? "open" : ""}`} 
+          onClick={() => setIsDrawerOpen(false)}
+        ></div>
+
+        {/* 🟢 Drawer Menu */}
+        <div className={`drawer ${isDrawerOpen ? "open" : ""}`}>
+          <button className="drawer-close-btn" onClick={() => setIsDrawerOpen(false)}>
+            ✕
+          </button>
+          
+          <div className="drawer-links-container">
+            {navLinksList}
+          </div>
+          
+          <div className="drawer-actions-container">
+            {navActionsList}
           </div>
         </div>
 

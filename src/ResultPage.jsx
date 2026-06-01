@@ -43,7 +43,7 @@ export default function ResultPage() {
   return (
     <div style={{ padding: "40px", maxWidth: "1000px", margin: "0 auto", fontFamily: "'Poppins', sans-serif" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "30px" }}>
-        <h2 style={{ color: "#103741", margin: 0, fontSize: "32px" }}>
+        <h2 style={{ color: "#103741", margin: 0 }}>
           Student Results Sheet
         </h2>
         {userRole === "admin" && (

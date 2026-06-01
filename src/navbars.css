@@ -1,12 +1,14 @@
 .navigation {
   position: relative;
-  width: 600px;
+  width: 100%;
+  max-width: 600px;
   height: 70px;
   background: linear-gradient(155deg, #00fffc, #eee);
   display: flex;
   justify-content: center;
   /* align-items: center; */
   border-radius: 10px;
+  overflow-x: auto;
 }
 
 .navigation ul {

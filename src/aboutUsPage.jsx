@@ -48,10 +48,10 @@ export default function AboutUsPage() {
   }));
 
   return (
-    <div style={{ padding: "40px", background: "#fff" }}>
+    <div style={{ padding: "5%", background: "#fff", maxWidth: "100%", boxSizing: "border-box" }}>
       
       {/* ১. হেড টিচার সেকশন */}
-      <div style={{ textAlign: "center", marginBottom: "60px", background: "#FFF5F3", padding: "40px", borderRadius: "20px" }}>
+      <div style={{ textAlign: "center", marginBottom: "60px", background: "#FFF5F3", padding: "5%", borderRadius: "20px" }}>
         <img 
           src={headTeacher?.picture || "https://i.pravatar.cc/150?u=head"} 
           style={{ width: "150px", height: "150px", borderRadius: "50%", border: "5px solid #FE5D37", objectFit: "cover" }} 
@@ -124,26 +124,28 @@ export default function AboutUsPage() {
 
       {/* ৪. সেরা ১০ ছাত্রের তালিকা */}
       <h2 style={{ color: "#103741", marginBottom: "20px" }}>Top 10 Students (Class 5 - 2025)</h2>
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr style={{ background: "#FE5D37", color: "white", textAlign: "left" }}>
-            <th style={tdStyle}>Rank</th>
-            <th style={tdStyle}>Student Name</th>
-            <th style={tdStyle}>Total Marks</th>
-            <th style={tdStyle}>Year</th>
-          </tr>
-        </thead>
-        <tbody>
-          {topStudents.map((s, i) => (
-            <tr key={i} style={{ borderBottom: "1px solid #eee" }}>
-              <td style={tdStyle}>#{s.pos}</td>
-              <td style={tdStyle}>{s.name}</td>
-              <td style={tdStyle}>{s.marks}</td>
-              <td style={tdStyle}>{s.year}</td>
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "500px" }}>
+          <thead>
+            <tr style={{ background: "#FE5D37", color: "white", textAlign: "left" }}>
+              <th style={tdStyle}>Rank</th>
+              <th style={tdStyle}>Student Name</th>
+              <th style={tdStyle}>Total Marks</th>
+              <th style={tdStyle}>Year</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {topStudents.map((s, i) => (
+              <tr key={i} style={{ borderBottom: "1px solid #eee" }}>
+                <td style={tdStyle}>#{s.pos}</td>
+                <td style={tdStyle}>{s.name}</td>
+                <td style={tdStyle}>{s.marks}</td>
+                <td style={tdStyle}>{s.year}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
     </div>
   );

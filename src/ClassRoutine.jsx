@@ -156,7 +156,7 @@ export default function ClassRoutine() {
   return (
     <div style={{ padding: "40px", maxWidth: "1200px", margin: "0 auto", fontFamily: "sans-serif" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "20px" }}>
-        <h2 style={{ color: "#103741", margin: 0, fontSize: "36px" }}>🗓️ Class Routine</h2>
+        <h2 style={{ color: "#103741", margin: 0 }}>🗓️ Class Routine</h2>
         
         {/* Search Bar Container */}
         <div style={{ display: "flex", gap: "10px", flex: "1", maxWidth: "400px" }}>
