@@ -11,7 +11,8 @@ export default function AuthForm() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("teacher"); // Default role to teacher
+  const [role, setRole] = useState("user"); // Default role
+  const [isSignUp, setIsSignUp] = useState(false);
 
   const loggedInRole = localStorage.getItem("userRole");
 
@@ -33,8 +34,20 @@ export default function AuthForm() {
     }
   };
 
-  // সাইন আপ করার জন্য (Only accessible if already logged in as Admin):
-  const handleSignUp = async () => {
+  // পাবলিক ইউজার সাইন আপ:
+  const handleUserSignUp = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      localStorage.setItem("userRole", "user");
+      alert("Account created successfully!");
+      navigate("/dashboard"); // Or wherever normal users should go
+    } catch (error) {
+      alert("সাইন-আপ ভুল হয়েছে: " + error.message);
+    }
+  };
+
+  // সাইন আপ করার জন্য (Only accessible if already logged in as Admin to create Teacher):
+  const handleAdminCreateTeacher = async () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       // Create an initial empty profile document for the new teacher
@@ -82,7 +95,7 @@ export default function AuthForm() {
               style={{ maxWidth: "400px" }}
             />
             
-            <button className="primary-btn" onClick={handleSignUp} style={{ maxWidth: "400px", marginTop: "10px" }}>
+            <button className="primary-btn" onClick={handleAdminCreateTeacher} style={{ maxWidth: "400px", marginTop: "10px" }}>
               Create Account
             </button>
 
@@ -99,30 +112,38 @@ export default function AuthForm() {
     );
   }
 
-  // Regular Login View (For logged out users)
+  // Regular Login/Signup View (For logged out users)
   return (
     <div className="auth-wrapper">
       <div className="auth-container">
         <div className="sign-in-container">
-          {/* 🟢 Teacher / Admin সিলেকশন বাটন (Toggle) */}
+          {/* 🟢 Role Selection Toggle */}
           <div style={toggleContainerStyle}>
             <button
+              style={role === "user" ? activeBtnStyle : inactiveBtnStyle}
+              onClick={() => { setRole("user"); setIsSignUp(false); }}
+            >
+              User
+            </button>
+            <button
               style={role === "teacher" ? activeBtnStyle : inactiveBtnStyle}
-              onClick={() => setRole("teacher")}
+              onClick={() => { setRole("teacher"); setIsSignUp(false); }}
             >
               Teacher
             </button>
             <button
               style={role === "admin" ? activeBtnStyle : inactiveBtnStyle}
-              onClick={() => setRole("admin")}
+              onClick={() => { setRole("admin"); setIsSignUp(false); }}
             >
               Admin
             </button>
           </div>
 
-          {/* 🟢 রোল অনুযায়ী টাইটেল পরিবর্তন হবে */}
-          <h1 style={{ marginBottom: "15px", fontSize: "28px" }}>
-            {role === "admin" ? "Admin Sign In" : "Teacher Sign In"}
+          {/* 🟢 Title based on role and mode */}
+          <h1 style={{ marginBottom: "15px", fontSize: "28px", textAlign: "center" }}>
+            {role === "admin" ? "Admin Sign In" 
+              : role === "teacher" ? "Teacher Sign In" 
+              : isSignUp ? "User Sign Up" : "User Sign In"}
           </h1>
 
           <input
@@ -140,22 +161,42 @@ export default function AuthForm() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <a href="#" className="forgot-password">
-            Forget Your Password?
-          </a>
+          {!isSignUp && (
+            <a href="#" className="forgot-password">
+              Forget Your Password?
+            </a>
+          )}
 
-          <button className="primary-btn" onClick={handleLogin}>
-            log in
+          <button 
+            className="primary-btn" 
+            onClick={isSignUp && role === "user" ? handleUserSignUp : handleLogin}
+          >
+            {isSignUp && role === "user" ? "Sign Up" : "Log In"}
           </button>
+
+          {role === "user" && (
+            <p style={{ marginTop: '15px', fontSize: '14px', color: '#555' }}>
+              {isSignUp ? "Already have an account? " : "Don't have an account? "}
+              <span 
+                style={{ color: '#FE5D37', cursor: 'pointer', fontWeight: 'bold' }}
+                onClick={() => setIsSignUp(!isSignUp)}
+              >
+                {isSignUp ? "Log In" : "Sign Up"}
+              </span>
+            </p>
+          )}
+
         </div>
 
-        {/* ডানপাশের ওভারলে অংশ */}
+        {/* Overlay Container */}
         <div className="overlay-container">
           <h1 style={{ color: "white" }}>Welcome!</h1>
           <p>
             {role === "admin" 
               ? "Sign in as an Admin to manage the school portal and register teachers."
-              : "Sign in to view and edit your profile. Contact an Admin if you don't have an account."}
+              : role === "teacher"
+              ? "Sign in to view and edit your profile. Contact an Admin if you don't have an account."
+              : "Sign in or create an account to access the platform and chat with our team."}
           </p>
         </div>
       </div>
@@ -163,34 +204,36 @@ export default function AuthForm() {
   );
 }
 
-// ================= ইনলাইন স্টাইলস (টগল বাটনের জন্য) =================
+// ================= CSS-in-JS Styles =================
 const toggleContainerStyle = {
   display: "flex",
   background: "#eee",
   borderRadius: "30px",
   marginBottom: "20px",
   overflow: "hidden",
-  width: "80%",
+  width: "90%",
 };
 
 const activeBtnStyle = {
   flex: 1,
-  padding: "10px",
+  padding: "10px 5px",
   border: "none",
-  background: "#FE5D37", // আপনার ওয়েবসাইটের থিম কালার
+  background: "#FE5D37", // Theme Color
   color: "white",
   fontWeight: "bold",
   cursor: "pointer",
   transition: "0.3s",
+  fontSize: "13px"
 };
 
 const inactiveBtnStyle = {
   flex: 1,
-  padding: "10px",
+  padding: "10px 5px",
   border: "none",
   background: "transparent",
   color: "#555",
   fontWeight: "bold",
   cursor: "pointer",
   transition: "0.3s",
+  fontSize: "13px"
 };

@@ -1,0 +1,286 @@
+/* src/profile.css */
+
+.profile-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  /* Colorful modern gradient background */
+  background: linear-gradient(135deg, #103741 0%, #1e6475 50%, #FE5D37 100%);
+  padding: 40px 20px;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
+}
+
+.profile-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 650px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header section with cover image feel */
+.profile-header {
+  background: url('https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2029&auto=format&fit=crop') center/cover;
+  height: 180px;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.profile-header::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%);
+}
+
+.header-title {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.back-btn {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  height: max-content;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Profile Picture Area */
+.profile-avatar-section {
+  display: flex;
+  justify-content: center;
+  margin-top: -60px; /* Pulls the avatar up into the header */
+  position: relative;
+  z-index: 2;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 5px solid white;
+  background: #f0f0f0;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  font-size: 60px;
+}
+
+.avatar-upload-btn {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 12px;
+  padding: 8px 0;
+  text-align: center;
+  cursor: pointer;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.avatar-wrapper:hover .avatar-upload-btn {
+  opacity: 1;
+}
+
+/* Form Content */
+.profile-content {
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input-group label .icon {
+  color: #FE5D37;
+}
+
+.profile-input {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  font-size: 15px;
+  color: #333;
+  background-color: #fafafa;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.profile-input:focus {
+  outline: none;
+  border-color: #FE5D37;
+  background-color: white;
+  box-shadow: 0 0 0 4px rgba(254, 93, 55, 0.1);
+}
+
+.profile-input[readonly] {
+  background-color: #f5f5f5;
+  color: #666;
+  border-color: #eee;
+  cursor: default;
+}
+
+/* File Upload styling for CV */
+.file-upload-wrapper {
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  background: #fafafa;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.file-upload-wrapper:hover {
+  border-color: #FE5D37;
+  background: #fff5f3;
+}
+
+.file-upload-input {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Save Button */
+.save-btn {
+  background: linear-gradient(to right, #FE5D37, #f73a0a);
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  box-shadow: 0 4px 15px rgba(254, 93, 55, 0.4);
+  transition: all 0.3s ease;
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(254, 93, 55, 0.6);
+}
+
+.save-btn:active {
+  transform: translateY(1px);
+}
+
+.save-btn:disabled {
+  background: #ccc;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Links and View states */
+.cert-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #0d6efd;
+  font-weight: 500;
+  text-decoration: none;
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #f1f8ff;
+  border-radius: 8px;
+  width: max-content;
+  transition: background 0.2s;
+}
+
+.cert-link:hover {
+  background: #e2f0ff;
+}
+
+.cv-preview-box {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.cv-image {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .profile-content {
+    padding: 20px;
+  }
+  .avatar-wrapper {
+    width: 110px;
+    height: 110px;
+  }
+  .profile-header {
+    height: 150px;
+  }
+}

@@ -8,7 +8,7 @@ import ClassRoutinePage from "./ClassRoutine";
 import ResultPage from "./ResultPage";
 
 // ================= আপনার পাঠানো নতুন ছবিগুলো =================
-import campusBg from "./assets/quilia-1-aA2Fadydc-unsplash.jpg";
+import campusBg from "./assets/higjschool.png";
 import scienceLab from "./assets/brooke-cagle--uHVRvDr7pg-unsplash.jpg";
 import studentLife from "./assets/national-cancer-institute-N_aihp118p8-unsplash.jpg";
 
@@ -42,46 +42,95 @@ export default function Dashboard() {
   const navLinksList = (
     <>
       <span
-        onClick={() => { setActiveMenu("Dashboard"); setIsDrawerOpen(false); }}
-        style={{ color: activeMenu === "Dashboard" ? "#FE5D37" : "#555", cursor: "pointer", fontWeight: activeMenu === "Dashboard" ? "bold" : "500" }}
+        onClick={() => {
+          setActiveMenu("Dashboard");
+          setIsDrawerOpen(false);
+        }}
+        style={{
+          color: activeMenu === "Dashboard" ? "#FE5D37" : "#555",
+          cursor: "pointer",
+          fontWeight: activeMenu === "Dashboard" ? "bold" : "500",
+        }}
       >
         Home
       </span>
       <span
-        onClick={() => { setActiveMenu("AboutUs"); setIsDrawerOpen(false); }}
-        style={{ color: activeMenu === "AboutUs" ? "#FE5D37" : "#555", cursor: "pointer", fontWeight: activeMenu === "AboutUs" ? "bold" : "500" }}
+        onClick={() => {
+          setActiveMenu("AboutUs");
+          setIsDrawerOpen(false);
+        }}
+        style={{
+          color: activeMenu === "AboutUs" ? "#FE5D37" : "#555",
+          cursor: "pointer",
+          fontWeight: activeMenu === "AboutUs" ? "bold" : "500",
+        }}
       >
         About Us
       </span>
       <span
-        onClick={() => { setActiveMenu("Projects"); setIsDrawerOpen(false); }}
-        style={{ color: activeMenu === "Projects" ? "#FE5D37" : "#555", cursor: "pointer", fontWeight: activeMenu === "Projects" ? "bold" : "500" }}
+        onClick={() => {
+          setActiveMenu("Projects");
+          setIsDrawerOpen(false);
+        }}
+        style={{
+          color: activeMenu === "Projects" ? "#FE5D37" : "#555",
+          cursor: "pointer",
+          fontWeight: activeMenu === "Projects" ? "bold" : "500",
+        }}
       >
         Classes
       </span>
       {userRole !== "guest" && userRole !== "user" && (
         <span
-          onClick={() => { setActiveMenu("ClassRoutine"); setIsDrawerOpen(false); }}
-          style={{ color: activeMenu === "ClassRoutine" ? "#FE5D37" : "#555", cursor: "pointer", fontWeight: activeMenu === "ClassRoutine" ? "bold" : "500" }}
+          onClick={() => {
+            setActiveMenu("ClassRoutine");
+            setIsDrawerOpen(false);
+          }}
+          style={{
+            color: activeMenu === "ClassRoutine" ? "#FE5D37" : "#555",
+            cursor: "pointer",
+            fontWeight: activeMenu === "ClassRoutine" ? "bold" : "500",
+          }}
         >
           Class Routine
         </span>
       )}
       <span
-        onClick={() => { setActiveMenu("Result"); setIsDrawerOpen(false); }}
-        style={{ color: activeMenu === "Result" ? "#FE5D37" : "#555", cursor: "pointer", fontWeight: activeMenu === "Result" ? "bold" : "500" }}
+        onClick={() => {
+          setActiveMenu("Result");
+          setIsDrawerOpen(false);
+        }}
+        style={{
+          color: activeMenu === "Result" ? "#FE5D37" : "#555",
+          cursor: "pointer",
+          fontWeight: activeMenu === "Result" ? "bold" : "500",
+        }}
       >
         Result
       </span>
       <span
-        onClick={() => { setActiveMenu("Admission"); setIsDrawerOpen(false); }}
-        style={{ color: activeMenu === "Admission" ? "#FE5D37" : "#555", cursor: "pointer", fontWeight: activeMenu === "Admission" ? "bold" : "500" }}
+        onClick={() => {
+          setActiveMenu("Admission");
+          setIsDrawerOpen(false);
+        }}
+        style={{
+          color: activeMenu === "Admission" ? "#FE5D37" : "#555",
+          cursor: "pointer",
+          fontWeight: activeMenu === "Admission" ? "bold" : "500",
+        }}
       >
         Admission
       </span>
       <span
-        onClick={() => { setActiveMenu("ContactUs"); setIsDrawerOpen(false); }}
-        style={{ color: activeMenu === "ContactUs" ? "#FE5D37" : "#555", cursor: "pointer", fontWeight: activeMenu === "ContactUs" ? "bold" : "500" }}
+        onClick={() => {
+          setActiveMenu("ContactUs");
+          setIsDrawerOpen(false);
+        }}
+        style={{
+          color: activeMenu === "ContactUs" ? "#FE5D37" : "#555",
+          cursor: "pointer",
+          fontWeight: activeMenu === "ContactUs" ? "bold" : "500",
+        }}
       >
         Contact Us
       </span>
@@ -90,22 +139,59 @@ export default function Dashboard() {
 
   const navActionsList = (
     <>
-      <button
-        onClick={() => { navigate("/teachers"); setIsDrawerOpen(false); }}
-        style={{ background: "#FE5D37", color: "white", border: "none", padding: "10px 20px", borderRadius: "30px", fontWeight: "bold", cursor: "pointer" }}
-      >
-        Teachers
-      </button>
-      <button
-        onClick={() => { navigate("/profile"); setIsDrawerOpen(false); }}
-        style={{ background: "#3b82f6", color: "white", border: "none", padding: "10px 20px", borderRadius: "30px", fontWeight: "bold", cursor: "pointer" }}
-      >
-        My Profile
-      </button>
+      {userRole !== "user" && userRole !== "guest" && (
+        <>
+          <button
+            onClick={() => {
+              navigate("/teachers");
+              setIsDrawerOpen(false);
+            }}
+            style={{
+              background: "#FE5D37",
+              color: "white",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "30px",
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}
+          >
+            Teachers
+          </button>
+          <button
+            onClick={() => {
+              navigate("/profile");
+              setIsDrawerOpen(false);
+            }}
+            style={{
+              background: "#3b82f6",
+              color: "white",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "30px",
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}
+          >
+            My Profile
+          </button>
+        </>
+      )}
       {userRole === "admin" && (
         <button
-          onClick={() => { navigate("/"); setIsDrawerOpen(false); }}
-          style={{ background: "#103741", color: "white", border: "none", padding: "10px 25px", borderRadius: "30px", fontWeight: "bold", cursor: "pointer" }}
+          onClick={() => {
+            navigate("/");
+            setIsDrawerOpen(false);
+          }}
+          style={{
+            background: "#103741",
+            color: "white",
+            border: "none",
+            padding: "10px 25px",
+            borderRadius: "30px",
+            fontWeight: "bold",
+            cursor: "pointer",
+          }}
         >
           + Create Teacher Auth
         </button>
@@ -116,7 +202,15 @@ export default function Dashboard() {
           setIsDrawerOpen(false);
           navigate("/");
         }}
-        style={{ background: "#dc3545", color: "white", border: "none", padding: "10px 25px", borderRadius: "30px", fontWeight: "bold", cursor: "pointer" }}
+        style={{
+          background: "#dc3545",
+          color: "white",
+          border: "none",
+          padding: "10px 25px",
+          borderRadius: "30px",
+          fontWeight: "bold",
+          cursor: "pointer",
+        }}
       >
         Logout
       </button>
@@ -263,38 +357,36 @@ export default function Dashboard() {
 
         {/* টপ নেভিগেশন */}
         <div className="top-nav-wrapper">
-          <button className="hamburger-btn" onClick={() => setIsDrawerOpen(true)}>
+          <button
+            className="hamburger-btn"
+            onClick={() => setIsDrawerOpen(true)}
+          >
             ☰
           </button>
 
-          <div className="nav-links-container">
-            {navLinksList}
-          </div>
+          <div className="nav-links-container">{navLinksList}</div>
 
-          <div className="nav-actions-container">
-            {navActionsList}
-          </div>
+          <div className="nav-actions-container">{navActionsList}</div>
         </div>
 
         {/* 🟢 Drawer Overlay */}
-        <div 
-          className={`drawer-overlay ${isDrawerOpen ? "open" : ""}`} 
+        <div
+          className={`drawer-overlay ${isDrawerOpen ? "open" : ""}`}
           onClick={() => setIsDrawerOpen(false)}
         ></div>
 
         {/* 🟢 Drawer Menu */}
         <div className={`drawer ${isDrawerOpen ? "open" : ""}`}>
-          <button className="drawer-close-btn" onClick={() => setIsDrawerOpen(false)}>
+          <button
+            className="drawer-close-btn"
+            onClick={() => setIsDrawerOpen(false)}
+          >
             ✕
           </button>
-          
-          <div className="drawer-links-container">
-            {navLinksList}
-          </div>
-          
-          <div className="drawer-actions-container">
-            {navActionsList}
-          </div>
+
+          <div className="drawer-links-container">{navLinksList}</div>
+
+          <div className="drawer-actions-container">{navActionsList}</div>
         </div>
 
         {/* 🟢 ৩. ডাইনামিক কন্টেন্ট এরিয়া */}
@@ -304,13 +396,15 @@ export default function Dashboard() {
             <>
               {/* 🟢 হিরো সেকশন */}
               <div
+                className="hero-section-container"
                 style={{
                   display: "flex",
                   padding: "100px 40px",
                   alignItems: "center",
-                  backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.70), rgba(255, 255, 255, 0.70)), url(${campusBg})`,
+                  // ইমেজটিকে কভার করতে cover এবং পজিশন সেন্টার ব্যবহার করুন
+                  backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.4)), url(${campusBg})`,
                   backgroundSize: "cover",
-                  backgroundPosition: "center",
+                  backgroundPosition: "center center",
                   backgroundRepeat: "no-repeat",
                   minHeight: "500px",
                   boxSizing: "border-box",
@@ -319,8 +413,12 @@ export default function Dashboard() {
                 }}
               >
                 {/* বাম পাশ: টেক্সট কন্টেন্ট */}
-                <div style={{ flex: 1.2, maxWidth: "600px" }}>
+                <div
+                  style={{ flex: 1.2, maxWidth: "600px" }}
+                  className="hero-text-content"
+                >
                   <h1
+                    className="hero-title"
                     style={{
                       fontSize: "56px",
                       color: "#103741",
@@ -331,6 +429,7 @@ export default function Dashboard() {
                     The Best Kindergarten School For Your Child
                   </h1>
                   <p
+                    className="hero-desc"
                     style={{
                       color: "#333",
                       fontSize: "18px",
@@ -341,7 +440,9 @@ export default function Dashboard() {
                     Vero elitr justo clita lorem. Rebum gubergren ea est ipsum
                     diam lorem erat.
                   </p>
-                  <div style={{ display: "flex", gap: "15px" }}>
+                  <div
+                    style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}
+                  >
                     <button
                       onClick={() => setActiveMenu("AboutUs")}
                       style={{
@@ -375,6 +476,7 @@ export default function Dashboard() {
 
                 {/* 🟢 ডান পাশ: রি-অ্যাড করা এবং ছোট সাইজের গোল ছবি */}
                 <div
+                  className="hero-image-content"
                   style={{
                     flex: 1,
                     display: "flex",
@@ -383,6 +485,7 @@ export default function Dashboard() {
                   }}
                 >
                   <div
+                    className="hero-image-wrapper"
                     style={{
                       width: "450px",
                       height: "450px",
@@ -719,6 +822,7 @@ export default function Dashboard() {
               display: "flex",
               justifyContent: "space-between",
               flexWrap: "wrap",
+              gap: "30px",
             }}
           >
             <div>
@@ -825,4 +929,3 @@ const infoCardStyle = {
 const thStyle = { padding: "12px" };
 const tdStyle = { padding: "12px" };
 const trStyle = { borderBottom: "1px solid #eee" };
-;

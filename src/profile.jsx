@@ -5,6 +5,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { db, auth } from "./firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import "./profile.css"; // The new colorful CSS
 
 export default function Profile() {
   const dispatch = useDispatch();
@@ -127,112 +128,151 @@ export default function Profile() {
     }
   };
 
-  const inputStyle = {
-    padding: "12px",
-    borderRadius: "8px",
-    border: "1px solid #ddd",
-    width: "100%",
-    maxWidth: "400px",
-    fontSize: "16px",
-    backgroundColor: isViewOnly ? "#f5f5f5" : "white",
-    color: isViewOnly ? "#555" : "black",
-  };
-
-  if (loading) return <div style={{ padding: "40px", textAlign: "center" }}>Loading profile...</div>;
+  if (loading) {
+    return (
+      <div className="profile-page-container" style={{ color: 'white', fontSize: '20px' }}>
+        Loading profile...
+      </div>
+    );
+  }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "40px", gap: "20px", background: "#f9f9f9", minHeight: "100vh" }}>
-      <div style={{ width: "100%", maxWidth: "600px", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-        <h2 style={{ margin: 0, color: "#103741" }}>{isViewOnly ? "Teacher Profile" : "Profile Setup"}</h2>
-        <button 
-          onClick={() => navigate(-1)}
-          style={{ background: "#FE5D37", color: "white", padding: "8px 15px", border: "none", borderRadius: "5px", cursor: "pointer" }}
-        >
-          Back
-        </button>
-      </div>
-
-      {preview ? (
-        <img
-          src={preview}
-          alt="Preview"
-          style={{ width: "120px", height: "120px", borderRadius: "50%", objectFit: "cover", boxShadow: "0 4px 10px rgba(0,0,0,0.1)" }}
-        />
-      ) : (
-        <div style={{ width: "120px", height: "120px", borderRadius: "50%", background: "#e0e0e0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "50px", boxShadow: "0 4px 10px rgba(0,0,0,0.1)" }}>
-          👤
+    <div className="profile-page-container">
+      <div className="profile-card">
+        
+        {/* Cover Header */}
+        <div className="profile-header">
+          <h2 className="header-title">{isViewOnly ? "Teacher Profile" : "Edit Profile"}</h2>
+          <button onClick={() => navigate(-1)} className="back-btn">
+            ← Back
+          </button>
         </div>
-      )}
 
-      {!isViewOnly && (
-        <div style={{ width: "100%", maxWidth: "400px" }}>
-          <label style={{ fontSize: "14px", color: "#666", marginBottom: "5px", display: "block" }}>Upload Profile Picture:</label>
-          <input type="file" accept="image/*" onChange={handleImage} style={inputStyle} />
+        {/* Floating Avatar */}
+        <div className="profile-avatar-section">
+          <div className="avatar-wrapper">
+            {preview ? (
+              <img src={preview} alt="Preview" className="avatar-image" />
+            ) : (
+              <div className="avatar-placeholder">👤</div>
+            )}
+            
+            {!isViewOnly && (
+              <>
+                <div className="avatar-upload-btn">Upload Photo</div>
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={handleImage} 
+                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
+                />
+              </>
+            )}
+          </div>
         </div>
-      )}
 
-      <div style={{ width: "100%", maxWidth: "400px" }}>
-        <label style={{ fontSize: "14px", color: "#666", marginBottom: "5px", display: "block" }}>Name:</label>
-        <input type="text" placeholder="Teacher Name" value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} readOnly={isViewOnly} />
-      </div>
+        {/* Input Fields */}
+        <div className="profile-content">
+          
+          <div className="input-group">
+            <label><span className="icon">📝</span> Full Name</label>
+            <input 
+              type="text" 
+              placeholder="e.g. John Doe" 
+              value={name} 
+              onChange={(e) => setName(e.target.value)} 
+              className="profile-input" 
+              readOnly={isViewOnly} 
+            />
+          </div>
 
-      <div style={{ width: "100%", maxWidth: "400px" }}>
-        <label style={{ fontSize: "14px", color: "#666", marginBottom: "5px", display: "block" }}>Mobile:</label>
-        <input type="text" placeholder="Mobile Number" value={mobile} onChange={(e) => setMobile(e.target.value)} style={inputStyle} readOnly={isViewOnly} />
-      </div>
+          <div className="input-group">
+            <label><span className="icon">📱</span> Mobile Number</label>
+            <input 
+              type="text" 
+              placeholder="e.g. +880 1XXX-XXXXXX" 
+              value={mobile} 
+              onChange={(e) => setMobile(e.target.value)} 
+              className="profile-input" 
+              readOnly={isViewOnly} 
+            />
+          </div>
 
-      <div style={{ width: "100%", maxWidth: "400px" }}>
-        <label style={{ fontSize: "14px", color: "#666", marginBottom: "5px", display: "block" }}>Email:</label>
-        <input type="email" placeholder="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} style={inputStyle} readOnly={isViewOnly} />
-      </div>
+          <div className="input-group">
+            <label><span className="icon">✉️</span> Email Address</label>
+            <input 
+              type="email" 
+              placeholder="e.g. user@example.com" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              className="profile-input" 
+              readOnly={isViewOnly} 
+            />
+          </div>
 
-      <div style={{ width: "100%", maxWidth: "400px" }}>
-        <label style={{ fontSize: "14px", color: "#666", marginBottom: "5px", display: "block" }}>Certificate Link:</label>
-        <input type="url" placeholder="Must include https://" value={certificateLink} onChange={(e) => setCertificateLink(e.target.value)} style={inputStyle} readOnly={isViewOnly} />
-        {isViewOnly && certificateLink && (
-          <a href={certificateLink} target="_blank" rel="noopener noreferrer" style={{ display: "block", marginTop: "5px", color: "#3b82f6" }}>View Certificate</a>
-        )}
-      </div>
+          <div className="input-group">
+            <label><span className="icon">🔗</span> Certificate Link (Optional)</label>
+            <input 
+              type="url" 
+              placeholder="Must include https://" 
+              value={certificateLink} 
+              onChange={(e) => setCertificateLink(e.target.value)} 
+              className="profile-input" 
+              readOnly={isViewOnly} 
+            />
+            {isViewOnly && certificateLink && (
+              <a href={certificateLink} target="_blank" rel="noopener noreferrer" className="cert-link">
+                <span style={{ fontSize: '18px' }}>📄</span> View Certificate Online
+              </a>
+            )}
+          </div>
 
-      {!isViewOnly && (
-        <div style={{ width: "100%", maxWidth: "400px" }}>
-          <label style={{ fontSize: "14px", color: "#666", marginBottom: "5px", display: "block" }}>Upload CV (PDF or Image under 1MB):</label>
-          <input type="file" accept=".pdf, image/*" onChange={handleCV} style={inputStyle} />
-        </div>
-      )}
-      
-      {isViewOnly && cvLink && (
-        <div style={{ width: "100%", maxWidth: "400px", padding: "10px", background: "white", borderRadius: "8px", border: "1px solid #ddd" }}>
-          <label style={{ fontSize: "14px", color: "#666", marginBottom: "10px", display: "block" }}>CV Document:</label>
-          {cvLink.startsWith("data:application/pdf") ? (
-            <a href={cvLink} download="CV.pdf" style={{ color: "#3b82f6", textDecoration: "none", fontWeight: "bold" }}>Download PDF CV</a>
+          {/* CV Upload / Preview Area */}
+          {!isViewOnly ? (
+            <div className="input-group" style={{ marginTop: '10px' }}>
+              <label><span className="icon">📎</span> Upload CV Document</label>
+              <div className="file-upload-wrapper">
+                <span style={{ color: '#888', fontSize: '14px', fontWeight: '500' }}>
+                  {cvLink ? "CV Selected (Click to change)" : "Click here to upload PDF or Image (Max 1MB)"}
+                </span>
+                <input 
+                  type="file" 
+                  accept=".pdf, image/*" 
+                  onChange={handleCV} 
+                  className="file-upload-input"
+                />
+              </div>
+            </div>
           ) : (
-            <img src={cvLink} alt="CV" style={{ width: "100%", borderRadius: "5px", border: "1px solid #eee" }} />
+            cvLink && (
+              <div className="input-group" style={{ marginTop: '10px' }}>
+                <label><span className="icon">📎</span> Attached CV</label>
+                <div className="cv-preview-box">
+                  {cvLink.startsWith("data:application/pdf") ? (
+                    <a href={cvLink} download="CV.pdf" className="cert-link" style={{ background: '#FFF5F3', color: '#FE5D37' }}>
+                      <span style={{ fontSize: '18px' }}>📥</span> Download PDF CV
+                    </a>
+                  ) : (
+                    <img src={cvLink} alt="CV" className="cv-image" />
+                  )}
+                </div>
+              </div>
+            )
           )}
-        </div>
-      )}
 
-      {!isViewOnly && (
-        <button
-          onClick={handleSave}
-          disabled={isSaving}
-          style={{
-            padding: "12px 30px",
-            background: "#3b82f6",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontSize: "16px",
-            opacity: isSaving ? 0.6 : 1,
-            marginTop: "20px",
-            width: "100%",
-            maxWidth: "400px"
-          }}
-        >
-          {isSaving ? "Saving..." : "Save Profile"}
-        </button>
-      )}
+          {/* Action Button */}
+          {!isViewOnly && (
+            <button
+              onClick={handleSave}
+              disabled={isSaving}
+              className="save-btn"
+            >
+              {isSaving ? "Saving..." : "Save Profile Details"}
+            </button>
+          )}
+
+        </div>
+      </div>
     </div>
   );
 }

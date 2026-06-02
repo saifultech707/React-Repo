@@ -46,6 +46,35 @@
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
+  .hero-section-container {
+    flex-direction: column !important;
+    padding: 50px 20px !important;
+    text-align: center;
+  }
+  
+  .hero-text-content {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-title {
+    font-size: 36px !important;
+  }
+  
+  .hero-desc {
+    font-size: 16px !important;
+  }
+
+  .hero-image-content {
+    justify-content: center !important;
+  }
+
+  .hero-image-wrapper {
+    width: 300px !important;
+    height: 300px !important;
+  }
+
   .top-nav-wrapper {
     padding: 15px 20px;
   }
