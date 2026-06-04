@@ -46,11 +46,7 @@ export default function Dashboard() {
           setActiveMenu("Dashboard");
           setIsDrawerOpen(false);
         }}
-        style={{
-          color: activeMenu === "Dashboard" ? "#FE5D37" : "#555",
-          cursor: "pointer",
-          fontWeight: activeMenu === "Dashboard" ? "bold" : "500",
-        }}
+        className={`nav-link ${activeMenu === "Dashboard" ? "active" : ""}`}
       >
         Home
       </span>
@@ -59,11 +55,7 @@ export default function Dashboard() {
           setActiveMenu("AboutUs");
           setIsDrawerOpen(false);
         }}
-        style={{
-          color: activeMenu === "AboutUs" ? "#FE5D37" : "#555",
-          cursor: "pointer",
-          fontWeight: activeMenu === "AboutUs" ? "bold" : "500",
-        }}
+        className={`nav-link ${activeMenu === "AboutUs" ? "active" : ""}`}
       >
         About Us
       </span>
@@ -72,11 +64,7 @@ export default function Dashboard() {
           setActiveMenu("Projects");
           setIsDrawerOpen(false);
         }}
-        style={{
-          color: activeMenu === "Projects" ? "#FE5D37" : "#555",
-          cursor: "pointer",
-          fontWeight: activeMenu === "Projects" ? "bold" : "500",
-        }}
+        className={`nav-link ${activeMenu === "Projects" ? "active" : ""}`}
       >
         Classes
       </span>
@@ -86,11 +74,7 @@ export default function Dashboard() {
             setActiveMenu("ClassRoutine");
             setIsDrawerOpen(false);
           }}
-          style={{
-            color: activeMenu === "ClassRoutine" ? "#FE5D37" : "#555",
-            cursor: "pointer",
-            fontWeight: activeMenu === "ClassRoutine" ? "bold" : "500",
-          }}
+          className={`nav-link ${activeMenu === "ClassRoutine" ? "active" : ""}`}
         >
           Class Routine
         </span>
@@ -100,11 +84,7 @@ export default function Dashboard() {
           setActiveMenu("Result");
           setIsDrawerOpen(false);
         }}
-        style={{
-          color: activeMenu === "Result" ? "#FE5D37" : "#555",
-          cursor: "pointer",
-          fontWeight: activeMenu === "Result" ? "bold" : "500",
-        }}
+        className={`nav-link ${activeMenu === "Result" ? "active" : ""}`}
       >
         Result
       </span>
@@ -113,11 +93,7 @@ export default function Dashboard() {
           setActiveMenu("Admission");
           setIsDrawerOpen(false);
         }}
-        style={{
-          color: activeMenu === "Admission" ? "#FE5D37" : "#555",
-          cursor: "pointer",
-          fontWeight: activeMenu === "Admission" ? "bold" : "500",
-        }}
+        className={`nav-link ${activeMenu === "Admission" ? "active" : ""}`}
       >
         Admission
       </span>
@@ -126,11 +102,7 @@ export default function Dashboard() {
           setActiveMenu("ContactUs");
           setIsDrawerOpen(false);
         }}
-        style={{
-          color: activeMenu === "ContactUs" ? "#FE5D37" : "#555",
-          cursor: "pointer",
-          fontWeight: activeMenu === "ContactUs" ? "bold" : "500",
-        }}
+        className={`nav-link ${activeMenu === "ContactUs" ? "active" : ""}`}
       >
         Contact Us
       </span>
@@ -142,6 +114,7 @@ export default function Dashboard() {
       {userRole !== "user" && userRole !== "guest" && (
         <>
           <button
+            className="btn-modern"
             onClick={() => {
               navigate("/teachers");
               setIsDrawerOpen(false);
@@ -150,15 +123,16 @@ export default function Dashboard() {
               background: "#FE5D37",
               color: "white",
               border: "none",
-              padding: "10px 20px",
+              padding: "10px 22px",
               borderRadius: "30px",
-              fontWeight: "bold",
+              fontWeight: "600",
               cursor: "pointer",
             }}
           >
             Teachers
           </button>
           <button
+            className="btn-modern"
             onClick={() => {
               navigate("/profile");
               setIsDrawerOpen(false);
@@ -167,9 +141,9 @@ export default function Dashboard() {
               background: "#3b82f6",
               color: "white",
               border: "none",
-              padding: "10px 20px",
+              padding: "10px 22px",
               borderRadius: "30px",
-              fontWeight: "bold",
+              fontWeight: "600",
               cursor: "pointer",
             }}
           >
@@ -179,6 +153,7 @@ export default function Dashboard() {
       )}
       {userRole === "admin" && (
         <button
+          className="btn-modern"
           onClick={() => {
             navigate("/");
             setIsDrawerOpen(false);
@@ -189,7 +164,7 @@ export default function Dashboard() {
             border: "none",
             padding: "10px 25px",
             borderRadius: "30px",
-            fontWeight: "bold",
+            fontWeight: "600",
             cursor: "pointer",
           }}
         >
@@ -197,18 +172,19 @@ export default function Dashboard() {
         </button>
       )}
       <button
+        className="btn-modern"
         onClick={() => {
           localStorage.removeItem("userRole");
           setIsDrawerOpen(false);
           navigate("/");
         }}
         style={{
-          background: "#dc3545",
+          background: "#ef4444",
           color: "white",
           border: "none",
           padding: "10px 25px",
           borderRadius: "30px",
-          fontWeight: "bold",
+          fontWeight: "600",
           cursor: "pointer",
         }}
       >
@@ -225,32 +201,29 @@ export default function Dashboard() {
         fontFamily: "'Poppins', sans-serif",
       }}
     >
-      {/* ================= মূল কন্টেন্ট ================= */}
       <div
         style={{
           flex: 1,
           overflowY: "auto",
-          background: "#fff",
+          background: "var(--bg-light)",
           display: "flex",
           flexDirection: "column",
         }}
       >
-        {/* 📢 ১. টপ হরাইজন্টাল অটো স্ক্রোলিং নোটিশ বার (Admin Edit Feature সহ) */}
+        {/* 📢 ১. টপ হরাইজন্টাল অটো স্ক্রোলিং নোটিশ বার */}
         <div
+          className="notice-bar"
           style={{
-            background: "#103741",
             color: "white",
-            padding: "8px 20px",
+            padding: "10px 20px",
             position: "relative",
             display: "flex",
             alignItems: "center",
-            borderBottom: "2px solid #FE5D37",
             zIndex: 101,
-            minHeight: "40px",
+            minHeight: "45px",
           }}
         >
           {isEditingNotice ? (
-            // 🟢 অ্যাডমিন যখন Edit বাটনে ক্লিক করবে তখন এই ইনপুট ফিল্ডটি আসবে
             <div
               style={{
                 display: "flex",
@@ -265,21 +238,24 @@ export default function Dashboard() {
                 onChange={(e) => setTempNotice(e.target.value)}
                 style={{
                   flex: 1,
-                  padding: "8px 12px",
-                  borderRadius: "5px",
+                  padding: "10px 15px",
+                  borderRadius: "8px",
                   border: "none",
                   outline: "none",
                   fontFamily: "inherit",
+                  fontSize: "14px",
+                  boxShadow: "inset 0 2px 4px rgba(0,0,0,0.1)",
                 }}
               />
               <button
                 onClick={saveNotice}
+                className="btn-modern"
                 style={{
                   background: "#10b981",
                   color: "white",
                   border: "none",
-                  padding: "8px 20px",
-                  borderRadius: "5px",
+                  padding: "10px 20px",
+                  borderRadius: "8px",
                   cursor: "pointer",
                   fontWeight: "bold",
                 }}
@@ -288,12 +264,13 @@ export default function Dashboard() {
               </button>
               <button
                 onClick={() => setIsEditingNotice(false)}
+                className="btn-modern"
                 style={{
                   background: "#ef4444",
                   color: "white",
                   border: "none",
-                  padding: "8px 15px",
-                  borderRadius: "5px",
+                  padding: "10px 15px",
+                  borderRadius: "8px",
                   cursor: "pointer",
                   fontWeight: "bold",
                 }}
@@ -302,7 +279,6 @@ export default function Dashboard() {
               </button>
             </div>
           ) : (
-            // 🟢 সাধারণ অবস্থায় স্ক্রোলিং নোটিশ দেখাবে
             <>
               <div
                 style={{
@@ -313,10 +289,7 @@ export default function Dashboard() {
                 }}
               >
                 <style>{`
-                  @keyframes scrollNotice {
-                    0% { transform: translateX(100%); }
-                    100% { transform: translateX(-100%); }
-                  }
+                  @keyframes scrollNotice { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
                 `}</style>
                 <div
                   style={{
@@ -324,28 +297,29 @@ export default function Dashboard() {
                     animation: "scrollNotice 25s linear infinite",
                     fontWeight: "500",
                     letterSpacing: "0.5px",
-                    fontSize: "14px",
+                    fontSize: "15px",
+                    textShadow: "0 1px 2px rgba(0,0,0,0.2)",
                   }}
                 >
                   {noticeText}
                 </div>
               </div>
-
-              {/* 🟢 শুধুমাত্র Admin লগইন করলেই এই এডিট বাটনটি দেখাবে */}
               {userRole === "admin" && (
                 <button
+                  className="btn-modern"
                   onClick={() => setIsEditingNotice(true)}
                   style={{
                     background: "#FE5D37",
                     color: "white",
                     border: "none",
-                    padding: "5px 15px",
+                    padding: "6px 18px",
                     borderRadius: "20px",
                     marginLeft: "20px",
                     cursor: "pointer",
-                    fontSize: "12px",
+                    fontSize: "13px",
                     fontWeight: "bold",
                     flexShrink: 0,
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
                   }}
                 >
                   ✏️ Edit Notice
@@ -363,9 +337,7 @@ export default function Dashboard() {
           >
             ☰
           </button>
-
           <div className="nav-links-container">{navLinksList}</div>
-
           <div className="nav-actions-container">{navActionsList}</div>
         </div>
 
@@ -383,15 +355,12 @@ export default function Dashboard() {
           >
             ✕
           </button>
-
           <div className="drawer-links-container">{navLinksList}</div>
-
           <div className="drawer-actions-container">{navActionsList}</div>
         </div>
 
         {/* 🟢 ৩. ডাইনামিক কন্টেন্ট এরিয়া */}
         <div style={{ flex: 1 }}>
-          {/* ================= প্রধান হোম ভিউ ================= */}
           {activeMenu === "Dashboard" && (
             <>
               {/* 🟢 হিরো সেকশন */}
@@ -399,31 +368,44 @@ export default function Dashboard() {
                 className="hero-section-container"
                 style={{
                   display: "flex",
-                  padding: "100px 40px",
+                  padding: "120px 60px",
                   alignItems: "center",
-                  // ইমেজটিকে কভার করতে cover এবং পজিশন সেন্টার ব্যবহার করুন
-                  backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.4)), url(${campusBg})`,
+                  backgroundImage: `linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.4) 100%), url(${campusBg})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center center",
-                  backgroundRepeat: "no-repeat",
-                  minHeight: "500px",
+                  backgroundAttachment: "fixed",
+                  minHeight: "650px",
                   boxSizing: "border-box",
-                  gap: "40px",
+                  gap: "50px",
                   width: "100%",
                 }}
               >
-                {/* বাম পাশ: টেক্সট কন্টেন্ট */}
                 <div
-                  style={{ flex: 1.2, maxWidth: "600px" }}
+                  style={{ flex: 1.2, maxWidth: "650px" }}
                   className="hero-text-content"
                 >
+                  <div
+                    style={{
+                      display: "inline-block",
+                      background: "rgba(232, 230, 236, 0.94)",
+                      color: "#FE5D37",
+                      padding: "8px 16px",
+                      borderRadius: "20px",
+                      fontWeight: "600",
+                      marginBottom: "20px",
+                      border: "1px solid rgba(254, 93, 55, 0.2)",
+                    }}
+                  >
+                    🚀 Welcome to Excellence
+                  </div>
                   <h1
                     className="hero-title"
                     style={{
-                      fontSize: "56px",
+                      fontSize: "64px",
                       color: "#103741",
-                      lineHeight: "1.2",
-                      marginBottom: "20px",
+                      lineHeight: "1.1",
+                      marginBottom: "25px",
+                      fontWeight: "700",
                     }}
                   >
                     The Best Kindergarten School For Your Child
@@ -431,42 +413,48 @@ export default function Dashboard() {
                   <p
                     className="hero-desc"
                     style={{
-                      color: "#333",
-                      fontSize: "18px",
-                      marginBottom: "30px",
-                      fontWeight: "500",
+                      color: "#444",
+                      fontSize: "20px",
+                      marginBottom: "40px",
+                      fontWeight: "400",
+                      lineHeight: "1.6",
                     }}
                   >
-                    Vero elitr justo clita lorem. Rebum gubergren ea est ipsum
-                    diam lorem erat.
+                    Nurturing young minds with a modern curriculum, world-class
+                    facilities, and a loving environment. Give your child the
+                    head start they deserve.
                   </p>
                   <div
-                    style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}
+                    style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}
                   >
                     <button
+                      className="btn-modern"
                       onClick={() => setActiveMenu("AboutUs")}
                       style={{
                         background: "#FE5D37",
                         color: "white",
-                        padding: "15px 35px",
+                        padding: "16px 40px",
                         borderRadius: "30px",
                         border: "none",
-                        fontWeight: "bold",
+                        fontWeight: "600",
                         cursor: "pointer",
+                        fontSize: "16px",
                       }}
                     >
                       Learn More
                     </button>
                     <button
+                      className="btn-modern"
                       onClick={() => setActiveMenu("Projects")}
                       style={{
                         background: "#103741",
                         color: "white",
-                        padding: "15px 35px",
+                        padding: "16px 40px",
                         borderRadius: "30px",
                         border: "none",
-                        fontWeight: "bold",
+                        fontWeight: "600",
                         cursor: "pointer",
+                        fontSize: "16px",
                       }}
                     >
                       Our Classes
@@ -474,31 +462,29 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* 🟢 ডান পাশ: রি-অ্যাড করা এবং ছোট সাইজের গোল ছবি */}
                 <div
                   className="hero-image-content"
                   style={{
                     flex: 1,
                     display: "flex",
-                    justifyContent: "flex-end",
+                    justifyContent: "center",
                     alignItems: "center",
                   }}
                 >
                   <div
                     className="hero-image-wrapper"
                     style={{
-                      width: "450px",
-                      height: "450px",
-                      background: "#eee",
+                      width: "480px",
+                      height: "480px",
                       borderRadius: "50%",
-                      display: "inline-block",
+                      display: "flex",
                       overflow: "hidden",
-                      boxShadow: "0 15px 35px rgba(16, 55, 65, 0.12)",
+                      boxShadow: "0 25px 50px -12px rgba(16, 55, 65, 0.3)",
                     }}
                   >
                     <img
                       src={studentLife}
-                      alt="Child"
+                      alt="Child Learning"
                       style={{
                         width: "100%",
                         height: "100%",
@@ -509,64 +495,83 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* ফ্যাসিলিটি সেকশন (SCALE-ON-HOVER ইফেক্টযুক্ত কার্ড) */}
+              {/* ফ্যাসিলিটি সেকশন */}
               <div
                 style={{
-                  padding: "60px 40px",
+                  padding: "80px 40px",
                   textAlign: "center",
-                  background: "#fff",
+                  background: "#f8fafc",
                 }}
               >
-                <h2
-                  style={{
-                    fontSize: "36px",
-                    color: "#103741",
-                    marginBottom: "40px",
-                  }}
-                >
-                  School Facilities
-                </h2>
+                <div style={{ marginBottom: "50px" }}>
+                  <h4
+                    style={{
+                      color: "#FE5D37",
+                      fontWeight: "600",
+                      letterSpacing: "1px",
+                      textTransform: "uppercase",
+                      margin: "0 0 10px 0",
+                    }}
+                  >
+                    Why Choose Us
+                  </h4>
+                  <h2
+                    style={{
+                      fontSize: "42px",
+                      color: "#103741",
+                      margin: 0,
+                      fontWeight: "700",
+                    }}
+                  >
+                    Our Premium Facilities
+                  </h2>
+                </div>
                 <div
                   style={{
                     display: "flex",
                     justifyContent: "center",
-                    gap: "25px",
+                    gap: "30px",
                     flexWrap: "wrap",
                   }}
                 >
                   <FacilityCard
                     icon="🚌"
                     title="Bus Service"
-                    color="#FFF5F3"
-                    textColor="#FE5D37"
+                    color="#fff"
+                    iconBg="#FFE5E0"
+                    iconColor="#FE5D37"
                     onClick={() => setActiveMenu("BusService")}
                   />
                   <FacilityCard
                     icon="⚽"
                     title="Playground"
-                    color="#F0F9F1"
-                    textColor="#198754"
+                    color="#fff"
+                    iconBg="#E6F4EA"
+                    iconColor="#198754"
                     onClick={() => setActiveMenu("Playground")}
                   />
                   <FacilityCard
                     icon="🍱"
                     title="Healthy Canteen"
-                    color="#FFF9EE"
-                    textColor="#FFC107"
+                    color="#fff"
+                    iconBg="#FFF4D6"
+                    iconColor="#FFC107"
                     onClick={() => setActiveMenu("Canteen")}
                   />
                   <FacilityCard
                     icon="🎨"
                     title="Creative Arts"
-                    color="#F1F8FF"
-                    textColor="#0D6EFD"
+                    color="#fff"
+                    iconBg="#E8F1FF"
+                    iconColor="#0D6EFD"
                     onClick={() => setActiveMenu("Arts")}
                   />
                   <FacilityCard
                     icon="🔬"
                     title="Study Center"
-                    color="#FFE0EB"
-                    textColor="#E91E63"
+                    color="#fff"
+                    iconBg="#FDE2EC"
+                    iconColor="#E91E63"
                     onClick={() => setActiveMenu("ScienceLab")}
                   />
                 </div>
@@ -576,49 +581,147 @@ export default function Dashboard() {
 
           {/* ================= অন্যান্য ফ্যাসিলিটি পেজগুলো ================= */}
           {activeMenu === "BusService" && (
-            <div style={facilityPageWrapper}>
+            <div className="sub-page-wrapper">
               <div style={facilityHeader}>
-                <h2>🚌 Transport & Bus Service Details</h2>
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "15px" }}
+                >
+                  <span
+                    style={{
+                      fontSize: "32px",
+                      background: "#FFE5E0",
+                      padding: "10px",
+                      borderRadius: "12px",
+                    }}
+                  >
+                    🚌
+                  </span>
+                  <h2 style={{ margin: 0, fontSize: "28px", color: "#103741" }}>
+                    Transport & Bus Service Details
+                  </h2>
+                </div>
                 <button
+                  className="btn-modern"
                   onClick={() => setActiveMenu("Dashboard")}
                   style={backBtnStyle}
                 >
                   ← Back to Home
                 </button>
               </div>
-              <p style={{ color: "#666" }}>
+              <p style={{ color: "#666", fontSize: "16px", lineHeight: "1.6" }}>
                 We provide safe and secure transport facilities for students
-                across the city.
+                across the city with real-time GPS tracking and dedicated
+                support staff on every route.
               </p>
               <div
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "15px",
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+                  gap: "20px",
                   marginTop: "30px",
                 }}
               >
                 <div style={infoCardStyle}>
-                  <strong>Route A (Main City):</strong> Driver: Aslam Uddin |
-                  Phone: 01711-XXXXXX | Time: 7:30 AM
+                  <h3 style={{ color: "#FE5D37", margin: "0 0 10px 0" }}>
+                    Route A (Main City)
+                  </h3>
+                  <p style={{ margin: "5px 0", color: "#555" }}>
+                    <strong>Driver:</strong> Aslam Uddin
+                  </p>
+                  <p style={{ margin: "5px 0", color: "#555" }}>
+                    <strong>Phone:</strong> 01711-XXXXXX
+                  </p>
+                  <div
+                    style={{
+                      marginTop: "15px",
+                      display: "inline-block",
+                      background: "#f0fdf4",
+                      color: "#166534",
+                      padding: "5px 12px",
+                      borderRadius: "20px",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Time: 7:30 AM
+                  </div>
                 </div>
                 <div style={infoCardStyle}>
-                  <strong>Route B (Suburbs):</strong> Driver: Milon Khan |
-                  Phone: 01822-XXXXXX | Time: 7:15 AM
+                  <h3 style={{ color: "#FE5D37", margin: "0 0 10px 0" }}>
+                    Route B (Suburbs)
+                  </h3>
+                  <p style={{ margin: "5px 0", color: "#555" }}>
+                    <strong>Driver:</strong> Milon Khan
+                  </p>
+                  <p style={{ margin: "5px 0", color: "#555" }}>
+                    <strong>Phone:</strong> 01822-XXXXXX
+                  </p>
+                  <div
+                    style={{
+                      marginTop: "15px",
+                      display: "inline-block",
+                      background: "#f0fdf4",
+                      color: "#166534",
+                      padding: "5px 12px",
+                      borderRadius: "20px",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Time: 7:15 AM
+                  </div>
                 </div>
                 <div style={infoCardStyle}>
-                  <strong>Route C (North Zone):</strong> Driver: Biplob Hossain
-                  | Phone: 01933-XXXXXX | Time: 7:40 AM
+                  <h3 style={{ color: "#FE5D37", margin: "0 0 10px 0" }}>
+                    Route C (North Zone)
+                  </h3>
+                  <p style={{ margin: "5px 0", color: "#555" }}>
+                    <strong>Driver:</strong> Biplob Hossain
+                  </p>
+                  <p style={{ margin: "5px 0", color: "#555" }}>
+                    <strong>Phone:</strong> 01933-XXXXXX
+                  </p>
+                  <div
+                    style={{
+                      marginTop: "15px",
+                      display: "inline-block",
+                      background: "#f0fdf4",
+                      color: "#166534",
+                      padding: "5px 12px",
+                      borderRadius: "20px",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Time: 7:40 AM
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
           {activeMenu === "Playground" && (
-            <div style={facilityPageWrapper}>
+            <div className="sub-page-wrapper">
               <div style={facilityHeader}>
-                <h2>⚽ Our School Playground & Sports Gallery</h2>
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "15px" }}
+                >
+                  <span
+                    style={{
+                      fontSize: "32px",
+                      background: "#E6F4EA",
+                      padding: "10px",
+                      borderRadius: "12px",
+                    }}
+                  >
+                    ⚽
+                  </span>
+                  <h2 style={{ margin: 0, fontSize: "28px", color: "#103741" }}>
+                    Our School Playground & Sports Gallery
+                  </h2>
+                </div>
                 <button
+                  className="btn-modern"
                   onClick={() => setActiveMenu("Dashboard")}
                   style={backBtnStyle}
                 >
@@ -630,7 +733,7 @@ export default function Dashboard() {
                   display: "grid",
                   gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
                   gap: "25px",
-                  marginTop: "20px",
+                  marginTop: "30px",
                 }}
               >
                 {[
@@ -645,21 +748,36 @@ export default function Dashboard() {
                       background: "white",
                       borderRadius: "16px",
                       overflow: "hidden",
-                      boxShadow: "0 8px 20px rgba(0,0,0,0.06)",
+                      boxShadow: "0 8px 25px rgba(0,0,0,0.06)",
                       border: "1px solid #eee",
+                      transition: "transform 0.3s",
+                      cursor: "pointer",
                     }}
+                    onMouseOver={(e) =>
+                      (e.currentTarget.style.transform = "translateY(-5px)")
+                    }
+                    onMouseOut={(e) =>
+                      (e.currentTarget.style.transform = "translateY(0)")
+                    }
                   >
                     <img
                       src={item.img}
                       alt={item.title}
                       style={{
                         width: "100%",
-                        height: "220px",
+                        height: "240px",
                         objectFit: "cover",
                       }}
                     />
-                    <div style={{ padding: "15px" }}>
-                      <h4 style={{ margin: 0, color: "#103741" }}>
+                    <div style={{ padding: "20px" }}>
+                      <h4
+                        style={{
+                          margin: 0,
+                          color: "#103741",
+                          fontSize: "16px",
+                          fontWeight: "600",
+                        }}
+                      >
                         {item.title}
                       </h4>
                     </div>
@@ -670,52 +788,106 @@ export default function Dashboard() {
           )}
 
           {activeMenu === "Canteen" && (
-            <div style={facilityPageWrapper}>
+            <div className="sub-page-wrapper">
               <div style={facilityHeader}>
-                <h2>🍱 Healthy Canteen Weekly Menu</h2>
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "15px" }}
+                >
+                  <span
+                    style={{
+                      fontSize: "32px",
+                      background: "#FFF4D6",
+                      padding: "10px",
+                      borderRadius: "12px",
+                    }}
+                  >
+                    🍱
+                  </span>
+                  <h2 style={{ margin: 0, fontSize: "28px", color: "#103741" }}>
+                    Healthy Canteen Weekly Menu
+                  </h2>
+                </div>
                 <button
+                  className="btn-modern"
                   onClick={() => setActiveMenu("Dashboard")}
                   style={backBtnStyle}
                 >
                   ← Back to Home
                 </button>
               </div>
-              <table
+              <div
                 style={{
-                  width: "100%",
-                  borderCollapse: "collapse",
+                  overflowX: "auto",
+                  borderRadius: "12px",
+                  boxShadow: "0 4px 15px rgba(0,0,0,0.05)",
                   marginTop: "25px",
-                  textAlign: "left",
                 }}
               >
-                <thead>
-                  <tr style={{ background: "#FFC107", color: "white" }}>
-                    <th style={thStyle}>Day</th>
-                    <th style={thStyle}>Breakfast</th>
-                    <th style={thStyle}>Lunch / Snacks</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr style={trStyle}>
-                    <td style={tdStyle}>Sunday</td>
-                    <td style={tdStyle}>Milk & Honey Oats</td>
-                    <td style={tdStyle}>Fresh Fruit Bowl & Egg Sandwich</td>
-                  </tr>
-                  <tr style={trStyle}>
-                    <td style={tdStyle}>Monday</td>
-                    <td style={tdStyle}>Homemade Roti & Vegetables</td>
-                    <td style={tdStyle}>Chicken Khichuri (Low Oil)</td>
-                  </tr>
-                </tbody>
-              </table>
+                <table
+                  style={{
+                    width: "100%",
+                    borderCollapse: "collapse",
+                    textAlign: "left",
+                    background: "#fff",
+                  }}
+                >
+                  <thead>
+                    <tr style={{ background: "#FFC107", color: "white" }}>
+                      <th style={thStyle}>Day</th>
+                      <th style={thStyle}>Breakfast (8:30 AM)</th>
+                      <th style={thStyle}>Lunch / Snacks (1:00 PM)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style={trStyle}>
+                      <td style={tdStyle}>
+                        <strong>Sunday</strong>
+                      </td>
+                      <td style={tdStyle}>Milk & Honey Oats with Nuts</td>
+                      <td style={tdStyle}>Fresh Fruit Bowl & Egg Sandwich</td>
+                    </tr>
+                    <tr style={trStyle}>
+                      <td style={tdStyle}>
+                        <strong>Monday</strong>
+                      </td>
+                      <td style={tdStyle}>Homemade Roti & Vegetables</td>
+                      <td style={tdStyle}>Chicken Khichuri (Low Oil)</td>
+                    </tr>
+                    <tr style={trStyle}>
+                      <td style={tdStyle}>
+                        <strong>Tuesday</strong>
+                      </td>
+                      <td style={tdStyle}>Pancakes with Maple Syrup</td>
+                      <td style={tdStyle}>Veggie Fried Rice & Chicken</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
 
           {activeMenu === "Arts" && (
-            <div style={facilityPageWrapper}>
+            <div className="sub-page-wrapper">
               <div style={facilityHeader}>
-                <h2>🎨 Creative Arts & Crafts Club</h2>
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "15px" }}
+                >
+                  <span
+                    style={{
+                      fontSize: "32px",
+                      background: "#E8F1FF",
+                      padding: "10px",
+                      borderRadius: "12px",
+                    }}
+                  >
+                    🎨
+                  </span>
+                  <h2 style={{ margin: 0, fontSize: "28px", color: "#103741" }}>
+                    Creative Arts & Crafts Club
+                  </h2>
+                </div>
                 <button
+                  className="btn-modern"
                   onClick={() => setActiveMenu("Dashboard")}
                   style={backBtnStyle}
                 >
@@ -725,7 +897,7 @@ export default function Dashboard() {
               <div
                 style={{
                   display: "flex",
-                  gap: "20px",
+                  gap: "25px",
                   flexWrap: "wrap",
                   marginTop: "30px",
                 }}
@@ -733,32 +905,99 @@ export default function Dashboard() {
                 <div
                   style={{
                     ...infoCardStyle,
-                    borderLeft: "5px solid #0D6EFD",
-                    flex: "1 1 250px",
+                    borderLeft: "6px solid #0D6EFD",
+                    flex: "1 1 300px",
                   }}
                 >
-                  <h3>Drawing Classes</h3>
-                  <p>Every Sunday & Tuesday at 11:00 AM</p>
+                  <h3
+                    style={{
+                      color: "#103741",
+                      fontSize: "20px",
+                      margin: "0 0 10px 0",
+                    }}
+                  >
+                    Drawing Classes
+                  </h3>
+                  <p style={{ color: "#666", lineHeight: "1.5" }}>
+                    Unlock the inner artist with our professional drawing
+                    sessions.
+                  </p>
+                  <div
+                    style={{
+                      marginTop: "15px",
+                      display: "inline-block",
+                      background: "#eff6ff",
+                      color: "#1d4ed8",
+                      padding: "8px 15px",
+                      borderRadius: "8px",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                    }}
+                  >
+                    🗓️ Every Sun & Tue at 11:00 AM
+                  </div>
                 </div>
                 <div
                   style={{
                     ...infoCardStyle,
-                    borderLeft: "5px solid #FE5D37",
-                    flex: "1 1 250px",
+                    borderLeft: "6px solid #FE5D37",
+                    flex: "1 1 300px",
                   }}
                 >
-                  <h3>Music & Rhythm</h3>
-                  <p>Every Monday & Wednesday at 12:30 PM</p>
+                  <h3
+                    style={{
+                      color: "#103741",
+                      fontSize: "20px",
+                      margin: "0 0 10px 0",
+                    }}
+                  >
+                    Music & Rhythm
+                  </h3>
+                  <p style={{ color: "#666", lineHeight: "1.5" }}>
+                    Vocal training and instrument practice for creative
+                    development.
+                  </p>
+                  <div
+                    style={{
+                      marginTop: "15px",
+                      display: "inline-block",
+                      background: "#fff1f2",
+                      color: "#e11d48",
+                      padding: "8px 15px",
+                      borderRadius: "8px",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                    }}
+                  >
+                    🗓️ Every Mon & Wed at 12:30 PM
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
           {activeMenu === "ScienceLab" && (
-            <div style={facilityPageWrapper}>
+            <div className="sub-page-wrapper">
               <div style={facilityHeader}>
-                <h2>🔬 Study Center & Science Lab</h2>
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "15px" }}
+                >
+                  <span
+                    style={{
+                      fontSize: "32px",
+                      background: "#FDE2EC",
+                      padding: "10px",
+                      borderRadius: "12px",
+                    }}
+                  >
+                    🔬
+                  </span>
+                  <h2 style={{ margin: 0, fontSize: "28px", color: "#103741" }}>
+                    Study Center & Science Lab
+                  </h2>
+                </div>
                 <button
+                  className="btn-modern"
                   onClick={() => setActiveMenu("Dashboard")}
                   style={backBtnStyle}
                 >
@@ -768,33 +1007,62 @@ export default function Dashboard() {
               <div
                 style={{
                   display: "flex",
-                  gap: "30px",
+                  gap: "40px",
                   alignItems: "center",
-                  marginBottom: "30px",
+                  flexWrap: "wrap",
+                  marginTop: "30px",
+                  background: "#f8fafc",
+                  padding: "30px",
+                  borderRadius: "16px",
+                  border: "1px solid #e2e8f0",
                 }}
               >
                 <img
                   src={scienceLab}
                   alt="Lab"
                   style={{
-                    width: "200px",
-                    height: "150px",
+                    width: "350px",
+                    height: "250px",
                     objectFit: "cover",
-                    borderRadius: "12px",
-                    boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
+                    borderRadius: "16px",
+                    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
                   }}
                 />
-                <p
-                  style={{
-                    color: "#666",
-                    flex: 1,
-                    fontSize: "16px",
-                    lineHeight: "1.6",
-                  }}
-                >
-                  We provide a modern Science Lab and a quiet Study Center to
-                  cultivate child curiosity and academic focus.
-                </p>
+                <div style={{ flex: 1, minWidth: "300px" }}>
+                  <h3
+                    style={{
+                      fontSize: "24px",
+                      color: "#103741",
+                      margin: "0 0 15px 0",
+                    }}
+                  >
+                    Igniting Curiosity
+                  </h3>
+                  <p
+                    style={{
+                      color: "#555",
+                      fontSize: "16px",
+                      lineHeight: "1.7",
+                      margin: "0 0 20px 0",
+                    }}
+                  >
+                    We provide a modern Science Lab and a quiet, resourceful
+                    Study Center. Our hands-on approach cultivates curiosity,
+                    enabling students to explore basic scientific concepts
+                    safely and interactively.
+                  </p>
+                  <ul
+                    style={{
+                      color: "#444",
+                      paddingLeft: "20px",
+                      lineHeight: "1.8",
+                    }}
+                  >
+                    <li>Fully equipped with child-safe apparatus.</li>
+                    <li>Guided experiments every Thursday.</li>
+                    <li>Extensive library section included.</li>
+                  </ul>
+                </div>
               </div>
             </div>
           )}
@@ -813,58 +1081,193 @@ export default function Dashboard() {
           style={{
             background: "#103741",
             color: "white",
-            padding: "40px",
+            padding: "60px 40px",
             marginTop: "auto",
           }}
         >
           <div
             style={{
+              maxWidth: "1200px",
+              margin: "0 auto",
               display: "flex",
               justifyContent: "space-between",
               flexWrap: "wrap",
-              gap: "30px",
+              gap: "40px",
             }}
           >
-            <div>
-              <h3>Get In Touch</h3>
-              <p>📍 Saidpur, Nilphamari, Bangladesh</p>
-              <p>📞 +880 1XXX XXXXXX</p>
-            </div>
-            <div>
-              <h3>Quick Links</h3>
-              <p
-                onClick={() => setActiveMenu("AboutUs")}
-                style={{ cursor: "pointer" }}
-              >
-                About Us
-              </p>
-              <p
-                onClick={() => setActiveMenu("ContactUs")}
-                style={{ cursor: "pointer" }}
-              >
-                Contact Us
-              </p>
-            </div>
-            <div>
-              <h3>Newsletter</h3>
-              <input
-                type="email"
-                placeholder="Your Email"
-                style={{ padding: "10px", borderRadius: "5px", border: "none" }}
-              />
-              <button
+            <div style={{ flex: "1 1 250px" }}>
+              <h3
                 style={{
-                  background: "#FE5D37",
-                  border: "none",
-                  padding: "10px",
-                  color: "white",
-                  marginLeft: "5px",
-                  borderRadius: "5px",
+                  fontSize: "28px",
+                  marginBottom: "20px",
+                  color: "#FE5D37",
+                  fontWeight: "700",
                 }}
               >
-                SignUp
-              </button>
+                EduCare.
+              </h3>
+              <p
+                style={{
+                  color: "#cbd5e1",
+                  lineHeight: "1.6",
+                  marginBottom: "15px",
+                }}
+              >
+                Providing the best foundation for your child's future with care
+                and modern education.
+              </p>
+              <p
+                style={{
+                  margin: "10px 0",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                }}
+              >
+                📍 Saidpur, Nilphamari, Bangladesh
+              </p>
+              <p
+                style={{
+                  margin: "10px 0",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                }}
+              >
+                📞 +880 1XXX XXXXXX
+              </p>
             </div>
+            <div style={{ flex: "1 1 200px" }}>
+              <h3
+                style={{
+                  fontSize: "20px",
+                  marginBottom: "20px",
+                  borderBottom: "2px solid #FE5D37",
+                  paddingBottom: "10px",
+                  display: "inline-block",
+                }}
+              >
+                Quick Links
+              </h3>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "12px",
+                }}
+              >
+                <span
+                  onClick={() => setActiveMenu("AboutUs")}
+                  style={{
+                    cursor: "pointer",
+                    color: "#cbd5e1",
+                    transition: "color 0.2s",
+                  }}
+                  onMouseOver={(e) => (e.target.style.color = "#fff")}
+                  onMouseOut={(e) => (e.target.style.color = "#cbd5e1")}
+                >
+                  → About Us
+                </span>
+                <span
+                  onClick={() => setActiveMenu("Projects")}
+                  style={{
+                    cursor: "pointer",
+                    color: "#cbd5e1",
+                    transition: "color 0.2s",
+                  }}
+                  onMouseOver={(e) => (e.target.style.color = "#fff")}
+                  onMouseOut={(e) => (e.target.style.color = "#cbd5e1")}
+                >
+                  → Classes
+                </span>
+                <span
+                  onClick={() => setActiveMenu("Admission")}
+                  style={{
+                    cursor: "pointer",
+                    color: "#cbd5e1",
+                    transition: "color 0.2s",
+                  }}
+                  onMouseOver={(e) => (e.target.style.color = "#fff")}
+                  onMouseOut={(e) => (e.target.style.color = "#cbd5e1")}
+                >
+                  → Admission
+                </span>
+                <span
+                  onClick={() => setActiveMenu("ContactUs")}
+                  style={{
+                    cursor: "pointer",
+                    color: "#cbd5e1",
+                    transition: "color 0.2s",
+                  }}
+                  onMouseOver={(e) => (e.target.style.color = "#fff")}
+                  onMouseOut={(e) => (e.target.style.color = "#cbd5e1")}
+                >
+                  → Contact Us
+                </span>
+              </div>
+            </div>
+            <div style={{ flex: "1 1 300px" }}>
+              <h3
+                style={{
+                  fontSize: "20px",
+                  marginBottom: "20px",
+                  borderBottom: "2px solid #FE5D37",
+                  paddingBottom: "10px",
+                  display: "inline-block",
+                }}
+              >
+                Newsletter
+              </h3>
+              <p style={{ color: "#cbd5e1", marginBottom: "20px" }}>
+                Subscribe to our newsletter to get latest updates and news.
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  background: "#fff",
+                  borderRadius: "8px",
+                  overflow: "hidden",
+                }}
+              >
+                <input
+                  type="email"
+                  placeholder="Your Email"
+                  style={{
+                    flex: 1,
+                    padding: "12px 15px",
+                    border: "none",
+                    outline: "none",
+                    fontSize: "14px",
+                  }}
+                />
+                <button
+                  className="btn-modern"
+                  style={{
+                    background: "#FE5D37",
+                    border: "none",
+                    padding: "0 25px",
+                    color: "white",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  SignUp
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            style={{
+              textAlign: "center",
+              marginTop: "50px",
+              paddingTop: "20px",
+              borderTop: "1px solid rgba(255,255,255,0.1)",
+              color: "#cbd5e1",
+              fontSize: "14px",
+            }}
+          >
+            © {new Date().getFullYear()} EduCare Kindergarten. All Rights
+            Reserved.
           </div>
         </div>
       </div>
@@ -873,59 +1276,65 @@ export default function Dashboard() {
 }
 
 // ================= স্টাইলস এবং সাব-কম্পোনেন্ট =================
-function FacilityCard({ icon, title, color, textColor, onClick }) {
+function FacilityCard({ icon, title, color, iconBg, iconColor, onClick }) {
   return (
     <div
+      className="facility-card-modern"
       onClick={onClick}
-      style={{
-        width: "180px",
-        padding: "30px 20px",
-        borderRadius: "50%",
-        background: color,
-        textAlign: "center",
-        border: `1px solid ${color}`,
-        cursor: "pointer",
-        transition: "transform 0.2s",
-      }}
-      onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.08)")}
-      onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
+      style={{ background: color }}
     >
-      <div style={{ fontSize: "40px", marginBottom: "10px" }}>{icon}</div>
-      <h4 style={{ color: textColor, margin: 0, fontWeight: "600" }}>
+      <div
+        className="icon-wrapper"
+        style={{ background: iconBg, color: iconColor }}
+      >
+        {icon}
+      </div>
+      <h4
+        style={{
+          color: "#103741",
+          margin: 0,
+          fontWeight: "600",
+          fontSize: "18px",
+        }}
+      >
         {title}
       </h4>
     </div>
   );
 }
 
-const facilityPageWrapper = {
-  padding: "40px",
-  maxWidth: "1100px",
-  margin: "0 auto",
-};
 const facilityHeader = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  marginBottom: "20px",
-  color: "#103741",
+  marginBottom: "30px",
+  borderBottom: "1px solid #eee",
+  paddingBottom: "20px",
 };
+
 const backBtnStyle = {
   background: "#FE5D37",
   color: "white",
   border: "none",
-  padding: "10px 20px",
-  borderRadius: "20px",
+  padding: "10px 22px",
+  borderRadius: "30px",
   cursor: "pointer",
-  fontWeight: "bold",
+  fontWeight: "600",
+  fontSize: "14px",
 };
+
 const infoCardStyle = {
-  background: "#f9f9f9",
-  padding: "20px",
-  borderRadius: "12px",
-  border: "1px solid #eee",
-  boxShadow: "0 2px 5px rgba(0,0,0,0.02)",
+  background: "#fff",
+  padding: "25px",
+  borderRadius: "16px",
+  border: "1px solid #f1f5f9",
+  boxShadow: "0 4px 15px rgba(0,0,0,0.03)",
+  transition: "transform 0.3s",
 };
-const thStyle = { padding: "12px" };
-const tdStyle = { padding: "12px" };
-const trStyle = { borderBottom: "1px solid #eee" };
+
+const thStyle = { padding: "16px", fontSize: "15px", fontWeight: "600" };
+const tdStyle = { padding: "16px", fontSize: "14px", color: "#444" };
+const trStyle = {
+  borderBottom: "1px solid #f1f5f9",
+  transition: "background 0.2s",
+};
