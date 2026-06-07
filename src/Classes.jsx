@@ -11,13 +11,13 @@ import {
 export default function Classes() {
   const [applications, setApplications] = useState([]);
   const [allClasses, setAllClasses] = useState({
-    1: [],
-    2: [],
-    3: [],
-    4: [],
-    5: [],
+    6: [],
+    7: [],
+    8: [],
+    9: [],
+    10: [],
   });
-  const [selectedClass, setSelectedClass] = useState(1);
+  const [selectedClass, setSelectedClass] = useState(6);
   const [selectedApp, setSelectedApp] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [showAdminPanel, setShowAdminPanel] = useState(false); // ✅ নতুন state
@@ -35,11 +35,11 @@ export default function Classes() {
 
   useEffect(() => {
     const unsub = onSnapshot(collection(db, "students"), (snapshot) => {
-      const newClasses = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+      const newClasses = { 6: [], 7: [], 8: [], 9: [], 10: [] };
       snapshot.docs.forEach((d) => {
         const st = { ...d.data(), id: d.id };
         const cls = parseInt(st.class);
-        if (cls >= 1 && cls <= 5) newClasses[cls].push(st);
+        if (cls >= 6 && cls <= 10) newClasses[cls].push(st);
       });
       setAllClasses(newClasses);
     });
@@ -51,7 +51,7 @@ export default function Classes() {
       const rawClass = app.applyClass || "";
       const digits = rawClass.replace(/\D/g, "");
       const classNumber = parseInt(digits);
-      if (!classNumber || classNumber < 1 || classNumber > 5) {
+      if (!classNumber || classNumber < 6 || classNumber > 10) {
         alert(`"${rawClass}" class এখনো support করা হয় না`);
         return;
       }
@@ -426,7 +426,7 @@ export default function Classes() {
           flexWrap: "wrap",
         }}
       >
-        {[1, 2, 3, 4, 5].map((cls) => (
+        {[6, 7, 8, 9, 10].map((cls) => (
           <button
             key={cls}
             onClick={() => setSelectedClass(cls)}

@@ -1,32 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { db } from "./firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
 
 export default function ClassRoutine() {
   const userRole = localStorage.getItem("userRole") || "guest";
   const isAdmin = userRole === "admin";
 
-  const initialData = [
-    { id: 1, name: "Ms. Fatema Khatun", subject: "English" },
-    { id: 2, name: "Ms. Sadia Islam", subject: "Science" },
-    { id: 3, name: "Ms. Rokeya Begum", subject: "Arts" },
-    { id: 4, name: "Ms. Tania Akter", subject: "Bangla" },
-    { id: 5, name: "Ms. Nasrin Jahan", subject: "Religion" },
-    { id: 6, name: "Mr. Rafiqul Islam", subject: "Mathematics" },
-    { id: 7, name: "Mr. Ahsan Habib", subject: "Physics" },
-    { id: 8, name: "Mr. Kamal Hossain", subject: "History" },
-    { id: 9, name: "Mr. Jashim Uddin", subject: "Geography" },
-    { id: 10, name: "Mr. Sumon Ahmed", subject: "Physical Edu" },
-  ];
-
   const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"];
   
   // Generating default routine
-  const generateDefaultRoutine = () => {
+  const generateDefaultRoutine = (teacherData) => {
     const routine = {};
-    initialData.forEach(t => {
+    teacherData.forEach(t => {
       routine[t.id] = days.map(day => ({
-        day, s1: "Class 5", s2: "Class 4", s3: "Class 3", s4: "Class 2", s5: "Class 1",
+        day, s1: "Class 10", s2: "Class 9", s3: "Class 8", s4: "Class 7", s5: "Class 6",
       }));
     });
     return routine;
@@ -46,15 +33,57 @@ export default function ClassRoutine() {
   useEffect(() => {
     const fetchRoutine = async () => {
       try {
+        // Fetch teachers from 'profiles' collection first
+        const profilesSnap = await getDocs(collection(db, "profiles"));
+        const fetchedTeachers = [];
+        profilesSnap.forEach((doc) => {
+          fetchedTeachers.push({ 
+            id: doc.id, 
+            name: doc.data().name || "Unnamed Teacher", 
+            subject: doc.data().subject || "General Subject" 
+          });
+        });
+
         const docSnap = await getDoc(doc(db, "classRoutine", "main"));
         if (docSnap.exists()) {
           const data = docSnap.data();
-          setTeachers(data.teachers || []);
-          setRoutines(data.routines || {});
+          const savedTeachers = data.teachers || [];
+          
+          const mergedTeachersMap = new Map();
+          
+          // Add saved teachers first to keep manual edits
+          savedTeachers.forEach(t => mergedTeachersMap.set(t.id, t));
+          
+          // Add or update with fetched profiles
+          fetchedTeachers.forEach(t => {
+            if (mergedTeachersMap.has(t.id)) {
+              // Update name but keep existing subject if it was manually set
+              const existing = mergedTeachersMap.get(t.id);
+              mergedTeachersMap.set(t.id, { ...existing, name: t.name });
+            } else {
+              mergedTeachersMap.set(t.id, t);
+            }
+          });
+
+          const finalTeachers = Array.from(mergedTeachersMap.values());
+          setTeachers(finalTeachers);
+
+          let currentRoutines = data.routines || {};
+          
+          // Ensure all teachers have a routine
+          finalTeachers.forEach(t => {
+            if (!currentRoutines[t.id]) {
+              currentRoutines[t.id] = days.map(day => ({
+                day, s1: "Class 10", s2: "Class 9", s3: "Class 8", s4: "Class 7", s5: "Class 6"
+              }));
+            }
+          });
+          
+          setRoutines(currentRoutines);
         } else {
-          // If no data exists in firebase, set to default
-          setTeachers(initialData);
-          setRoutines(generateDefaultRoutine());
+          // If no data exists in firebase, set to default using fetched profiles
+          setTeachers(fetchedTeachers);
+          setRoutines(generateDefaultRoutine(fetchedTeachers));
         }
       } catch (error) {
         console.error("Error fetching routine:", error);
@@ -93,7 +122,7 @@ export default function ClassRoutine() {
   };
 
   const handleAddTeacher = () => {
-    const newId = teachers.length > 0 ? Math.max(...teachers.map(t => t.id)) + 1 : 1;
+    const newId = "manual_" + Date.now();
     const newTeacher = { id: newId, name: "New Teacher Name", subject: "Subject" };
     
     setTeachers([newTeacher, ...teachers]); // Add to the top
@@ -101,12 +130,12 @@ export default function ClassRoutine() {
     setRoutines(prev => ({
       ...prev,
       [newId]: days.map(day => ({
-        day, s1: "", s2: "", s3: "", s4: "", s5: ""
+        day, s1: "Class 10", s2: "Class 9", s3: "Class 8", s4: "Class 7", s5: "Class 6"
       }))
     }));
   };
 
-  const handleRemoveTeacher = (id) => {
+  const handleRemoveTeacher = async (id) => {
     if (window.confirm("Are you sure you want to remove this teacher and their routine?")) {
       setTeachers(teachers.filter(t => t.id !== id));
       setRoutines(prev => {
@@ -114,6 +143,15 @@ export default function ClassRoutine() {
         delete newRoutines[id];
         return newRoutines;
       });
+      
+      // Also permanently delete from 'profiles' if it's a fetched teacher
+      if (id && !String(id).startsWith("manual_")) {
+        try {
+          await deleteDoc(doc(db, "profiles", id));
+        } catch (error) {
+          console.error("Error deleting teacher profile:", error);
+        }
+      }
     }
   };
 

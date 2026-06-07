@@ -26,7 +26,7 @@ export default function Dashboard() {
 
   // 🟢 নোটিশ এডিট করার জন্য State
   const [noticeText, setNoticeText] = useState(
-    "📢 আমাদের এখানে ২০২৬ শিক্ষাবর্ষে প্লে থেকে পঞ্চম শ্রেণী পর্যন্ত সীমিত আসনে ভর্তি চলছে! 🎒 আগামী সপ্তাহে স্কুল প্রাঙ্গণে বার্ষিক ক্রীড়া প্রতিযোগিতা অনুষ্ঠিত হতে যাচ্ছে। বিস্তারিত জানতে 'Contact Us' পেজে যোগাযোগ করুন। 📞",
+    "📢 আমাদের এখানে ২০২৬ শিক্ষাবর্ষে ষষ্ঠ থেকে দশম শ্রেণী পর্যন্ত সীমিত আসনে ভর্তি চলছে! 🎒 আগামী সপ্তাহে স্কুল প্রাঙ্গণে বার্ষিক ক্রীড়া প্রতিযোগিতা অনুষ্ঠিত হতে যাচ্ছে। বিস্তারিত জানতে 'Contact Us' পেজে যোগাযোগ করুন। 📞",
   );
   const [isEditingNotice, setIsEditingNotice] = useState(false);
   const [tempNotice, setTempNotice] = useState(noticeText);
@@ -113,24 +113,6 @@ export default function Dashboard() {
     <>
       {userRole !== "user" && userRole !== "guest" && (
         <>
-          <button
-            className="btn-modern"
-            onClick={() => {
-              navigate("/teachers");
-              setIsDrawerOpen(false);
-            }}
-            style={{
-              background: "#FE5D37",
-              color: "white",
-              border: "none",
-              padding: "10px 22px",
-              borderRadius: "30px",
-              fontWeight: "600",
-              cursor: "pointer",
-            }}
-          >
-            Teachers
-          </button>
           <button
             className="btn-modern"
             onClick={() => {
@@ -408,7 +390,7 @@ export default function Dashboard() {
                       fontWeight: "700",
                     }}
                   >
-                    The Best Kindergarten School For Your Child
+                    School Dashboard
                   </h1>
                   <p
                     className="hero-desc"
@@ -1104,7 +1086,7 @@ export default function Dashboard() {
                   fontWeight: "700",
                 }}
               >
-                EduCare.
+                School Dashboard
               </h3>
               <p
                 style={{
@@ -1266,7 +1248,7 @@ export default function Dashboard() {
               fontSize: "14px",
             }}
           >
-            © {new Date().getFullYear()} EduCare Kindergarten. All Rights
+            © {new Date().getFullYear()} School Dashboard. All Rights
             Reserved.
           </div>
         </div>
