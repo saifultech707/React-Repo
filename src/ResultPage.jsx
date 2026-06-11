@@ -340,11 +340,13 @@ export default function ResultPage() {
 
   return (
     <div
+      className="mobile-padding"
       style={{
         padding: "40px",
         maxWidth: "1200px",
         margin: "0 auto",
         fontFamily: "'Poppins', sans-serif",
+        boxSizing: "border-box",
       }}
     >
       <div
@@ -769,6 +771,7 @@ export default function ResultPage() {
           onClick={handleCancelClick}
         >
           <div
+            className="mobile-padding-inner"
             style={{
               background: "white",
               padding: "30px",
@@ -778,6 +781,7 @@ export default function ResultPage() {
               maxHeight: "90vh",
               overflowY: "auto",
               position: "relative",
+              boxSizing: "border-box",
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -1361,6 +1365,7 @@ export default function ResultPage() {
             onClick={() => setEditingTopStudent(null)}
           >
             <div
+            className="mobile-padding-inner"
               style={{
                 background: "white",
                 padding: "30px",
@@ -1370,6 +1375,7 @@ export default function ResultPage() {
                 maxHeight: "90vh",
                 overflowY: "auto",
                 position: "relative",
+              boxSizing: "border-box",
               }}
               onClick={(e) => e.stopPropagation()}
             >

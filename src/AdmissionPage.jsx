@@ -48,15 +48,18 @@ export default function AdmissionPage() {
 
   return (
     <div
+      className="mobile-padding"
       style={{
         padding: "40px 20px",
         background: "#f9fafb",
         minHeight: "80vh",
         display: "flex",
         justifyContent: "center",
+        boxSizing: "border-box",
       }}
     >
       <div
+        className="mobile-padding-inner"
         style={{
           background: "white",
           padding: "40px",
@@ -64,6 +67,7 @@ export default function AdmissionPage() {
           boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
           width: "100%",
           maxWidth: "800px",
+          boxSizing: "border-box",
         }}
       >
         <div style={{ textAlign: "center", marginBottom: "30px" }}>

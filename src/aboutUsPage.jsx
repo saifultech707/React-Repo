@@ -74,7 +74,7 @@ export default function AboutUsPage() {
             biology: 90,
             religion: 95,
             bgs: 82,
-            ict: 90
+            ict: 90,
           })),
         }));
         setSscData(defSSC);
@@ -192,7 +192,14 @@ export default function AboutUsPage() {
       return { cgpa: "N/A", totalMarks: student.marks };
     }
 
-    const commonSubjects = ["bangla", "english", "math", "religion", "bgs", "ict"];
+    const commonSubjects = [
+      "bangla",
+      "english",
+      "math",
+      "religion",
+      "bgs",
+      "ict",
+    ];
     const groupSubjects = {
       Science: ["physics", "chemistry", "biology"],
       Arts: ["history", "civics", "economics"],
@@ -200,7 +207,10 @@ export default function AboutUsPage() {
     };
 
     const group = student.group || "Science";
-    const studentSubjects = [...commonSubjects, ...(groupSubjects[group] || [])];
+    const studentSubjects = [
+      ...commonSubjects,
+      ...(groupSubjects[group] || []),
+    ];
 
     let totalGPA = 0;
     let failed = false;
@@ -226,6 +236,7 @@ export default function AboutUsPage() {
 
   return (
     <div
+      className="mobile-padding"
       style={{
         padding: "5%",
         background: "#fff",
@@ -491,90 +502,201 @@ export default function AboutUsPage() {
           >
             SSC Passing Data (Last 5 Years)
           </h2>
-            </div>
+        </div>
 
         <div>
           {sscData.map((yearData, i) => (
+            <div
+              key={i}
+              style={{
+                marginBottom: "40px",
+                border: "1px solid #eee",
+                borderRadius: "12px",
+                overflow: "hidden",
+                boxShadow: "0 4px 15px rgba(0,0,0,0.03)",
+              }}
+            >
               <div
-                key={i}
                 style={{
-                  marginBottom: "40px",
-                  border: "1px solid #eee",
-                  borderRadius: "12px",
-                  overflow: "hidden",
-                  boxShadow: "0 4px 15px rgba(0,0,0,0.03)",
+                  background: "#103741",
+                  color: "white",
+                  padding: "20px",
+                  display: "flex",
+                  justifyContent: "space-around",
+                  flexWrap: "wrap",
+                  gap: "15px",
+                  alignItems: "center",
                 }}
               >
-                <div
-                  style={{
-                    background: "#103741",
-                    color: "white",
-                    padding: "20px",
-                    display: "flex",
-                    justifyContent: "space-around",
-                    flexWrap: "wrap",
-                    gap: "15px",
-                    alignItems: "center"
-                  }}
-                >
-                  <h3 style={{ margin: 0, fontSize: "20px" }}>
-                    📅 Year: {yearData.year}
-                  </h3>
-                  <h3 style={{ margin: 0, color: "#FE5D37", fontSize: "20px" }}>
-                    📈 Passing Rate: {yearData.passingRate}
-                  </h3>
-                  <h3 style={{ margin: 0, fontSize: "20px" }}>
-                    🏆 GPA 5.00: {yearData.gpa5}
-                  </h3>
-                  {userRole === "admin" && editingSscIndex !== i && (
-                    <button
-                      onClick={() => {
-                        setTempSscData(JSON.parse(JSON.stringify(sscData)));
-                        setEditingSscIndex(i);
-                      }}
-                      style={adminBtnStyle}
-                    >
-                      ✏️ Edit Year
-                    </button>
-                  )}
-                </div>
-                
-                {editingSscIndex === i ? (
-                  <div style={{ padding: "20px", background: "#f8fafc" }}>
-                    <div style={{ display: "flex", gap: "15px", marginBottom: "15px", flexWrap: "wrap" }}>
-                      <div style={{ flex: "1 1 150px" }}>
-                        <label style={labelStyle}>Year</label>
-                        <input type="number" value={tempSscData[i].year} onChange={e => handleSscChange(i, 'year', e.target.value)} style={inputStyle} />
-                      </div>
-                      <div style={{ flex: "1 1 150px" }}>
-                        <label style={labelStyle}>Passing Rate</label>
-                        <input type="text" value={tempSscData[i].passingRate} onChange={e => handleSscChange(i, 'passingRate', e.target.value)} style={inputStyle} />
-                      </div>
-                      <div style={{ flex: "1 1 150px" }}>
-                        <label style={labelStyle}>GPA 5.00 Count</label>
-                        <input type="text" value={tempSscData[i].gpa5} onChange={e => handleSscChange(i, 'gpa5', e.target.value)} style={inputStyle} />
-                      </div>
+                <h3 style={{ margin: 0, fontSize: "20px" }}>
+                  📅 Year: {yearData.year}
+                </h3>
+                <h3 style={{ margin: 0, color: "#FE5D37", fontSize: "20px" }}>
+                  📈 Passing Rate: {yearData.passingRate}
+                </h3>
+                <h3 style={{ margin: 0, fontSize: "20px" }}>
+                  🏆 GPA 5.00: {yearData.gpa5}
+                </h3>
+                {userRole === "admin" && editingSscIndex !== i && (
+                  <button
+                    onClick={() => {
+                      setTempSscData(JSON.parse(JSON.stringify(sscData)));
+                      setEditingSscIndex(i);
+                    }}
+                    style={adminBtnStyle}
+                  >
+                    ✏️ Edit Year
+                  </button>
+                )}
+              </div>
+
+              {editingSscIndex === i ? (
+                <div style={{ padding: "20px", background: "#f8fafc" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "15px",
+                      marginBottom: "15px",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <div style={{ flex: "1 1 150px" }}>
+                      <label style={labelStyle}>Year</label>
+                      <input
+                        type="number"
+                        value={tempSscData[i].year}
+                        onChange={(e) =>
+                          handleSscChange(i, "year", e.target.value)
+                        }
+                        style={inputStyle}
+                      />
                     </div>
-                    <h4 style={{ color: "#103741", marginBottom: "10px" }}>Top 5 Students:</h4>
-                    <div style={{ display: "grid", gap: "10px" }}>
-                      {tempSscData[i].topStudents.map((student, studentIndex) => {
-                        const { cgpa, totalMarks } = calculateResult(student);
-                        return (
-                        <div key={studentIndex} style={{ display: "flex", gap: "10px", alignItems: "center", background: "#fff", padding: "10px", borderRadius: "8px", border: "1px solid #ddd", flexWrap: "wrap" }}>
-                          <span style={{ fontWeight: "bold", width: "30px", color: "#FE5D37" }}>#{studentIndex + 1}</span>
-                          <input type="text" placeholder="Name" value={student.name} onChange={e => handleTopStudentChange(i, studentIndex, 'name', e.target.value)} style={{ ...inputStyle, flex: 2 }} />
-                          <input type="text" placeholder="Marks" value={student.marks} onChange={e => handleTopStudentChange(i, studentIndex, 'marks', e.target.value)} style={{ ...inputStyle, flex: 1 }} />
-                          <div style={{ flex: 1, fontSize: "13px", color: "#555", textAlign: "center", minWidth: "120px" }}><strong>Marks:</strong> {totalMarks} <br/> <strong>CGPA:</strong> {cgpa}</div>
-                          <button onClick={() => setEditingTopStudent({ yearIndex: i, studentIndex })} style={{...adminBtnStyle, padding: "8px 12px", background: "#3b82f6"}}>📝 Edit Details</button>
-                        </div>
-                      )})}
+                    <div style={{ flex: "1 1 150px" }}>
+                      <label style={labelStyle}>Passing Rate</label>
+                      <input
+                        type="text"
+                        value={tempSscData[i].passingRate}
+                        onChange={(e) =>
+                          handleSscChange(i, "passingRate", e.target.value)
+                        }
+                        style={inputStyle}
+                      />
                     </div>
-                    <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
-                      <button onClick={saveSscData} style={saveBtnStyle}>Save</button>
-                      <button onClick={() => setEditingSscIndex(null)} style={cancelBtnStyle}>Cancel</button>
+                    <div style={{ flex: "1 1 150px" }}>
+                      <label style={labelStyle}>GPA 5.00 Count</label>
+                      <input
+                        type="text"
+                        value={tempSscData[i].gpa5}
+                        onChange={(e) =>
+                          handleSscChange(i, "gpa5", e.target.value)
+                        }
+                        style={inputStyle}
+                      />
                     </div>
                   </div>
-                ) : (
+                  <h4 style={{ color: "#103741", marginBottom: "10px" }}>
+                    Top 5 Students:
+                  </h4>
+                  <div style={{ display: "grid", gap: "10px" }}>
+                    {tempSscData[i].topStudents.map((student, studentIndex) => {
+                      const { cgpa, totalMarks } = calculateResult(student);
+                      return (
+                        <div
+                          key={studentIndex}
+                          style={{
+                            display: "flex",
+                            gap: "10px",
+                            alignItems: "center",
+                            background: "#fff",
+                            padding: "10px",
+                            borderRadius: "8px",
+                            border: "1px solid #ddd",
+                            flexWrap: "wrap",
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                              width: "30px",
+                              color: "#FE5D37",
+                            }}
+                          >
+                            #{studentIndex + 1}
+                          </span>
+                          <input
+                            type="text"
+                            placeholder="Name"
+                            value={student.name}
+                            onChange={(e) =>
+                              handleTopStudentChange(
+                                i,
+                                studentIndex,
+                                "name",
+                                e.target.value,
+                              )
+                            }
+                            style={{ ...inputStyle, flex: 2 }}
+                          />
+                          <input
+                            type="text"
+                            placeholder="Marks"
+                            value={student.marks}
+                            onChange={(e) =>
+                              handleTopStudentChange(
+                                i,
+                                studentIndex,
+                                "marks",
+                                e.target.value,
+                              )
+                            }
+                            style={{ ...inputStyle, flex: 1 }}
+                          />
+                          <div
+                            style={{
+                              flex: 1,
+                              fontSize: "13px",
+                              color: "#555",
+                              textAlign: "center",
+                              minWidth: "120px",
+                            }}
+                          >
+                            <strong>Marks:</strong> {totalMarks} <br />{" "}
+                            <strong>CGPA:</strong> {cgpa}
+                          </div>
+                          <button
+                            onClick={() =>
+                              setEditingTopStudent({
+                                yearIndex: i,
+                                studentIndex,
+                              })
+                            }
+                            style={{
+                              ...adminBtnStyle,
+                              padding: "8px 12px",
+                              background: "#3b82f6",
+                            }}
+                          >
+                            📝 Edit Details
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div
+                    style={{ display: "flex", gap: "10px", marginTop: "20px" }}
+                  >
+                    <button onClick={saveSscData} style={saveBtnStyle}>
+                      Save
+                    </button>
+                    <button
+                      onClick={() => setEditingSscIndex(null)}
+                      style={cancelBtnStyle}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
                 <div style={{ overflowX: "auto" }}>
                   <table
                     style={{
@@ -597,45 +719,60 @@ export default function AboutUsPage() {
                       {yearData.topStudents.map((s, idx) => {
                         const { cgpa, totalMarks } = calculateResult(s);
                         return (
-                        <tr
-                          key={idx}
-                          style={{
-                            borderBottom: "1px solid #eee",
-                            background: idx % 2 === 0 ? "white" : "#fafafa",
-                          }}
-                        >
-                          <td
+                          <tr
+                            key={idx}
                             style={{
-                              ...tdStyle,
-                              fontWeight: "bold",
-                              color: "#FE5D37",
+                              borderBottom: "1px solid #eee",
+                              background: idx % 2 === 0 ? "white" : "#fafafa",
                             }}
                           >
-                            #{idx + 1}
-                          </td>
-                          <td style={{ ...tdStyle, color: "#555" }}>{s.roll || "-"}</td>
-                          <td
-                            style={{
-                              ...tdStyle,
-                              fontWeight: "500",
-                              color: "#103741",
-                            }}
-                          >
-                            {s.name}
-                          </td>
-                          <td style={tdStyle}>{s.marks}</td>
-                          <td style={{ ...tdStyle, color: "#555" }}>{s.group || "Science"}</td>
-                          <td style={{ ...tdStyle, fontWeight: "bold" }}>{totalMarks}</td>
-                          <td style={{ ...tdStyle, fontWeight: "bold", color: "#10b981" }}>{cgpa}</td>
-                        </tr>
-                      )})}
+                            <td
+                              style={{
+                                ...tdStyle,
+                                fontWeight: "bold",
+                                color: "#FE5D37",
+                              }}
+                            >
+                              #{idx + 1}
+                            </td>
+                            <td style={{ ...tdStyle, color: "#555" }}>
+                              {s.roll || "-"}
+                            </td>
+                            <td
+                              style={{
+                                ...tdStyle,
+                                fontWeight: "500",
+                                color: "#103741",
+                              }}
+                            >
+                              {s.name}
+                            </td>
+                            <td style={tdStyle}>{s.marks}</td>
+                            <td style={{ ...tdStyle, color: "#555" }}>
+                              {s.group || "Science"}
+                            </td>
+                            <td style={{ ...tdStyle, fontWeight: "bold" }}>
+                              {totalMarks}
+                            </td>
+                            <td
+                              style={{
+                                ...tdStyle,
+                                fontWeight: "bold",
+                                color: "#10b981",
+                              }}
+                            >
+                              {cgpa}
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
-                )}
-              </div>
-            ))}
-          </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* ৬. Achievement Corner */}
@@ -810,7 +947,9 @@ export default function AboutUsPage() {
             {achievementsData.map((ach, index) => (
               <div
                 key={index}
-                onClick={() => { if (!isEditingAch) setSelectedAchievement(ach); }}
+                onClick={() => {
+                  if (!isEditingAch) setSelectedAchievement(ach);
+                }}
                 style={{
                   background: "#fff",
                   border: "1px solid #eee",
@@ -818,7 +957,7 @@ export default function AboutUsPage() {
                   overflow: "hidden",
                   boxShadow: "0 8px 25px rgba(0,0,0,0.06)",
                   transition: "transform 0.3s",
-                  cursor: isEditingAch ? "default" : "pointer"
+                  cursor: isEditingAch ? "default" : "pointer",
                 }}
               >
                 <img
@@ -871,35 +1010,183 @@ export default function AboutUsPage() {
 
       {/* Achievement Details Modal */}
       {selectedAchievement && (
-        <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }} onClick={() => setSelectedAchievement(null)}>
-          <div style={{ background: "white", padding: "30px", borderRadius: "15px", maxWidth: "500px", width: "90%", textAlign: "center", position: "relative" }} onClick={e => e.stopPropagation()}>
-            <button onClick={() => setSelectedAchievement(null)} style={{ position: "absolute", top: "15px", right: "15px", background: "#eee", border: "none", borderRadius: "50%", width: "30px", height: "30px", cursor: "pointer", fontWeight: "bold" }}>✕</button>
-            <img src={selectedAchievement.image || "https://i.pravatar.cc/300"} style={{ width: "150px", height: "150px", borderRadius: "50%", objectFit: "cover", marginBottom: "20px", border: "4px solid #FE5D37" }} alt={selectedAchievement.name} />
-            <h2 style={{ color: "#103741", margin: "0 0 10px 0" }}>{selectedAchievement.name}</h2>
-            <p style={{ color: "#FE5D37", fontWeight: "bold", fontSize: "18px", margin: "0 0 20px 0" }}>{selectedAchievement.profession}</p>
-            <div style={{ background: "#f8fafc", padding: "15px", borderRadius: "10px", textAlign: "left", fontSize: "16px", color: "#555" }}>
-              <p style={{ margin: "10px 0" }}>🎓 <strong>College / University:</strong> {selectedAchievement.college}</p>
-              <p style={{ margin: "10px 0" }}>💼 <strong>Job Title:</strong> {selectedAchievement.jobTitle}</p>
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0,0,0,0.6)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+          onClick={() => setSelectedAchievement(null)}
+        >
+          <div
+            style={{
+              background: "white",
+              padding: "30px",
+              borderRadius: "15px",
+              maxWidth: "500px",
+              width: "90%",
+              textAlign: "center",
+              position: "relative",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setSelectedAchievement(null)}
+              style={{
+                position: "absolute",
+                top: "15px",
+                right: "15px",
+                background: "#eee",
+                border: "none",
+                borderRadius: "50%",
+                width: "30px",
+                height: "30px",
+                cursor: "pointer",
+                fontWeight: "bold",
+              }}
+            >
+              ✕
+            </button>
+            <img
+              src={selectedAchievement.image || "https://i.pravatar.cc/300"}
+              style={{
+                width: "150px",
+                height: "150px",
+                borderRadius: "50%",
+                objectFit: "cover",
+                marginBottom: "20px",
+                border: "4px solid #FE5D37",
+              }}
+              alt={selectedAchievement.name}
+            />
+            <h2 style={{ color: "#103741", margin: "0 0 10px 0" }}>
+              {selectedAchievement.name}
+            </h2>
+            <p
+              style={{
+                color: "#FE5D37",
+                fontWeight: "bold",
+                fontSize: "18px",
+                margin: "0 0 20px 0",
+              }}
+            >
+              {selectedAchievement.profession}
+            </p>
+            <div
+              style={{
+                background: "#f8fafc",
+                padding: "15px",
+                borderRadius: "10px",
+                textAlign: "left",
+                fontSize: "16px",
+                color: "#555",
+              }}
+            >
+              <p style={{ margin: "10px 0" }}>
+                🎓 <strong>College / University:</strong>{" "}
+                {selectedAchievement.college}
+              </p>
+              <p style={{ margin: "10px 0" }}>
+                💼 <strong>Job Title:</strong> {selectedAchievement.jobTitle}
+              </p>
             </div>
-            <button onClick={() => setSelectedAchievement(null)} style={{ ...saveBtnStyle, marginTop: "20px", width: "100%" }}>Close</button>
+            <button
+              onClick={() => setSelectedAchievement(null)}
+              style={{ ...saveBtnStyle, marginTop: "20px", width: "100%" }}
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
 
       {/* Edit Top Student Details Modal */}
       {editingTopStudent && (
-        <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }} onClick={() => setEditingTopStudent(null)}>
-          <div style={{ background: "white", padding: "30px", borderRadius: "15px", maxWidth: "650px", width: "90%", maxHeight: "90vh", overflowY: "auto", position: "relative" }} onClick={e => e.stopPropagation()}>
-            <h2 style={{ color: "#103741", marginTop: 0 }}>Edit Student Details</h2>
-            
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px", marginBottom: "20px" }}>
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0,0,0,0.6)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+          onClick={() => setEditingTopStudent(null)}
+        >
+          <div
+            style={{
+              background: "white",
+              padding: "30px",
+              borderRadius: "15px",
+              maxWidth: "650px",
+              width: "90%",
+              maxHeight: "90vh",
+              overflowY: "auto",
+              position: "relative",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 style={{ color: "#103741", marginTop: 0 }}>
+              Edit Student Details
+            </h2>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: "15px",
+                marginBottom: "20px",
+              }}
+            >
               <div>
                 <label style={labelStyle}>Roll Number</label>
-                <input type="text" value={tempSscData[editingTopStudent.yearIndex].topStudents[editingTopStudent.studentIndex].roll || ""} onChange={e => handleTopStudentChange(editingTopStudent.yearIndex, editingTopStudent.studentIndex, 'roll', e.target.value)} style={inputStyle} />
+                <input
+                  type="text"
+                  value={
+                    tempSscData[editingTopStudent.yearIndex].topStudents[
+                      editingTopStudent.studentIndex
+                    ].roll || ""
+                  }
+                  onChange={(e) =>
+                    handleTopStudentChange(
+                      editingTopStudent.yearIndex,
+                      editingTopStudent.studentIndex,
+                      "roll",
+                      e.target.value,
+                    )
+                  }
+                  style={inputStyle}
+                />
               </div>
               <div>
                 <label style={labelStyle}>Group</label>
-                <select value={tempSscData[editingTopStudent.yearIndex].topStudents[editingTopStudent.studentIndex].group || "Science"} onChange={e => handleTopStudentChange(editingTopStudent.yearIndex, editingTopStudent.studentIndex, 'group', e.target.value)} style={inputStyle}>
+                <select
+                  value={
+                    tempSscData[editingTopStudent.yearIndex].topStudents[
+                      editingTopStudent.studentIndex
+                    ].group || "Science"
+                  }
+                  onChange={(e) =>
+                    handleTopStudentChange(
+                      editingTopStudent.yearIndex,
+                      editingTopStudent.studentIndex,
+                      "group",
+                      e.target.value,
+                    )
+                  }
+                  style={inputStyle}
+                >
                   <option value="Science">Science</option>
                   <option value="Arts">Arts</option>
                   <option value="Commerce">Commerce</option>
@@ -907,37 +1194,161 @@ export default function AboutUsPage() {
               </div>
             </div>
 
-            <h4 style={{ color: "#FE5D37", borderBottom: "2px solid #eee", paddingBottom: "5px", marginBottom: "15px" }}>Subject Marks</h4>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "15px" }}>
-              {["bangla", "english", "math", "religion", "bgs", "ict"].map(sub => (
-                <div key={sub}>
-                  <label style={{...labelStyle, textTransform: "capitalize"}}>{sub}</label>
-                  <input type="number" value={tempSscData[editingTopStudent.yearIndex].topStudents[editingTopStudent.studentIndex][sub] || ""} onChange={e => handleTopStudentChange(editingTopStudent.yearIndex, editingTopStudent.studentIndex, sub, e.target.value)} style={inputStyle} />
-                </div>
-              ))}
-              
+            <h4
+              style={{
+                color: "#FE5D37",
+                borderBottom: "2px solid #eee",
+                paddingBottom: "5px",
+                marginBottom: "15px",
+              }}
+            >
+              Subject Marks
+            </h4>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+                gap: "15px",
+              }}
+            >
+              {["bangla", "english", "math", "religion", "bgs", "ict"].map(
+                (sub) => (
+                  <div key={sub}>
+                    <label
+                      style={{ ...labelStyle, textTransform: "capitalize" }}
+                    >
+                      {sub}
+                    </label>
+                    <input
+                      type="number"
+                      value={
+                        tempSscData[editingTopStudent.yearIndex].topStudents[
+                          editingTopStudent.studentIndex
+                        ][sub] || ""
+                      }
+                      onChange={(e) =>
+                        handleTopStudentChange(
+                          editingTopStudent.yearIndex,
+                          editingTopStudent.studentIndex,
+                          sub,
+                          e.target.value,
+                        )
+                      }
+                      style={inputStyle}
+                    />
+                  </div>
+                ),
+              )}
+
               {/* Group specific subjects */}
-              {(tempSscData[editingTopStudent.yearIndex].topStudents[editingTopStudent.studentIndex].group === "Science" || !tempSscData[editingTopStudent.yearIndex].topStudents[editingTopStudent.studentIndex].group) && ["physics", "chemistry", "biology"].map(sub => (
-                <div key={sub}>
-                  <label style={{...labelStyle, textTransform: "capitalize"}}>{sub}</label>
-                  <input type="number" value={tempSscData[editingTopStudent.yearIndex].topStudents[editingTopStudent.studentIndex][sub] || ""} onChange={e => handleTopStudentChange(editingTopStudent.yearIndex, editingTopStudent.studentIndex, sub, e.target.value)} style={inputStyle} />
-                </div>
-              ))}
-              {tempSscData[editingTopStudent.yearIndex].topStudents[editingTopStudent.studentIndex].group === "Arts" && ["history", "civics", "economics"].map(sub => (
-                <div key={sub}>
-                  <label style={{...labelStyle, textTransform: "capitalize"}}>{sub}</label>
-                  <input type="number" value={tempSscData[editingTopStudent.yearIndex].topStudents[editingTopStudent.studentIndex][sub] || ""} onChange={e => handleTopStudentChange(editingTopStudent.yearIndex, editingTopStudent.studentIndex, sub, e.target.value)} style={inputStyle} />
-                </div>
-              ))}
-              {tempSscData[editingTopStudent.yearIndex].topStudents[editingTopStudent.studentIndex].group === "Commerce" && ["accounting", "finance", "businessEnt"].map(sub => (
-                <div key={sub}>
-                  <label style={{...labelStyle, textTransform: "capitalize", whiteSpace: "nowrap"}}>{sub === "businessEnt" ? "Bus. Ent." : sub}</label>
-                  <input type="number" value={tempSscData[editingTopStudent.yearIndex].topStudents[editingTopStudent.studentIndex][sub] || ""} onChange={e => handleTopStudentChange(editingTopStudent.yearIndex, editingTopStudent.studentIndex, sub, e.target.value)} style={inputStyle} />
-                </div>
-              ))}
+              {(tempSscData[editingTopStudent.yearIndex].topStudents[
+                editingTopStudent.studentIndex
+              ].group === "Science" ||
+                !tempSscData[editingTopStudent.yearIndex].topStudents[
+                  editingTopStudent.studentIndex
+                ].group) &&
+                ["physics", "chemistry", "biology"].map((sub) => (
+                  <div key={sub}>
+                    <label
+                      style={{ ...labelStyle, textTransform: "capitalize" }}
+                    >
+                      {sub}
+                    </label>
+                    <input
+                      type="number"
+                      value={
+                        tempSscData[editingTopStudent.yearIndex].topStudents[
+                          editingTopStudent.studentIndex
+                        ][sub] || ""
+                      }
+                      onChange={(e) =>
+                        handleTopStudentChange(
+                          editingTopStudent.yearIndex,
+                          editingTopStudent.studentIndex,
+                          sub,
+                          e.target.value,
+                        )
+                      }
+                      style={inputStyle}
+                    />
+                  </div>
+                ))}
+              {tempSscData[editingTopStudent.yearIndex].topStudents[
+                editingTopStudent.studentIndex
+              ].group === "Arts" &&
+                ["history", "civics", "economics"].map((sub) => (
+                  <div key={sub}>
+                    <label
+                      style={{ ...labelStyle, textTransform: "capitalize" }}
+                    >
+                      {sub}
+                    </label>
+                    <input
+                      type="number"
+                      value={
+                        tempSscData[editingTopStudent.yearIndex].topStudents[
+                          editingTopStudent.studentIndex
+                        ][sub] || ""
+                      }
+                      onChange={(e) =>
+                        handleTopStudentChange(
+                          editingTopStudent.yearIndex,
+                          editingTopStudent.studentIndex,
+                          sub,
+                          e.target.value,
+                        )
+                      }
+                      style={inputStyle}
+                    />
+                  </div>
+                ))}
+              {tempSscData[editingTopStudent.yearIndex].topStudents[
+                editingTopStudent.studentIndex
+              ].group === "Commerce" &&
+                ["accounting", "finance", "businessEnt"].map((sub) => (
+                  <div key={sub}>
+                    <label
+                      style={{
+                        ...labelStyle,
+                        textTransform: "capitalize",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {sub === "businessEnt" ? "Bus. Ent." : sub}
+                    </label>
+                    <input
+                      type="number"
+                      value={
+                        tempSscData[editingTopStudent.yearIndex].topStudents[
+                          editingTopStudent.studentIndex
+                        ][sub] || ""
+                      }
+                      onChange={(e) =>
+                        handleTopStudentChange(
+                          editingTopStudent.yearIndex,
+                          editingTopStudent.studentIndex,
+                          sub,
+                          e.target.value,
+                        )
+                      }
+                      style={inputStyle}
+                    />
+                  </div>
+                ))}
             </div>
 
-            <button onClick={() => setEditingTopStudent(null)} style={{ ...saveBtnStyle, marginTop: "25px", width: "100%", padding: "12px", fontSize: "16px" }}>Save & Close</button>
+            <button
+              onClick={() => setEditingTopStudent(null)}
+              style={{
+                ...saveBtnStyle,
+                marginTop: "25px",
+                width: "100%",
+                padding: "12px",
+                fontSize: "16px",
+              }}
+            >
+              Save & Close
+            </button>
           </div>
         </div>
       )}

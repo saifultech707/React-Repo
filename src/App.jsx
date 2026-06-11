@@ -14,6 +14,51 @@ import Teachers from "./Teachers";
 function App() {
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .mobile-padding {
+            padding-left: 15px !important;
+            padding-right: 15px !important;
+            padding-top: 20px !important;
+            padding-bottom: 20px !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+          }
+          .mobile-padding-inner {
+            padding: 15px !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+          }
+          h1 { font-size: 24px !important; line-height: 1.3 !important; }
+          h2 { font-size: 20px !important; line-height: 1.3 !important; }
+          h3 { font-size: 18px !important; line-height: 1.3 !important; }
+          h4 { font-size: 16px !important; }
+          
+          th, td {
+            padding: 8px 10px !important;
+            font-size: 13px !important;
+          }
+          
+          input, select, textarea {
+            font-size: 14px !important;
+          }
+          
+          .auth-container {
+            flex-direction: column !important;
+            height: auto !important;
+            width: 90% !important;
+            min-height: auto !important;
+          }
+          .sign-in-container {
+            padding: 30px 20px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+          }
+          .overlay-container {
+            display: none !important;
+          }
+        }
+      `}</style>
       <div
         style={{
           display: "flex",

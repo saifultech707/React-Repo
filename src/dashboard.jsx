@@ -467,7 +467,7 @@ export default function Dashboard() {
             <>
               {/* 🟢 হিরো সেকশন */}
               <div
-                className="hero-section-container"
+                className="hero-section-container mobile-padding"
                 style={{
                   display: "flex",
                   padding: "120px 60px",
@@ -623,7 +623,7 @@ export default function Dashboard() {
 
               {/* ফ্যাসিলিটি সেকশন */}
               <div
-                className="facility-section"
+                className="facility-section mobile-padding"
                 style={{
                   padding: "80px 40px",
                   textAlign: "center",
@@ -1206,7 +1206,7 @@ export default function Dashboard() {
 
         {/* ফুটার সেকশন */}
         <div
-          className="footer-section"
+          className="footer-section mobile-padding"
           style={{
             background: "#103741",
             color: "white",

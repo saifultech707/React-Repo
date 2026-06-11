@@ -279,11 +279,13 @@ export default function ClassRoutine() {
 
   return (
     <div
+      className="mobile-padding"
       style={{
         padding: "40px",
         maxWidth: "1200px",
         margin: "0 auto",
         fontFamily: "sans-serif",
+        boxSizing: "border-box",
       }}
     >
       <div
@@ -434,6 +436,7 @@ export default function ClassRoutine() {
             <div
               key={teacher.id}
               ref={(el) => (teacherRefs.current[teacher.id] = el)}
+              className="mobile-padding-inner"
               style={{
                 marginBottom: "50px",
                 background: "#fff",
@@ -442,6 +445,7 @@ export default function ClassRoutine() {
                 boxShadow: "0 8px 20px rgba(0,0,0,0.04)",
                 border: "1px solid #eee",
                 scrollMarginTop: "20px",
+                boxSizing: "border-box",
               }}
             >
               <div
@@ -746,6 +750,7 @@ export default function ClassRoutine() {
           {classesList.map((cls) => (
             <div
               key={cls}
+              className="mobile-padding-inner"
               style={{
                 marginBottom: "50px",
                 background: "#fff",
@@ -753,6 +758,7 @@ export default function ClassRoutine() {
                 padding: "25px",
                 boxShadow: "0 8px 20px rgba(0,0,0,0.04)",
                 border: "1px solid #eee",
+                boxSizing: "border-box",
               }}
             >
               <div
@@ -979,6 +985,7 @@ export default function ClassRoutine() {
           }}
         >
           <div
+            className="mobile-padding-inner"
             style={{
               background: "white",
               padding: "30px",
@@ -988,6 +995,7 @@ export default function ClassRoutine() {
               position: "relative",
               textAlign: "center",
               boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+              boxSizing: "border-box",
             }}
           >
             <button

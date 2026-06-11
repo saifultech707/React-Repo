@@ -175,6 +175,7 @@ export default function Classes() {
   if (showAdminPanel) {
     return (
       <div
+        className="mobile-padding"
         style={{
           width: "100%",
           minHeight: "100vh",
@@ -198,7 +199,16 @@ export default function Classes() {
           <span style={totalBadgeStyle}>{applications.length} Pending</span>
         </div>
 
-        <div style={{ padding: "24px", maxWidth: "900px", margin: "0 auto" }}>
+        <div
+          className="mobile-padding"
+          style={{
+            padding: "24px",
+            maxWidth: "900px",
+            margin: "0 auto",
+            boxSizing: "border-box",
+            width: "100%",
+          }}
+        >
           {applications.length === 0 && (
             <div style={emptyBoxStyle}>
               <p style={{ fontSize: "40px", margin: 0 }}>🎉</p>
@@ -296,7 +306,11 @@ export default function Classes() {
         {/* Application Details Modal */}
         {selectedApp && (
           <div style={modalBgStyle} onClick={() => setSelectedApp(null)}>
-            <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
+            <div
+              className="mobile-padding-inner"
+              style={{ ...modalStyle, boxSizing: "border-box" }}
+              onClick={(e) => e.stopPropagation()}
+            >
               <div style={modalHeaderStyle}>
                 <h3 style={{ margin: 0, color: "#103741" }}>
                   Application Details
@@ -393,7 +407,15 @@ export default function Classes() {
   // ✅ MAIN PAGE — Student List
   // =============================================
   return (
-    <div style={{ width: "100%", padding: "20px", fontFamily: "Poppins" }}>
+    <div
+      className="mobile-padding"
+      style={{
+        width: "100%",
+        padding: "20px",
+        fontFamily: "Poppins",
+        boxSizing: "border-box",
+      }}
+    >
       {/* Admin Button — শুধু admin দেখবে */}
       {userRole === "admin" && (
         <div
@@ -508,7 +530,12 @@ export default function Classes() {
       {selectedStudent && (
         <div style={modalBgStyle} onClick={() => setSelectedStudent(null)}>
           <div
-            style={{ ...modalStyle, maxWidth: "520px" }}
+            className="mobile-padding-inner"
+            style={{
+              ...modalStyle,
+              maxWidth: "520px",
+              boxSizing: "border-box",
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             <div style={modalHeaderStyle}>
