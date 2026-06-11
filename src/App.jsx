@@ -1,4 +1,4 @@
-import Dashboard from "./Dashboard";
+import Dashboard from "./dashboard";
 import { Route, Routes } from "react-router-dom";
 
 import Classes from "./Classes";

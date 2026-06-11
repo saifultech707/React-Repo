@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { db } from "./firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import ProjectsPage from "./Classes";
 import AboutUsPage from "./aboutUsPage";
 import ContactUsPage from "./contactus";
@@ -34,9 +36,33 @@ export default function Dashboard() {
   // 🟢 AuthForm থেকে সেভ করা রোলটি এখানে চেক করা হচ্ছে
   const userRole = localStorage.getItem("userRole") || "user";
 
-  const saveNotice = () => {
-    setNoticeText(tempNotice);
-    setIsEditingNotice(false);
+  useEffect(() => {
+    const fetchNotice = async () => {
+      try {
+        const docRef = doc(db, "settings", "notice");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists() && docSnap.data().text) {
+          const fetchedNotice = docSnap.data().text;
+          setNoticeText(fetchedNotice);
+          setTempNotice(fetchedNotice);
+        }
+      } catch (error) {
+        console.error("Error fetching notice:", error);
+      }
+    };
+    fetchNotice();
+  }, []);
+
+  const saveNotice = async () => {
+    try {
+      await setDoc(doc(db, "settings", "notice"), { text: tempNotice }, { merge: true });
+      setNoticeText(tempNotice);
+      setIsEditingNotice(false);
+      alert("Notice updated successfully!");
+    } catch (error) {
+      console.error("Error updating notice:", error);
+      alert("Failed to update notice.");
+    }
   };
 
   const navLinksList = (
@@ -59,16 +85,18 @@ export default function Dashboard() {
       >
         About Us
       </span>
-      <span
-        onClick={() => {
-          setActiveMenu("Projects");
-          setIsDrawerOpen(false);
-        }}
-        className={`nav-link ${activeMenu === "Projects" ? "active" : ""}`}
-      >
-        Classes
-      </span>
-      {userRole !== "guest" && userRole !== "user" && (
+      {userRole === "admin" && (
+        <span
+          onClick={() => {
+            setActiveMenu("Projects");
+            setIsDrawerOpen(false);
+          }}
+          className={`nav-link ${activeMenu === "Projects" ? "active" : ""}`}
+        >
+          Classes
+        </span>
+      )}
+      {userRole === "admin" && (
         <span
           onClick={() => {
             setActiveMenu("ClassRoutine");
@@ -330,7 +358,7 @@ export default function Dashboard() {
         ></div>
 
         {/* 🟢 Drawer Menu */}
-        <div className={`drawer ${isDrawerOpen ? "open" : ""}`}>
+        <div className={`drawer ${isDrawerOpen ? "open" : ""}`} style={{ overflowY: 'auto' }}>
           <button
             className="drawer-close-btn"
             onClick={() => setIsDrawerOpen(false)}
@@ -356,6 +384,7 @@ export default function Dashboard() {
                   backgroundSize: "cover",
                   backgroundPosition: "center center",
                   backgroundAttachment: "fixed",
+                  background: "linear-gradient(135deg, #e0f2fe 0%, #ffffff 50%, #fff7ed 100%)",
                   minHeight: "650px",
                   boxSizing: "border-box",
                   gap: "50px",
@@ -425,22 +454,24 @@ export default function Dashboard() {
                     >
                       Learn More
                     </button>
-                    <button
-                      className="btn-modern"
-                      onClick={() => setActiveMenu("Projects")}
-                      style={{
-                        background: "#103741",
-                        color: "white",
-                        padding: "16px 40px",
-                        borderRadius: "30px",
-                        border: "none",
-                        fontWeight: "600",
-                        cursor: "pointer",
-                        fontSize: "16px",
-                      }}
-                    >
-                      Our Classes
-                    </button>
+                    {userRole === "admin" && (
+                      <button
+                        className="btn-modern"
+                        onClick={() => setActiveMenu("Projects")}
+                        style={{
+                          background: "#103741",
+                          color: "white",
+                          padding: "16px 40px",
+                          borderRadius: "30px",
+                          border: "none",
+                          fontWeight: "600",
+                          cursor: "pointer",
+                          fontSize: "16px",
+                        }}
+                      >
+                        Our Classes
+                      </button>
+                    )}
                   </div>
                 </div>
 
@@ -1162,18 +1193,20 @@ export default function Dashboard() {
                 >
                   → About Us
                 </span>
-                <span
-                  onClick={() => setActiveMenu("Projects")}
-                  style={{
-                    cursor: "pointer",
-                    color: "#cbd5e1",
-                    transition: "color 0.2s",
-                  }}
-                  onMouseOver={(e) => (e.target.style.color = "#fff")}
-                  onMouseOut={(e) => (e.target.style.color = "#cbd5e1")}
-                >
-                  → Classes
-                </span>
+                {userRole === "admin" && (
+                  <span
+                    onClick={() => setActiveMenu("Projects")}
+                    style={{
+                      cursor: "pointer",
+                      color: "#cbd5e1",
+                      transition: "color 0.2s",
+                    }}
+                    onMouseOver={(e) => (e.target.style.color = "#fff")}
+                    onMouseOut={(e) => (e.target.style.color = "#cbd5e1")}
+                  >
+                    → Classes
+                  </span>
+                )}
                 <span
                   onClick={() => setActiveMenu("Admission")}
                   style={{
@@ -1292,25 +1325,25 @@ function HeroCarousel({ images }) {
       filter: "brightness(1)",
     },
     right1: {
-      transform: "translateX(140px) scale(0.8) rotateY(-15deg)",
+      transform: "translateX(160px) scale(0.85) rotateY(-15deg)",
       zIndex: 6,
       opacity: 0.85,
       filter: "brightness(0.75)",
     },
     right2: {
-      transform: "translateX(220px) scale(0.65) rotateY(-25deg)",
+      transform: "translateX(250px) scale(0.75) rotateY(-25deg)",
       zIndex: 3,
       opacity: 0.5,
       filter: "brightness(0.5)",
     },
     left1: {
-      transform: "translateX(-140px) scale(0.8) rotateY(15deg)",
+      transform: "translateX(-160px) scale(0.85) rotateY(15deg)",
       zIndex: 6,
       opacity: 0.85,
       filter: "brightness(0.75)",
     },
     left2: {
-      transform: "translateX(-220px) scale(0.65) rotateY(25deg)",
+      transform: "translateX(-250px) scale(0.75) rotateY(25deg)",
       zIndex: 3,
       opacity: 0.5,
       filter: "brightness(0.5)",
@@ -1324,7 +1357,7 @@ function HeroCarousel({ images }) {
   };
 
   return (
-    <div style={{ position: "relative", width: "420px", height: "340px", perspective: "1000px" }}>
+    <div style={{ position: "relative", width: "100%", maxWidth: "500px", height: "400px", perspective: "1000px" }}>
       {images.map((img, i) => {
         const pos = getPos(i);
         const s = cardStyles[pos];
@@ -1336,10 +1369,10 @@ function HeroCarousel({ images }) {
               position: "absolute",
               left: "50%",
               top: "50%",
-              marginLeft: "-90px",
-              marginTop: "-120px",
-              width: "180px",
-              height: "240px",
+              marginLeft: "-100px",
+              marginTop: "-140px",
+              width: "200px",
+              height: "280px",
               borderRadius: "18px",
               overflow: "hidden",
               cursor: "pointer",
@@ -1366,7 +1399,7 @@ function HeroCarousel({ images }) {
           position: "absolute",
           bottom: "0px",
           left: "50%",
-          marginLeft: "-55px",
+          marginLeft: "-80px",
           width: "40px",
           height: "40px",
           borderRadius: "50%",
@@ -1390,7 +1423,7 @@ function HeroCarousel({ images }) {
           position: "absolute",
           bottom: "0px",
           left: "50%",
-          marginLeft: "15px",
+          marginLeft: "40px",
           width: "40px",
           height: "40px",
           borderRadius: "50%",
@@ -1410,7 +1443,7 @@ function HeroCarousel({ images }) {
       </button>
 
       {/* ডট ইন্ডিকেটর */}
-      <div style={{ position: "absolute", bottom: "8px", left: "50%", transform: "translateX(-50%)", display: "flex", gap: "6px", marginLeft: "-30px" }}>
+      <div style={{ position: "absolute", bottom: "8px", left: "50%", transform: "translateX(-50%)", display: "flex", gap: "6px" }}>
         {images.map((_, i) => (
           <div
             key={i}
