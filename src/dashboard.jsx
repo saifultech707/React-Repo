@@ -444,7 +444,7 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                <div
+                {/* <div
                   className="hero-image-content"
                   style={{
                     flex: 1,
@@ -474,7 +474,19 @@ export default function Dashboard() {
                       }}
                     />
                   </div>
-                </div>
+                </div> */}
+                {/* ===== CAROUSEL - hero-image-content এর জায়গায় ===== */}
+<div
+  className="hero-image-content"
+  style={{
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  }}
+>
+  <HeroCarousel images={[studentLife, scienceLab, playImg1, playImg2, playImg3]} />
+</div>
               </div>
 
               {/* ফ্যাসিলিটি সেকশন */}
@@ -1256,7 +1268,167 @@ export default function Dashboard() {
     </div>
   );
 }
+function HeroCarousel({ images }) {
+  const [active, setActive] = useState(0);
 
+  const prev = () => setActive((p) => (p - 1 + images.length) % images.length);
+  const next = () => setActive((p) => (p + 1) % images.length);
+
+  const getPos = (i) => {
+    const diff = (i - active + images.length) % images.length;
+    if (diff === 0) return "center";
+    if (diff === 1) return "right1";
+    if (diff === 2) return "right2";
+    if (diff === images.length - 1) return "left1";
+    if (diff === images.length - 2) return "left2";
+    return "hidden";
+  };
+
+  const cardStyles = {
+    center: {
+      transform: "translateX(0px) scale(1) rotateY(0deg)",
+      zIndex: 10,
+      opacity: 1,
+      filter: "brightness(1)",
+    },
+    right1: {
+      transform: "translateX(140px) scale(0.8) rotateY(-15deg)",
+      zIndex: 6,
+      opacity: 0.85,
+      filter: "brightness(0.75)",
+    },
+    right2: {
+      transform: "translateX(220px) scale(0.65) rotateY(-25deg)",
+      zIndex: 3,
+      opacity: 0.5,
+      filter: "brightness(0.5)",
+    },
+    left1: {
+      transform: "translateX(-140px) scale(0.8) rotateY(15deg)",
+      zIndex: 6,
+      opacity: 0.85,
+      filter: "brightness(0.75)",
+    },
+    left2: {
+      transform: "translateX(-220px) scale(0.65) rotateY(25deg)",
+      zIndex: 3,
+      opacity: 0.5,
+      filter: "brightness(0.5)",
+    },
+    hidden: {
+      transform: "translateX(0px) scale(0.5)",
+      zIndex: 0,
+      opacity: 0,
+      filter: "brightness(0.3)",
+    },
+  };
+
+  return (
+    <div style={{ position: "relative", width: "420px", height: "340px", perspective: "1000px" }}>
+      {images.map((img, i) => {
+        const pos = getPos(i);
+        const s = cardStyles[pos];
+        return (
+          <div
+            key={i}
+            onClick={() => setActive(i)}
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              marginLeft: "-90px",
+              marginTop: "-120px",
+              width: "180px",
+              height: "240px",
+              borderRadius: "18px",
+              overflow: "hidden",
+              cursor: "pointer",
+              transition: "all 0.5s cubic-bezier(0.4,0,0.2,1)",
+              boxShadow: pos === "center"
+                ? "0 25px 50px rgba(16,55,65,0.35)"
+                : "0 10px 25px rgba(0,0,0,0.2)",
+              ...s,
+            }}
+          >
+            <img
+              src={img}
+              alt=""
+              style={{ width: "100%", height: "100%", objectFit: "cover", pointerEvents: "none" }}
+            />
+          </div>
+        );
+      })}
+
+      {/* নেভ বাটন */}
+      <button
+        onClick={prev}
+        style={{
+          position: "absolute",
+          bottom: "0px",
+          left: "50%",
+          marginLeft: "-55px",
+          width: "40px",
+          height: "40px",
+          borderRadius: "50%",
+          border: "2px solid rgba(255,255,255,0.7)",
+          background: "rgba(255,255,255,0.2)",
+          color: "#103741",
+          fontSize: "18px",
+          cursor: "pointer",
+          backdropFilter: "blur(4px)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 20,
+        }}
+      >
+        ‹
+      </button>
+      <button
+        onClick={next}
+        style={{
+          position: "absolute",
+          bottom: "0px",
+          left: "50%",
+          marginLeft: "15px",
+          width: "40px",
+          height: "40px",
+          borderRadius: "50%",
+          border: "none",
+          background: "#FE5D37",
+          color: "white",
+          fontSize: "18px",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 20,
+          boxShadow: "0 4px 12px rgba(254,93,55,0.4)",
+        }}
+      >
+        ›
+      </button>
+
+      {/* ডট ইন্ডিকেটর */}
+      <div style={{ position: "absolute", bottom: "8px", left: "50%", transform: "translateX(-50%)", display: "flex", gap: "6px", marginLeft: "-30px" }}>
+        {images.map((_, i) => (
+          <div
+            key={i}
+            onClick={() => setActive(i)}
+            style={{
+              width: i === active ? "20px" : "7px",
+              height: "7px",
+              borderRadius: "4px",
+              background: i === active ? "#FE5D37" : "rgba(16,55,65,0.3)",
+              transition: "all 0.3s",
+              cursor: "pointer",
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 // ================= স্টাইলস এবং সাব-কম্পোনেন্ট =================
 function FacilityCard({ icon, title, color, iconBg, iconColor, onClick }) {
   return (
