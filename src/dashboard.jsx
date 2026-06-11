@@ -55,7 +55,11 @@ export default function Dashboard() {
 
   const saveNotice = async () => {
     try {
-      await setDoc(doc(db, "settings", "notice"), { text: tempNotice }, { merge: true });
+      await setDoc(
+        doc(db, "settings", "notice"),
+        { text: tempNotice },
+        { merge: true },
+      );
       setNoticeText(tempNotice);
       setIsEditingNotice(false);
       alert("Notice updated successfully!");
@@ -211,6 +215,45 @@ export default function Dashboard() {
         fontFamily: "'Poppins', sans-serif",
       }}
     >
+      <style>{`
+        @media (max-width: 768px) {
+          .hero-section-container {
+            padding: 40px 20px !important;
+            min-height: auto !important;
+            flex-direction: column !important;
+            gap: 30px !important;
+          }
+          .hero-title {
+            font-size: 32px !important;
+            margin-bottom: 15px !important;
+          }
+          .hero-desc {
+            font-size: 16px !important;
+            margin-bottom: 25px !important;
+          }
+          .facility-section {
+            padding: 40px 20px !important;
+          }
+          .facility-title {
+            font-size: 26px !important;
+          }
+          .footer-section {
+            padding: 40px 20px !important;
+          }
+          .hero-carousel-wrapper {
+            height: 300px !important;
+          }
+          .hero-carousel-card {
+            width: 140px !important;
+            height: 200px !important;
+            margin-left: -70px !important;
+            margin-top: -100px !important;
+          }
+          .drawer-actions-container .btn-modern {
+            width: 100% !important;
+          }
+        }
+      `}</style>
       <div
         style={{
           flex: 1,
@@ -358,15 +401,64 @@ export default function Dashboard() {
         ></div>
 
         {/* 🟢 Drawer Menu */}
-        <div className={`drawer ${isDrawerOpen ? "open" : ""}`} style={{ overflowY: 'auto' }}>
-          <button
-            className="drawer-close-btn"
-            onClick={() => setIsDrawerOpen(false)}
+        <div
+          className={`drawer ${isDrawerOpen ? "open" : ""}`}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            padding: "20px",
+            maxHeight: "100vh",
+            boxSizing: "border-box",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginBottom: "20px",
+              flexShrink: 0,
+            }}
           >
-            ✕
-          </button>
-          <div className="drawer-links-container">{navLinksList}</div>
-          <div className="drawer-actions-container">{navActionsList}</div>
+            <button
+              className="drawer-close-btn"
+              onClick={() => setIsDrawerOpen(false)}
+              style={{
+                background: "none",
+                border: "none",
+                fontSize: "24px",
+                cursor: "pointer",
+                color: "#333",
+              }}
+            >
+              ✕
+            </button>
+          </div>
+          <div
+            className="drawer-links-container"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "15px",
+              flex: 1,
+              overflowY: "auto",
+              paddingRight: "5px",
+            }}
+          >
+            {navLinksList}
+          </div>
+          <div
+            className="drawer-actions-container"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "15px",
+              marginTop: "20px",
+              paddingBottom: "10px",
+              flexShrink: 0,
+            }}
+          >
+            {navActionsList}
+          </div>
         </div>
 
         {/* 🟢 ৩. ডাইনামিক কন্টেন্ট এরিয়া */}
@@ -384,7 +476,8 @@ export default function Dashboard() {
                   backgroundSize: "cover",
                   backgroundPosition: "center center",
                   backgroundAttachment: "fixed",
-                  background: "linear-gradient(135deg, #e0f2fe 0%, #ffffff 50%, #fff7ed 100%)",
+                  background:
+                    "linear-gradient(135deg, #e0f2fe 0%, #ffffff 50%, #fff7ed 100%)",
                   minHeight: "650px",
                   boxSizing: "border-box",
                   gap: "50px",
@@ -507,21 +600,30 @@ export default function Dashboard() {
                   </div>
                 </div> */}
                 {/* ===== CAROUSEL - hero-image-content এর জায়গায় ===== */}
-<div
-  className="hero-image-content"
-  style={{
-    flex: 1,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  }}
->
-  <HeroCarousel images={[studentLife, scienceLab, playImg1, playImg2, playImg3]} />
-</div>
+                <div
+                  className="hero-image-content"
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <HeroCarousel
+                    images={[
+                      studentLife,
+                      scienceLab,
+                      playImg1,
+                      playImg2,
+                      playImg3,
+                    ]}
+                  />
+                </div>
               </div>
 
               {/* ফ্যাসিলিটি সেকশন */}
               <div
+                className="facility-section"
                 style={{
                   padding: "80px 40px",
                   textAlign: "center",
@@ -541,6 +643,7 @@ export default function Dashboard() {
                     Why Choose Us
                   </h4>
                   <h2
+                    className="facility-title"
                     style={{
                       fontSize: "42px",
                       color: "#103741",
@@ -1103,6 +1206,7 @@ export default function Dashboard() {
 
         {/* ফুটার সেকশন */}
         <div
+          className="footer-section"
           style={{
             background: "#103741",
             color: "white",
@@ -1293,8 +1397,7 @@ export default function Dashboard() {
               fontSize: "14px",
             }}
           >
-            © {new Date().getFullYear()} School Dashboard. All Rights
-            Reserved.
+            © {new Date().getFullYear()} School Dashboard. All Rights Reserved.
           </div>
         </div>
       </div>
@@ -1357,13 +1460,23 @@ function HeroCarousel({ images }) {
   };
 
   return (
-    <div style={{ position: "relative", width: "100%", maxWidth: "500px", height: "400px", perspective: "1000px" }}>
+    <div
+      className="hero-carousel-wrapper"
+      style={{
+        position: "relative",
+        width: "100%",
+        maxWidth: "500px",
+        height: "400px",
+        perspective: "1000px",
+      }}
+    >
       {images.map((img, i) => {
         const pos = getPos(i);
         const s = cardStyles[pos];
         return (
           <div
             key={i}
+            className="hero-carousel-card"
             onClick={() => setActive(i)}
             style={{
               position: "absolute",
@@ -1377,16 +1490,22 @@ function HeroCarousel({ images }) {
               overflow: "hidden",
               cursor: "pointer",
               transition: "all 0.5s cubic-bezier(0.4,0,0.2,1)",
-              boxShadow: pos === "center"
-                ? "0 25px 50px rgba(16,55,65,0.35)"
-                : "0 10px 25px rgba(0,0,0,0.2)",
+              boxShadow:
+                pos === "center"
+                  ? "0 25px 50px rgba(16,55,65,0.35)"
+                  : "0 10px 25px rgba(0,0,0,0.2)",
               ...s,
             }}
           >
             <img
               src={img}
               alt=""
-              style={{ width: "100%", height: "100%", objectFit: "cover", pointerEvents: "none" }}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                pointerEvents: "none",
+              }}
             />
           </div>
         );
@@ -1443,7 +1562,16 @@ function HeroCarousel({ images }) {
       </button>
 
       {/* ডট ইন্ডিকেটর */}
-      <div style={{ position: "absolute", bottom: "8px", left: "50%", transform: "translateX(-50%)", display: "flex", gap: "6px" }}>
+      <div
+        style={{
+          position: "absolute",
+          bottom: "8px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          gap: "6px",
+        }}
+      >
         {images.map((_, i) => (
           <div
             key={i}
@@ -1497,6 +1625,8 @@ const facilityHeader = {
   marginBottom: "30px",
   borderBottom: "1px solid #eee",
   paddingBottom: "20px",
+  flexWrap: "wrap",
+  gap: "15px",
 };
 
 const backBtnStyle = {
