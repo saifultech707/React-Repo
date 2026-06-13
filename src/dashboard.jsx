@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "./firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, collection, getDocs, query, where } from "firebase/firestore";
 import ProjectsPage from "./Classes";
 import AboutUsPage from "./aboutUsPage";
 import ContactUsPage from "./contactus";
@@ -42,6 +42,20 @@ export default function Dashboard() {
     playImg3,
   ]);
 
+  // 🟢 অ্যাডমিনের জন্য Quick Stats
+  const [adminStats, setAdminStats] = useState({
+    pendingAdmissions: 0,
+    totalStudents: 0,
+    totalProfiles: 0,
+  });
+
+  // 🟢 আপকামিং ইভেন্টস এর জন্য State
+  const [events] = useState([
+    { date: "15 Aug 2026", title: "Independence Day", desc: "Flag hoisting and cultural program on the school grounds." },
+    { date: "05 Sep 2026", title: "Teacher's Day", desc: "Special assembly and student performances dedicated to our teachers." },
+    { date: "20 Oct 2026", title: "Annual Science Fair", desc: "Inter-class science exhibition and project competition." }
+  ]);
+
   // 🟢 AuthForm থেকে সেভ করা রোলটি এখানে চেক করা হচ্ছে
   const userRole = localStorage.getItem("userRole") || "user";
 
@@ -65,6 +79,29 @@ export default function Dashboard() {
     };
     fetchData();
   }, []);
+
+  // 🟢 অ্যাডমিন স্ট্যাটস ফেচ করা
+  useEffect(() => {
+    if (userRole === "admin") {
+      const fetchAdminStats = async () => {
+        try {
+          const appQuery = query(collection(db, "applications"), where("status", "==", "pending"));
+          const appSnap = await getDocs(appQuery);
+          const stuSnap = await getDocs(collection(db, "students"));
+          const profSnap = await getDocs(collection(db, "profiles"));
+
+          setAdminStats({
+            pendingAdmissions: appSnap.size,
+            totalStudents: stuSnap.size,
+            totalProfiles: profSnap.size,
+          });
+        } catch (error) {
+          console.error("Error fetching admin stats:", error);
+        }
+      };
+      fetchAdminStats();
+    }
+  }, [userRole]);
 
   const saveNotice = async () => {
     try {
@@ -698,6 +735,30 @@ export default function Dashboard() {
                 </div>
               </div>
 
+              {/* 🟢 অ্যাডমিন ওভারভিউ সেকশন (শুধুমাত্র অ্যাডমিন দেখতে পাবে) */}
+              {userRole === "admin" && (
+                <div className="admin-stats-section mobile-padding" style={{ padding: "40px 60px", background: "#f0fdf4" }}>
+                  <h2 style={{ color: "#166534", marginBottom: "20px", fontSize: "28px", fontWeight: "700" }}>📊 Admin Overview</h2>
+                  <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+                    <div style={statCardStyle}>
+                      <h3 style={{ fontSize: "36px", margin: "10px 0", color: "#166534" }}>{adminStats.pendingAdmissions}</h3>
+                      <p style={{ color: "#15803d", fontWeight: "600", margin: "0 0 10px 0" }}>Pending Admissions</p>
+                      <button onClick={() => { setActiveMenu("Projects"); window.scrollTo(0,0); }} style={statBtnStyle}>Review Now</button>
+                    </div>
+                    <div style={statCardStyle}>
+                      <h3 style={{ fontSize: "36px", margin: "10px 0", color: "#166534" }}>{adminStats.totalStudents}</h3>
+                      <p style={{ color: "#15803d", fontWeight: "600", margin: "0 0 10px 0" }}>Enrolled Students</p>
+                      <button onClick={() => { setActiveMenu("Projects"); window.scrollTo(0,0); }} style={statBtnStyle}>View Classes</button>
+                    </div>
+                    <div style={statCardStyle}>
+                      <h3 style={{ fontSize: "36px", margin: "10px 0", color: "#166534" }}>{adminStats.totalProfiles}</h3>
+                      <p style={{ color: "#15803d", fontWeight: "600", margin: "0 0 10px 0" }}>Registered Profiles</p>
+                      <button onClick={() => navigate("/teachers")} style={statBtnStyle}>View Teachers</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* ফ্যাসিলিটি সেকশন */}
               <div
                 className="facility-section mobile-padding"
@@ -779,6 +840,25 @@ export default function Dashboard() {
                     iconColor="#E91E63"
                     onClick={() => setActiveMenu("ScienceLab")}
                   />
+                </div>
+              </div>
+              
+              {/* 🟢 আপকামিং ইভেন্টস সেকশন */}
+              <div className="events-section mobile-padding" style={{ padding: "60px 40px", background: "#fff" }}>
+                <div style={{ marginBottom: "40px", textAlign: "center" }}>
+                  <h4 style={{ color: "#FE5D37", fontWeight: "600", textTransform: "uppercase", margin: "0 0 10px 0", letterSpacing: "1px" }}>Calendar</h4>
+                  <h2 style={{ fontSize: "36px", color: "#103741", margin: 0, fontWeight: "700" }}>Upcoming Events</h2>
+                </div>
+                <div style={{ display: "flex", gap: "20px", justifyContent: "center", flexWrap: "wrap" }}>
+                  {events.map((ev, i) => (
+                    <div key={i} style={{ background: "#f8fafc", padding: "25px", borderRadius: "12px", borderLeft: "5px solid #FE5D37", flex: "1 1 280px", maxWidth: "350px", boxShadow: "0 4px 15px rgba(0,0,0,0.04)", transition: "transform 0.3s", cursor: "pointer" }} 
+                         onMouseOver={(e) => (e.currentTarget.style.transform = "translateY(-5px)")} 
+                         onMouseOut={(e) => (e.currentTarget.style.transform = "translateY(0)")}>
+                      <div style={{ display: "inline-block", background: "#ffe4dc", color: "#FE5D37", padding: "6px 12px", borderRadius: "20px", fontWeight: "bold", marginBottom: "15px", fontSize: "13px" }}>📅 {ev.date}</div>
+                      <h3 style={{ margin: "0 0 10px 0", color: "#103741", fontSize: "20px", fontWeight: "600" }}>{ev.title}</h3>
+                      <p style={{ margin: 0, color: "#666", fontSize: "15px", lineHeight: "1.6" }}>{ev.desc}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </>
@@ -1775,4 +1855,27 @@ const tdStyle = { padding: "16px", fontSize: "14px", color: "#444" };
 const trStyle = {
   borderBottom: "1px solid #f1f5f9",
   transition: "background 0.2s",
+};
+
+const statCardStyle = {
+  flex: "1 1 200px",
+  background: "white",
+  padding: "25px",
+  borderRadius: "16px",
+  boxShadow: "0 4px 20px rgba(22, 101, 52, 0.08)",
+  textAlign: "center",
+  border: "1px solid #dcfce7",
+};
+
+const statBtnStyle = {
+  marginTop: "5px",
+  background: "#166534",
+  color: "white",
+  border: "none",
+  padding: "8px 20px",
+  borderRadius: "20px",
+  cursor: "pointer",
+  fontWeight: "600",
+  fontSize: "13px",
+  transition: "background 0.3s"
 };
