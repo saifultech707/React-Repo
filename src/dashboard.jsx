@@ -17,7 +17,7 @@ import studentLife from "./assets/national-cancer-institute-N_aihp118p8-unsplash
 // পুরনো খেলার ৪টি ইমেজ
 import playImg1 from "./assets/marcus-wallis-mUtQXjjLPbw-unsplash.jpg";
 import playImg2 from "./assets/aksh-yadav-bY4cqxp7vos-unsplash.jpg";
-import playImg3 from "./assets/mudassir-ali-DvreeyPXQww-unsplash.jpg";
+import playImg3 from "./assets/169595884133310988.jpg";
 import playImg4 from "./assets/vicky-adams-gywHscPZwMM-unsplash.jpg";
 import "./dashboard.css";
 
@@ -33,24 +33,37 @@ export default function Dashboard() {
   const [isEditingNotice, setIsEditingNotice] = useState(false);
   const [tempNotice, setTempNotice] = useState(noticeText);
 
+  // 🟢 ক্যারোসেল ইমেজের জন্য State
+  const [carouselImages, setCarouselImages] = useState([
+    studentLife,
+    scienceLab,
+    playImg1,
+    playImg2,
+    playImg3,
+  ]);
+
   // 🟢 AuthForm থেকে সেভ করা রোলটি এখানে চেক করা হচ্ছে
   const userRole = localStorage.getItem("userRole") || "user";
 
   useEffect(() => {
-    const fetchNotice = async () => {
+    const fetchData = async () => {
       try {
-        const docRef = doc(db, "settings", "notice");
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists() && docSnap.data().text) {
-          const fetchedNotice = docSnap.data().text;
+        const noticeSnap = await getDoc(doc(db, "settings", "notice"));
+        if (noticeSnap.exists() && noticeSnap.data().text) {
+          const fetchedNotice = noticeSnap.data().text;
           setNoticeText(fetchedNotice);
           setTempNotice(fetchedNotice);
         }
+
+        const carouselSnap = await getDoc(doc(db, "settings", "carousel"));
+        if (carouselSnap.exists() && carouselSnap.data().images) {
+          setCarouselImages(carouselSnap.data().images);
+        }
       } catch (error) {
-        console.error("Error fetching notice:", error);
+        console.error("Error fetching data:", error);
       }
     };
-    fetchNotice();
+    fetchData();
   }, []);
 
   const saveNotice = async () => {
@@ -66,6 +79,38 @@ export default function Dashboard() {
     } catch (error) {
       console.error("Error updating notice:", error);
       alert("Failed to update notice.");
+    }
+  };
+
+  const handleCarouselImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64Image = reader.result;
+      const updatedImages = [...carouselImages, base64Image];
+      try {
+        await setDoc(doc(db, "settings", "carousel"), { images: updatedImages }, { merge: true });
+        setCarouselImages(updatedImages);
+        alert("Image uploaded successfully!");
+      } catch (error) {
+        console.error("Error saving image:", error);
+        alert("Failed to upload image.");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDeleteCarouselImage = async (index) => {
+    if (window.confirm("Are you sure you want to delete this image?")) {
+      const updatedImages = carouselImages.filter((_, i) => i !== index);
+      try {
+        await setDoc(doc(db, "settings", "carousel"), { images: updatedImages }, { merge: true });
+        setCarouselImages(updatedImages);
+      } catch (error) {
+        console.error("Error deleting image:", error);
+        alert("Failed to delete image.");
+      }
     }
   };
 
@@ -613,19 +658,43 @@ export default function Dashboard() {
                   style={{
                     flex: 1,
                     display: "flex",
+                    flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
                   }}
                 >
                   <HeroCarousel
-                    images={[
-                      studentLife,
-                      scienceLab,
-                      playImg1,
-                      playImg2,
-                      playImg3,
-                    ]}
+                    images={carouselImages.length > 0 ? carouselImages : [studentLife]}
+                    userRole={userRole}
+                    onDeleteImage={handleDeleteCarouselImage}
                   />
+                  {userRole === "admin" && (
+                    <div style={{ marginTop: "30px", zIndex: 30 }}>
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        id="carousel-upload" 
+                        style={{ display: "none" }} 
+                        onChange={handleCarouselImageUpload} 
+                      />
+                      <label 
+                        htmlFor="carousel-upload" 
+                        className="btn-modern" 
+                        style={{
+                          background: "#3b82f6",
+                          color: "white",
+                          padding: "10px 20px",
+                          borderRadius: "8px",
+                          cursor: "pointer",
+                          fontWeight: "bold",
+                          display: "inline-block",
+                          boxShadow: "0 4px 10px rgba(59, 130, 246, 0.3)",
+                        }}
+                      >
+                        + Add Image to Carousel
+                      </label>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -1412,13 +1481,14 @@ export default function Dashboard() {
     </div>
   );
 }
-function HeroCarousel({ images }) {
+function HeroCarousel({ images, userRole, onDeleteImage }) {
   const [active, setActive] = useState(0);
 
   const prev = () => setActive((p) => (p - 1 + images.length) % images.length);
   const next = () => setActive((p) => (p + 1) % images.length);
 
   useEffect(() => {
+    if (images.length <= 1) return;
     const timer = setInterval(() => {
       setActive((p) => (p + 1) % images.length);
     }, 3000);
@@ -1522,86 +1592,122 @@ function HeroCarousel({ images }) {
                 pointerEvents: "none",
               }}
             />
+            {userRole === "admin" && pos === "center" && onDeleteImage && images.length > 1 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDeleteImage(i);
+                  setActive((p) => (p >= images.length - 1 ? Math.max(0, p - 1) : p));
+                }}
+                style={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  background: "#ef4444",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: "30px",
+                  height: "30px",
+                  cursor: "pointer",
+                  zIndex: 100,
+                  fontSize: "14px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 2px 5px rgba(0,0,0,0.2)"
+                }}
+                title="Delete Image"
+              >
+                ✕
+              </button>
+            )}
           </div>
         );
       })}
 
       {/* নেভ বাটন */}
-      <button
-        onClick={prev}
-        style={{
-          position: "absolute",
-          bottom: "0px",
-          left: "50%",
-          marginLeft: "-80px",
-          width: "40px",
-          height: "40px",
-          borderRadius: "50%",
-          border: "2px solid rgba(255,255,255,0.7)",
-          background: "rgba(255,255,255,0.2)",
-          color: "#103741",
-          fontSize: "18px",
-          cursor: "pointer",
-          backdropFilter: "blur(4px)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 20,
-        }}
-      >
-        ‹
-      </button>
-      <button
-        onClick={next}
-        style={{
-          position: "absolute",
-          bottom: "0px",
-          left: "50%",
-          marginLeft: "40px",
-          width: "40px",
-          height: "40px",
-          borderRadius: "50%",
-          border: "none",
-          background: "#FE5D37",
-          color: "white",
-          fontSize: "18px",
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 20,
-          boxShadow: "0 4px 12px rgba(254,93,55,0.4)",
-        }}
-      >
-        ›
-      </button>
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={prev}
+            style={{
+              position: "absolute",
+              bottom: "0px",
+              left: "50%",
+              marginLeft: "-80px",
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              border: "2px solid rgba(255,255,255,0.7)",
+              background: "rgba(255,255,255,0.2)",
+              color: "#103741",
+              fontSize: "18px",
+              cursor: "pointer",
+              backdropFilter: "blur(4px)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 20,
+            }}
+          >
+            ‹
+          </button>
+          <button
+            onClick={next}
+            style={{
+              position: "absolute",
+              bottom: "0px",
+              left: "50%",
+              marginLeft: "40px",
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              border: "none",
+              background: "#FE5D37",
+              color: "white",
+              fontSize: "18px",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 20,
+              boxShadow: "0 4px 12px rgba(254,93,55,0.4)",
+            }}
+          >
+            ›
+          </button>
+        </>
+      )}
 
       {/* ডট ইন্ডিকেটর */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "8px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          gap: "6px",
-        }}
-      >
-        {images.map((_, i) => (
-          <div
-            key={i}
-            onClick={() => setActive(i)}
-            style={{
-              width: i === active ? "20px" : "7px",
-              height: "7px",
-              borderRadius: "4px",
-              background: i === active ? "#FE5D37" : "rgba(16,55,65,0.3)",
-              transition: "all 0.3s",
-              cursor: "pointer",
-            }}
-          />
-        ))}
-      </div>
+      {images.length > 1 && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "8px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: "flex",
+            gap: "6px",
+          }}
+        >
+          {images.map((_, i) => (
+            <div
+              key={i}
+              onClick={() => setActive(i)}
+              style={{
+                width: i === active ? "20px" : "7px",
+                height: "7px",
+                borderRadius: "4px",
+                background: i === active ? "#FE5D37" : "rgba(16,55,65,0.3)",
+                transition: "all 0.3s",
+                cursor: "pointer",
+              }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
