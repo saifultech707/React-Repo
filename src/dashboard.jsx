@@ -216,7 +216,15 @@ export default function Dashboard() {
       }}
     >
       <style>{`
+        @media (min-width: 769px) {
+          .hamburger-btn, .drawer, .drawer-overlay {
+            display: none !important;
+          }
+        }
         @media (max-width: 768px) {
+          .nav-links-container, .nav-actions-container {
+            display: none !important;
+          }
           .hero-section-container {
             padding: 40px 20px !important;
             min-height: auto !important;
@@ -1409,6 +1417,13 @@ function HeroCarousel({ images }) {
 
   const prev = () => setActive((p) => (p - 1 + images.length) % images.length);
   const next = () => setActive((p) => (p + 1) % images.length);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActive((p) => (p + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [images.length]);
 
   const getPos = (i) => {
     const diff = (i - active + images.length) % images.length;

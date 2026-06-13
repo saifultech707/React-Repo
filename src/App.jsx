@@ -41,6 +41,12 @@ function App() {
           
           input, select, textarea {
             font-size: 14px !important;
+            color: #333 !important;
+            background-color: #fff !important;
+          }
+
+          input::placeholder, textarea::placeholder {
+            color: #999 !important;
           }
           
           .auth-container {
