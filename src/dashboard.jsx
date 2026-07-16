@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "./firebase";
-import { doc, getDoc, setDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import ProjectsPage from "./Classes";
 import AboutUsPage from "./aboutUsPage";
 import ContactUsPage from "./contactus";
@@ -33,7 +41,14 @@ export default function Dashboard() {
   const [isEditingNotice, setIsEditingNotice] = useState(false);
   const [tempNotice, setTempNotice] = useState(noticeText);
 
-  // 🟢 ক্যারোসেল ইমেজের জন্য State
+  // 🟢 Head Teacher Advice State
+  const [adviceData, setAdviceData] = useState({
+    text: "Our focus is not only on academic excellence but on building strong moral character. I request all parents to work hand-in-hand with us to ensure a bright future for our children.",
+    name: "Md. Abdur Rahman",
+  });
+  const [isEditingAdvice, setIsEditingAdvice] = useState(false);
+  const [tempAdviceData, setTempAdviceData] = useState(adviceData);
+
   const [carouselImages, setCarouselImages] = useState([
     studentLife,
     scienceLab,
@@ -41,8 +56,6 @@ export default function Dashboard() {
     playImg2,
     playImg3,
   ]);
-
-  // 🟢 অ্যাডমিনের জন্য Quick Stats
   const [adminStats, setAdminStats] = useState({
     pendingAdmissions: 0,
     totalStudents: 0,
@@ -51,9 +64,21 @@ export default function Dashboard() {
 
   // 🟢 আপকামিং ইভেন্টস এর জন্য State
   const [events] = useState([
-    { date: "15 Aug 2026", title: "Independence Day", desc: "Flag hoisting and cultural program on the school grounds." },
-    { date: "05 Sep 2026", title: "Teacher's Day", desc: "Special assembly and student performances dedicated to our teachers." },
-    { date: "20 Oct 2026", title: "Annual Science Fair", desc: "Inter-class science exhibition and project competition." }
+    {
+      date: "15 Aug 2026",
+      title: "Independence Day",
+      desc: "Flag hoisting and cultural program on the school grounds.",
+    },
+    {
+      date: "05 Sep 2026",
+      title: "Teacher's Day",
+      desc: "Special assembly and student performances dedicated to our teachers.",
+    },
+    {
+      date: "20 Oct 2026",
+      title: "Annual Science Fair",
+      desc: "Inter-class science exhibition and project competition.",
+    },
   ]);
 
   // 🟢 AuthForm থেকে সেভ করা রোলটি এখানে চেক করা হচ্ছে
@@ -73,6 +98,13 @@ export default function Dashboard() {
         if (carouselSnap.exists() && carouselSnap.data().images) {
           setCarouselImages(carouselSnap.data().images);
         }
+
+        const adviceSnap = await getDoc(doc(db, "settings", "advice"));
+        if (adviceSnap.exists() && adviceSnap.data()) {
+          const fetchedAdvice = adviceSnap.data();
+          setAdviceData((prev) => ({ ...prev, ...fetchedAdvice }));
+          setTempAdviceData((prev) => ({ ...prev, ...fetchedAdvice }));
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -85,7 +117,10 @@ export default function Dashboard() {
     if (userRole === "admin") {
       const fetchAdminStats = async () => {
         try {
-          const appQuery = query(collection(db, "applications"), where("status", "==", "pending"));
+          const appQuery = query(
+            collection(db, "applications"),
+            where("status", "==", "pending"),
+          );
           const appSnap = await getDocs(appQuery);
           const stuSnap = await getDocs(collection(db, "students"));
           const profSnap = await getDocs(collection(db, "profiles"));
@@ -119,6 +154,22 @@ export default function Dashboard() {
     }
   };
 
+  const saveAdvice = async () => {
+    try {
+      await setDoc(
+        doc(db, "settings", "advice"),
+        tempAdviceData,
+        { merge: true },
+      );
+      setAdviceData(tempAdviceData);
+      setIsEditingAdvice(false);
+      alert("Advice updated successfully!");
+    } catch (error) {
+      console.error("Error updating advice:", error);
+      alert("Failed to update advice.");
+    }
+  };
+
   const handleCarouselImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -127,7 +178,11 @@ export default function Dashboard() {
       const base64Image = reader.result;
       const updatedImages = [...carouselImages, base64Image];
       try {
-        await setDoc(doc(db, "settings", "carousel"), { images: updatedImages }, { merge: true });
+        await setDoc(
+          doc(db, "settings", "carousel"),
+          { images: updatedImages },
+          { merge: true },
+        );
         setCarouselImages(updatedImages);
         alert("Image uploaded successfully!");
       } catch (error) {
@@ -142,7 +197,11 @@ export default function Dashboard() {
     if (window.confirm("Are you sure you want to delete this image?")) {
       const updatedImages = carouselImages.filter((_, i) => i !== index);
       try {
-        await setDoc(doc(db, "settings", "carousel"), { images: updatedImages }, { merge: true });
+        await setDoc(
+          doc(db, "settings", "carousel"),
+          { images: updatedImages },
+          { merge: true },
+        );
         setCarouselImages(updatedImages);
       } catch (error) {
         console.error("Error deleting image:", error);
@@ -255,7 +314,7 @@ export default function Dashboard() {
             setIsDrawerOpen(false);
           }}
           style={{
-            background: "#103741",
+            background: "#0F172A",
             color: "white",
             border: "none",
             padding: "10px 25px",
@@ -452,7 +511,7 @@ export default function Dashboard() {
                   className="btn-modern"
                   onClick={() => setIsEditingNotice(true)}
                   style={{
-                    background: "#FE5D37",
+                    background: "#2563EB",
                     color: "white",
                     border: "none",
                     padding: "6px 18px",
@@ -642,7 +701,7 @@ export default function Dashboard() {
                         className="btn-modern"
                         onClick={() => setActiveMenu("Projects")}
                         style={{
-                          background: "#103741",
+                          background: "#0F172A",
                           color: "white",
                           padding: "16px 40px",
                           borderRadius: "30px",
@@ -654,6 +713,172 @@ export default function Dashboard() {
                       >
                         Our Classes
                       </button>
+                    )}
+                  </div>
+
+                  {/* Head Teacher Advice Block */}
+                  <div
+                    style={{
+                      marginTop: "40px",
+                      padding: "25px 35px",
+                      background: "rgba(255, 255, 255, 0.7)",
+                      borderLeft: "6px solid #2563EB",
+                      borderRadius: "0 20px 20px 0",
+                      boxShadow: "0 15px 35px rgba(0,0,0,0.06)",
+                      backdropFilter: "blur(12px)",
+                      position: "relative",
+                      maxWidth: "550px",
+                    }}
+                  >
+                    {userRole === "admin" && !isEditingAdvice && (
+                      <button
+                        onClick={() => setIsEditingAdvice(true)}
+                        style={{
+                          position: "absolute",
+                          top: "10px",
+                          right: "10px",
+                          background: "#2563EB",
+                          color: "white",
+                          border: "none",
+                          padding: "5px 12px",
+                          borderRadius: "8px",
+                          cursor: "pointer",
+                          fontSize: "12px",
+                          zIndex: 10,
+                        }}
+                      >
+                        ✏️ Edit
+                      </button>
+                    )}
+
+                    {isEditingAdvice ? (
+                      <div style={{ display: "flex", flexDirection: "column", gap: "12px", position: "relative", zIndex: 2 }}>
+                        <textarea
+                          value={tempAdviceData.text}
+                          onChange={(e) => setTempAdviceData({ ...tempAdviceData, text: e.target.value })}
+                          rows="4"
+                          placeholder="Advice Text"
+                          style={{
+                            width: "100%",
+                            padding: "10px",
+                            borderRadius: "8px",
+                            border: "1px solid #ccc",
+                            fontFamily: "inherit",
+                            boxSizing: "border-box"
+                          }}
+                        />
+                        <input
+                          type="text"
+                          value={tempAdviceData.name}
+                          onChange={(e) => setTempAdviceData({ ...tempAdviceData, name: e.target.value })}
+                          placeholder="Teacher Name"
+                          style={{
+                            width: "100%",
+                            padding: "10px",
+                            borderRadius: "8px",
+                            border: "1px solid #ccc",
+                            fontFamily: "inherit",
+                            boxSizing: "border-box"
+                          }}
+                        />
+                        <div style={{ display: "flex", gap: "10px" }}>
+                          <button
+                            onClick={saveAdvice}
+                            style={{
+                              background: "#10b981",
+                              color: "white",
+                              border: "none",
+                              padding: "8px 15px",
+                              borderRadius: "8px",
+                              cursor: "pointer",
+                              fontWeight: "bold"
+                            }}
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={() => {
+                              setTempAdviceData(adviceData);
+                              setIsEditingAdvice(false);
+                            }}
+                            style={{
+                              background: "#ef4444",
+                              color: "white",
+                              border: "none",
+                              padding: "8px 15px",
+                              borderRadius: "8px",
+                              cursor: "pointer",
+                              fontWeight: "bold"
+                            }}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "-15px",
+                        left: "15px",
+                        fontSize: "60px",
+                        color: "#2563EB",
+                        opacity: 0.2,
+                        fontFamily: "serif",
+                        lineHeight: 1,
+                      }}
+                    >
+                      ❝
+                    </div>
+                    <p
+                      style={{
+                        fontFamily: "Georgia, 'Times New Roman', Times, serif",
+                        fontSize: "20px",
+                        color: "#1e293b",
+                        lineHeight: "1.7",
+                        margin: "0 0 20px 0",
+                        fontStyle: "italic",
+                        fontWeight: "500",
+                        position: "relative",
+                        zIndex: 2,
+                      }}
+                    >
+                      "{adviceData.text}"
+                    </p>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "15px",
+                      }}
+                    >
+                      <div>
+                        <h4
+                          style={{
+                            margin: 0,
+                            color: "#0F172A",
+                            fontSize: "17px",
+                            fontWeight: "700",
+                          }}
+                        >
+                          {adviceData.name}
+                        </h4>
+                        <p
+                          style={{
+                            margin: 0,
+                            color: "#2563EB",
+                            fontSize: "14px",
+                            fontWeight: "600",
+                            textTransform: "uppercase",
+                            letterSpacing: "1px",
+                          }}
+                        >
+                          Head Teacher
+                        </p>
+                      </div>
+                    </div>
+                      </>
                     )}
                   </div>
                 </div>
@@ -701,22 +926,24 @@ export default function Dashboard() {
                   }}
                 >
                   <HeroCarousel
-                    images={carouselImages.length > 0 ? carouselImages : [studentLife]}
+                    images={
+                      carouselImages.length > 0 ? carouselImages : [studentLife]
+                    }
                     userRole={userRole}
                     onDeleteImage={handleDeleteCarouselImage}
                   />
                   {userRole === "admin" && (
                     <div style={{ marginTop: "30px", zIndex: 30 }}>
-                      <input 
-                        type="file" 
-                        accept="image/*" 
-                        id="carousel-upload" 
-                        style={{ display: "none" }} 
-                        onChange={handleCarouselImageUpload} 
+                      <input
+                        type="file"
+                        accept="image/*"
+                        id="carousel-upload"
+                        style={{ display: "none" }}
+                        onChange={handleCarouselImageUpload}
                       />
-                      <label 
-                        htmlFor="carousel-upload" 
-                        className="btn-modern" 
+                      <label
+                        htmlFor="carousel-upload"
+                        className="btn-modern"
                         style={{
                           background: "#3b82f6",
                           color: "white",
@@ -737,25 +964,114 @@ export default function Dashboard() {
 
               {/* 🟢 অ্যাডমিন ওভারভিউ সেকশন (শুধুমাত্র অ্যাডমিন দেখতে পাবে) */}
               {userRole === "admin" && (
-                <div className="admin-stats-section mobile-padding" style={{ padding: "40px 60px", background: "#f0fdf4" }}>
-                  <h2 style={{ color: "#166534", marginBottom: "20px", fontSize: "28px", fontWeight: "700" }}>📊 Admin Overview</h2>
-                  <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+                <div
+                  className="admin-stats-section mobile-padding"
+                  style={{ padding: "40px 60px", background: "#f0fdf4" }}
+                >
+                  <h2
+                    style={{
+                      color: "#166534",
+                      marginBottom: "20px",
+                      fontSize: "28px",
+                      fontWeight: "700",
+                    }}
+                  >
+                    📊 Admin Overview
+                  </h2>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "20px",
+                      flexWrap: "wrap",
+                      marginBottom: "40px",
+                    }}
+                  >
                     <div style={statCardStyle}>
-                      <h3 style={{ fontSize: "36px", margin: "10px 0", color: "#166534" }}>{adminStats.pendingAdmissions}</h3>
-                      <p style={{ color: "#15803d", fontWeight: "600", margin: "0 0 10px 0" }}>Pending Admissions</p>
-                      <button onClick={() => { setActiveMenu("Projects"); window.scrollTo(0,0); }} style={statBtnStyle}>Review Now</button>
+                      <h3
+                        style={{
+                          fontSize: "36px",
+                          margin: "10px 0",
+                          color: "#166534",
+                        }}
+                      >
+                        {adminStats.pendingAdmissions}
+                      </h3>
+                      <p
+                        style={{
+                          color: "#15803d",
+                          fontWeight: "600",
+                          margin: "0 0 10px 0",
+                        }}
+                      >
+                        Pending Admissions
+                      </p>
+                      <button
+                        onClick={() => {
+                          setActiveMenu("Projects");
+                          window.scrollTo(0, 0);
+                        }}
+                        style={statBtnStyle}
+                      >
+                        Review Now
+                      </button>
                     </div>
                     <div style={statCardStyle}>
-                      <h3 style={{ fontSize: "36px", margin: "10px 0", color: "#166534" }}>{adminStats.totalStudents}</h3>
-                      <p style={{ color: "#15803d", fontWeight: "600", margin: "0 0 10px 0" }}>Enrolled Students</p>
-                      <button onClick={() => { setActiveMenu("Projects"); window.scrollTo(0,0); }} style={statBtnStyle}>View Classes</button>
+                      <h3
+                        style={{
+                          fontSize: "36px",
+                          margin: "10px 0",
+                          color: "#166534",
+                        }}
+                      >
+                        {adminStats.totalStudents}
+                      </h3>
+                      <p
+                        style={{
+                          color: "#15803d",
+                          fontWeight: "600",
+                          margin: "0 0 10px 0",
+                        }}
+                      >
+                        Enrolled Students
+                      </p>
+                      <button
+                        onClick={() => {
+                          setActiveMenu("Projects");
+                          window.scrollTo(0, 0);
+                        }}
+                        style={statBtnStyle}
+                      >
+                        View Classes
+                      </button>
                     </div>
                     <div style={statCardStyle}>
-                      <h3 style={{ fontSize: "36px", margin: "10px 0", color: "#166534" }}>{adminStats.totalProfiles}</h3>
-                      <p style={{ color: "#15803d", fontWeight: "600", margin: "0 0 10px 0" }}>Registered Profiles</p>
-                      <button onClick={() => navigate("/teachers")} style={statBtnStyle}>View Teachers</button>
+                      <h3
+                        style={{
+                          fontSize: "36px",
+                          margin: "10px 0",
+                          color: "#166534",
+                        }}
+                      >
+                        {adminStats.totalProfiles}
+                      </h3>
+                      <p
+                        style={{
+                          color: "#15803d",
+                          fontWeight: "600",
+                          margin: "0 0 10px 0",
+                        }}
+                      >
+                        Registered Profiles
+                      </p>
+                      <button
+                        onClick={() => navigate("/teachers")}
+                        style={statBtnStyle}
+                      >
+                        View Teachers
+                      </button>
                     </div>
                   </div>
+
                 </div>
               )}
 
@@ -771,7 +1087,7 @@ export default function Dashboard() {
                 <div style={{ marginBottom: "50px" }}>
                   <h4
                     style={{
-                      color: "#FE5D37",
+                      color: "#2563EB",
                       fontWeight: "600",
                       letterSpacing: "1px",
                       textTransform: "uppercase",
@@ -842,21 +1158,98 @@ export default function Dashboard() {
                   />
                 </div>
               </div>
-              
+
               {/* 🟢 আপকামিং ইভেন্টস সেকশন */}
-              <div className="events-section mobile-padding" style={{ padding: "60px 40px", background: "#fff" }}>
+              <div
+                className="events-section mobile-padding"
+                style={{ padding: "60px 40px", background: "#fff" }}
+              >
                 <div style={{ marginBottom: "40px", textAlign: "center" }}>
-                  <h4 style={{ color: "#FE5D37", fontWeight: "600", textTransform: "uppercase", margin: "0 0 10px 0", letterSpacing: "1px" }}>Calendar</h4>
-                  <h2 style={{ fontSize: "36px", color: "#103741", margin: 0, fontWeight: "700" }}>Upcoming Events</h2>
+                  <h4
+                    style={{
+                      color: "#2563EB",
+                      fontWeight: "600",
+                      textTransform: "uppercase",
+                      margin: "0 0 10px 0",
+                      letterSpacing: "1px",
+                    }}
+                  >
+                    Calendar
+                  </h4>
+                  <h2
+                    style={{
+                      fontSize: "36px",
+                      color: "#0F172A",
+                      margin: 0,
+                      fontWeight: "700",
+                    }}
+                  >
+                    Upcoming Events
+                  </h2>
                 </div>
-                <div style={{ display: "flex", gap: "20px", justifyContent: "center", flexWrap: "wrap" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "20px",
+                    justifyContent: "center",
+                    flexWrap: "wrap",
+                  }}
+                >
                   {events.map((ev, i) => (
-                    <div key={i} style={{ background: "#f8fafc", padding: "25px", borderRadius: "12px", borderLeft: "5px solid #FE5D37", flex: "1 1 280px", maxWidth: "350px", boxShadow: "0 4px 15px rgba(0,0,0,0.04)", transition: "transform 0.3s", cursor: "pointer" }} 
-                         onMouseOver={(e) => (e.currentTarget.style.transform = "translateY(-5px)")} 
-                         onMouseOut={(e) => (e.currentTarget.style.transform = "translateY(0)")}>
-                      <div style={{ display: "inline-block", background: "#ffe4dc", color: "#FE5D37", padding: "6px 12px", borderRadius: "20px", fontWeight: "bold", marginBottom: "15px", fontSize: "13px" }}>📅 {ev.date}</div>
-                      <h3 style={{ margin: "0 0 10px 0", color: "#103741", fontSize: "20px", fontWeight: "600" }}>{ev.title}</h3>
-                      <p style={{ margin: 0, color: "#666", fontSize: "15px", lineHeight: "1.6" }}>{ev.desc}</p>
+                    <div
+                      key={i}
+                      style={{
+                        background: "#f8fafc",
+                        padding: "25px",
+                        borderRadius: "12px",
+                        borderLeft: "5px solid #FE5D37",
+                        flex: "1 1 280px",
+                        maxWidth: "350px",
+                        boxShadow: "0 4px 15px rgba(0,0,0,0.04)",
+                        transition: "transform 0.3s",
+                        cursor: "pointer",
+                      }}
+                      onMouseOver={(e) =>
+                        (e.currentTarget.style.transform = "translateY(-5px)")
+                      }
+                      onMouseOut={(e) =>
+                        (e.currentTarget.style.transform = "translateY(0)")
+                      }
+                    >
+                      <div
+                        style={{
+                          display: "inline-block",
+                          background: "#DBEAFE",
+                          color: "#2563EB",
+                          padding: "6px 12px",
+                          borderRadius: "20px",
+                          fontWeight: "bold",
+                          marginBottom: "15px",
+                          fontSize: "13px",
+                        }}
+                      >
+                        📅 {ev.date}
+                      </div>
+                      <h3
+                        style={{
+                          margin: "0 0 10px 0",
+                          color: "#0F172A",
+                          fontSize: "20px",
+                          fontWeight: "600",
+                        }}
+                      >
+                        {ev.title}
+                      </h3>
+                      <p
+                        style={{
+                          margin: 0,
+                          color: "#666",
+                          fontSize: "15px",
+                          lineHeight: "1.6",
+                        }}
+                      >
+                        {ev.desc}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -881,7 +1274,7 @@ export default function Dashboard() {
                   >
                     🚌
                   </span>
-                  <h2 style={{ margin: 0, fontSize: "28px", color: "#103741" }}>
+                  <h2 style={{ margin: 0, fontSize: "28px", color: "#0F172A" }}>
                     Transport & Bus Service Details
                   </h2>
                 </div>
@@ -907,7 +1300,7 @@ export default function Dashboard() {
                 }}
               >
                 <div style={infoCardStyle}>
-                  <h3 style={{ color: "#FE5D37", margin: "0 0 10px 0" }}>
+                  <h3 style={{ color: "#2563EB", margin: "0 0 10px 0" }}>
                     Route A (Main City)
                   </h3>
                   <p style={{ margin: "5px 0", color: "#555" }}>
@@ -932,7 +1325,7 @@ export default function Dashboard() {
                   </div>
                 </div>
                 <div style={infoCardStyle}>
-                  <h3 style={{ color: "#FE5D37", margin: "0 0 10px 0" }}>
+                  <h3 style={{ color: "#2563EB", margin: "0 0 10px 0" }}>
                     Route B (Suburbs)
                   </h3>
                   <p style={{ margin: "5px 0", color: "#555" }}>
@@ -957,7 +1350,7 @@ export default function Dashboard() {
                   </div>
                 </div>
                 <div style={infoCardStyle}>
-                  <h3 style={{ color: "#FE5D37", margin: "0 0 10px 0" }}>
+                  <h3 style={{ color: "#2563EB", margin: "0 0 10px 0" }}>
                     Route C (North Zone)
                   </h3>
                   <p style={{ margin: "5px 0", color: "#555" }}>
@@ -1001,7 +1394,7 @@ export default function Dashboard() {
                   >
                     ⚽
                   </span>
-                  <h2 style={{ margin: 0, fontSize: "28px", color: "#103741" }}>
+                  <h2 style={{ margin: 0, fontSize: "28px", color: "#0F172A" }}>
                     Our School Playground & Sports Gallery
                   </h2>
                 </div>
@@ -1058,7 +1451,7 @@ export default function Dashboard() {
                       <h4
                         style={{
                           margin: 0,
-                          color: "#103741",
+                          color: "#0F172A",
                           fontSize: "16px",
                           fontWeight: "600",
                         }}
@@ -1088,7 +1481,7 @@ export default function Dashboard() {
                   >
                     🍱
                   </span>
-                  <h2 style={{ margin: 0, fontSize: "28px", color: "#103741" }}>
+                  <h2 style={{ margin: 0, fontSize: "28px", color: "#0F172A" }}>
                     Healthy Canteen Weekly Menu
                   </h2>
                 </div>
@@ -1167,7 +1560,7 @@ export default function Dashboard() {
                   >
                     🎨
                   </span>
-                  <h2 style={{ margin: 0, fontSize: "28px", color: "#103741" }}>
+                  <h2 style={{ margin: 0, fontSize: "28px", color: "#0F172A" }}>
                     Creative Arts & Crafts Club
                   </h2>
                 </div>
@@ -1196,7 +1589,7 @@ export default function Dashboard() {
                 >
                   <h3
                     style={{
-                      color: "#103741",
+                      color: "#0F172A",
                       fontSize: "20px",
                       margin: "0 0 10px 0",
                     }}
@@ -1231,7 +1624,7 @@ export default function Dashboard() {
                 >
                   <h3
                     style={{
-                      color: "#103741",
+                      color: "#0F172A",
                       fontSize: "20px",
                       margin: "0 0 10px 0",
                     }}
@@ -1277,7 +1670,7 @@ export default function Dashboard() {
                   >
                     🔬
                   </span>
-                  <h2 style={{ margin: 0, fontSize: "28px", color: "#103741" }}>
+                  <h2 style={{ margin: 0, fontSize: "28px", color: "#0F172A" }}>
                     Study Center & Science Lab
                   </h2>
                 </div>
@@ -1317,7 +1710,7 @@ export default function Dashboard() {
                   <h3
                     style={{
                       fontSize: "24px",
-                      color: "#103741",
+                      color: "#0F172A",
                       margin: "0 0 15px 0",
                     }}
                   >
@@ -1365,7 +1758,7 @@ export default function Dashboard() {
         <div
           className="footer-section mobile-padding"
           style={{
-            background: "#103741",
+            background: "#0F172A",
             color: "white",
             padding: "60px 40px",
             marginTop: "auto",
@@ -1386,7 +1779,7 @@ export default function Dashboard() {
                 style={{
                   fontSize: "28px",
                   marginBottom: "20px",
-                  color: "#FE5D37",
+                  color: "#2563EB",
                   fontWeight: "700",
                 }}
               >
@@ -1394,7 +1787,7 @@ export default function Dashboard() {
               </h3>
               <p
                 style={{
-                  color: "#cbd5e1",
+                  color: "#0F172A",
                   lineHeight: "1.6",
                   marginBottom: "15px",
                 }}
@@ -1428,7 +1821,7 @@ export default function Dashboard() {
                 style={{
                   fontSize: "20px",
                   marginBottom: "20px",
-                  borderBottom: "2px solid #FE5D37",
+                  borderBottom: "2px solid #2563EB",
                   paddingBottom: "10px",
                   display: "inline-block",
                 }}
@@ -1499,7 +1892,7 @@ export default function Dashboard() {
                 style={{
                   fontSize: "20px",
                   marginBottom: "20px",
-                  borderBottom: "2px solid #FE5D37",
+                  borderBottom: "2px solid #2563EB",
                   paddingBottom: "10px",
                   display: "inline-block",
                 }}
@@ -1531,7 +1924,7 @@ export default function Dashboard() {
                 <button
                   className="btn-modern"
                   style={{
-                    background: "#FE5D37",
+                    background: "#2563EB",
                     border: "none",
                     padding: "0 25px",
                     color: "white",
@@ -1657,7 +2050,7 @@ function HeroCarousel({ images, userRole, onDeleteImage }) {
               transition: "all 0.5s cubic-bezier(0.4,0,0.2,1)",
               boxShadow:
                 pos === "center"
-                  ? "0 25px 50px rgba(16,55,65,0.35)"
+                  ? "0 25px 50px rgba(15,23,42,0.35)"
                   : "0 10px 25px rgba(0,0,0,0.2)",
               ...s,
             }}
@@ -1672,36 +2065,41 @@ function HeroCarousel({ images, userRole, onDeleteImage }) {
                 pointerEvents: "none",
               }}
             />
-            {userRole === "admin" && pos === "center" && onDeleteImage && images.length > 1 && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDeleteImage(i);
-                  setActive((p) => (p >= images.length - 1 ? Math.max(0, p - 1) : p));
-                }}
-                style={{
-                  position: "absolute",
-                  top: "10px",
-                  right: "10px",
-                  background: "#ef4444",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "50%",
-                  width: "30px",
-                  height: "30px",
-                  cursor: "pointer",
-                  zIndex: 100,
-                  fontSize: "14px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: "0 2px 5px rgba(0,0,0,0.2)"
-                }}
-                title="Delete Image"
-              >
-                ✕
-              </button>
-            )}
+            {userRole === "admin" &&
+              pos === "center" &&
+              onDeleteImage &&
+              images.length > 1 && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDeleteImage(i);
+                    setActive((p) =>
+                      p >= images.length - 1 ? Math.max(0, p - 1) : p,
+                    );
+                  }}
+                  style={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "10px",
+                    background: "#ef4444",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "50%",
+                    width: "30px",
+                    height: "30px",
+                    cursor: "pointer",
+                    zIndex: 100,
+                    fontSize: "14px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+                  }}
+                  title="Delete Image"
+                >
+                  ✕
+                </button>
+              )}
           </div>
         );
       })}
@@ -1721,7 +2119,7 @@ function HeroCarousel({ images, userRole, onDeleteImage }) {
               borderRadius: "50%",
               border: "2px solid rgba(255,255,255,0.7)",
               background: "rgba(255,255,255,0.2)",
-              color: "#103741",
+              color: "#0F172A",
               fontSize: "18px",
               cursor: "pointer",
               backdropFilter: "blur(4px)",
@@ -1744,7 +2142,7 @@ function HeroCarousel({ images, userRole, onDeleteImage }) {
               height: "40px",
               borderRadius: "50%",
               border: "none",
-              background: "#FE5D37",
+              background: "#2563EB",
               color: "white",
               fontSize: "18px",
               cursor: "pointer",
@@ -1752,7 +2150,7 @@ function HeroCarousel({ images, userRole, onDeleteImage }) {
               alignItems: "center",
               justifyContent: "center",
               zIndex: 20,
-              boxShadow: "0 4px 12px rgba(254,93,55,0.4)",
+              boxShadow: "0 4px 12px rgba(37,99,235,0.4)",
             }}
           >
             ›
@@ -1780,7 +2178,7 @@ function HeroCarousel({ images, userRole, onDeleteImage }) {
                 width: i === active ? "20px" : "7px",
                 height: "7px",
                 borderRadius: "4px",
-                background: i === active ? "#FE5D37" : "rgba(16,55,65,0.3)",
+                background: i === active ? "#2563EB" : "rgba(15,23,42,0.3)",
                 transition: "all 0.3s",
                 cursor: "pointer",
               }}
@@ -1807,7 +2205,7 @@ function FacilityCard({ icon, title, color, iconBg, iconColor, onClick }) {
       </div>
       <h4
         style={{
-          color: "#103741",
+          color: "#0F172A",
           margin: 0,
           fontWeight: "600",
           fontSize: "18px",
@@ -1831,7 +2229,7 @@ const facilityHeader = {
 };
 
 const backBtnStyle = {
-  background: "#FE5D37",
+  background: "#2563EB",
   color: "white",
   border: "none",
   padding: "10px 22px",
@@ -1877,5 +2275,5 @@ const statBtnStyle = {
   cursor: "pointer",
   fontWeight: "600",
   fontSize: "13px",
-  transition: "background 0.3s"
+  transition: "background 0.3s",
 };

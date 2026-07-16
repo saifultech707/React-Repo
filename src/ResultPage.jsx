@@ -34,7 +34,6 @@ export default function ResultPage() {
   };
 
   useEffect(() => {
-    setLoading(true);
     const unsub = onSnapshot(collection(db, "results"), (snapshot) => {
       const fetchedResults = snapshot.docs.map((d) => ({
         ...d.data(),
@@ -359,7 +358,7 @@ export default function ResultPage() {
           gap: "10px",
         }}
       >
-        <h2 style={{ color: "#103741", margin: 0 }}>Student Results Sheet</h2>
+    <h2 style={{ color: "#0F172A", margin: 0 }}>Student Results Sheet</h2>
         {userRole === "admin" && (
           <div
             style={{
@@ -371,7 +370,7 @@ export default function ResultPage() {
           >
             <div
               style={{
-                background: "#FE5D37",
+            background: "#2563EB",
                 color: "white",
                 padding: "8px 16px",
                 borderRadius: "20px",
@@ -402,8 +401,8 @@ export default function ResultPage() {
         <div key={className} style={{ marginBottom: "40px" }}>
           <h3
             style={{
-              color: "#FE5D37",
-              borderBottom: "2px solid #103741",
+          color: "#2563EB",
+          borderBottom: "2px solid #0F172A",
               paddingBottom: "10px",
               marginBottom: "20px",
             }}
@@ -428,7 +427,7 @@ export default function ResultPage() {
               <thead>
                 <tr
                   style={{
-                    background: "#103741",
+                background: "#0F172A",
                     color: "white",
                     textAlign: "left",
                   }}
@@ -436,7 +435,7 @@ export default function ResultPage() {
                   <th
                     style={{
                       padding: "15px",
-                      borderBottom: "2px solid #FE5D37",
+                      borderBottom: "2px solid #2563EB",
                     }}
                   >
                     Roll
@@ -558,7 +557,7 @@ export default function ResultPage() {
                   <th
                     style={{
                       padding: "15px",
-                      borderBottom: "2px solid #FE5D37",
+                  borderBottom: "2px solid #2563EB",
                       minWidth: "70px",
                     }}
                   >
@@ -567,7 +566,7 @@ export default function ResultPage() {
                   <th
                     style={{
                       padding: "15px",
-                      borderBottom: "2px solid #FE5D37",
+                      borderBottom: "2px solid #2563EB",
                     }}
                   >
                     Rel
@@ -608,7 +607,7 @@ export default function ResultPage() {
                     <th
                       style={{
                         padding: "15px",
-                        borderBottom: "2px solid #FE5D37",
+                    borderBottom: "2px solid #2563EB",
                         textAlign: "center",
                       }}
                     >
@@ -713,7 +712,7 @@ export default function ResultPage() {
                           style={{
                             padding: "15px",
                             fontWeight: "bold",
-                            color: grade.includes("A") ? "#10b981" : "#FE5D37",
+                        color: grade.includes("A") ? "#10b981" : "#2563EB",
                           }}
                         >
                           {grade}
@@ -787,7 +786,7 @@ export default function ResultPage() {
           >
             <h2
               style={{
-                color: "#103741",
+              color: "#0F172A",
                 marginTop: 0,
                 borderBottom: "2px solid #eee",
                 paddingBottom: "15px",
@@ -858,7 +857,7 @@ export default function ResultPage() {
 
             <h4
               style={{
-                color: "#FE5D37",
+              color: "#2563EB",
                 borderBottom: "2px solid #eee",
                 paddingBottom: "5px",
                 marginBottom: "15px",
@@ -985,8 +984,8 @@ export default function ResultPage() {
         >
           <h2
             style={{
-              color: "#103741",
-              borderLeft: "5px solid #FE5D37",
+              color: "#0F172A",
+              borderLeft: "5px solid #2563EB",
               paddingLeft: "15px",
               margin: 0,
             }}
@@ -1021,7 +1020,7 @@ export default function ResultPage() {
               <div
                 onClick={() => toggleYear(i)}
                 style={{
-                  background: "#103741",
+                background: "#0F172A",
                   color: "white",
                   padding: "20px",
                   display: "flex",
@@ -1050,7 +1049,7 @@ export default function ResultPage() {
                     alignItems: "center",
                   }}
                 >
-                  <h3 style={{ margin: 0, color: "#FE5D37", fontSize: "16px" }}>
+                <h3 style={{ margin: 0, color: "#2563EB", fontSize: "16px" }}>
                     📈 Passing Rate: {yearData.passingRate}
                   </h3>
                   <h3 style={{ margin: 0, fontSize: "16px" }}>
@@ -1131,7 +1130,7 @@ export default function ResultPage() {
 
                     <h4
                       style={{
-                        color: "#103741",
+                      color: "#0F172A",
                         marginBottom: "10px",
                         marginTop: "10px",
                       }}
@@ -1160,7 +1159,7 @@ export default function ResultPage() {
                                 style={{
                                   fontWeight: "bold",
                                   width: "30px",
-                                  color: "#FE5D37",
+                                color: "#2563EB",
                                 }}
                               >
                                 #{studentIndex + 1}
@@ -1303,7 +1302,7 @@ export default function ResultPage() {
                                 style={{
                                   ...tdStyle,
                                   fontWeight: "bold",
-                                  color: "#FE5D37",
+                              color: "#2563EB",
                                 }}
                               >
                                 #{idx + 1}
@@ -1379,7 +1378,7 @@ export default function ResultPage() {
               }}
               onClick={(e) => e.stopPropagation()}
             >
-              <h2 style={{ color: "#103741", marginTop: 0 }}>
+            <h2 style={{ color: "#0F172A", marginTop: 0 }}>
                 Edit Student Details
               </h2>
 
@@ -1438,7 +1437,7 @@ export default function ResultPage() {
 
               <h4
                 style={{
-                  color: "#FE5D37",
+                color: "#2563EB",
                   borderBottom: "2px solid #eee",
                   paddingBottom: "5px",
                   marginBottom: "15px",
@@ -1612,7 +1611,7 @@ const inputStyle = {
 const thStyle = {
   padding: "8px 10px",
   border: "1px solid #ddd",
-  background: "#103741",
+  background: "#0F172A",
   color: "white",
   fontWeight: "600",
   fontSize: "13px",
@@ -1634,7 +1633,7 @@ const labelStyle = {
   marginBottom: "5px",
 };
 const editBtnStyle = {
-  background: "#FE5D37",
+  background: "#2563EB",
   color: "white",
   border: "none",
   padding: "6px 15px",

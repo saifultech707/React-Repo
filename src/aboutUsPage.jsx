@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { db } from "./firebase";
 import { collection, getDocs, doc, getDoc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
 export default function AboutUsPage() {
   const [teachers, setTeachers] = useState([]);
-  const [headTeacher, setHeadTeacher] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   // Auth State from localStorage
-  const [userRole, setUserRole] = useState(
+  const [userRole] = useState(
     localStorage.getItem("userRole") || "guest",
   ); // admin, teacher, guest
 
@@ -33,18 +32,7 @@ export default function AboutUsPage() {
         ...doc.data(),
       }));
 
-      // Separate Admin (Head Teacher) and Teachers
-      const admins = profilesList.filter(
-        (p) => p.role === "admin" || p.email === "admin@gmail.com",
-      ); // Fallback to email if role not set
-      const regularTeachers = profilesList.filter(
-        (p) => p.role !== "admin" && p.email !== "admin@gmail.com",
-      );
-
-      if (admins.length > 0) {
-        setHeadTeacher(admins[0]);
-      }
-      setTeachers(regularTeachers);
+      setTeachers(profilesList);
     } catch (error) {
       console.error("Error fetching profiles:", error);
     }
@@ -108,8 +96,11 @@ export default function AboutUsPage() {
   };
 
   useEffect(() => {
-    fetchProfiles();
-    fetchAboutUsData();
+    const loadData = async () => {
+      await fetchProfiles();
+      await fetchAboutUsData();
+    };
+    loadData();
   }, []);
 
   const handleSscChange = (yearIndex, field, value) => {
@@ -244,52 +235,6 @@ export default function AboutUsPage() {
         boxSizing: "border-box",
       }}
     >
-      {/* ১. হেড টিচার সেকশন */}
-      <div
-        style={{
-          textAlign: "center",
-          marginBottom: "60px",
-          background: "#FFF5F3",
-          padding: "5%",
-          borderRadius: "20px",
-        }}
-      >
-        <img
-          src={headTeacher?.picture || "https://i.pravatar.cc/150?u=head"}
-          style={{
-            width: "150px",
-            height: "150px",
-            borderRadius: "50%",
-            border: "5px solid #FE5D37",
-            objectFit: "cover",
-          }}
-          alt={headTeacher?.name || "Head Teacher"}
-        />
-        <h2 style={{ color: "#103741", marginTop: "15px" }}>
-          {headTeacher?.name || "Mr. Abdur Rahman"}
-        </h2>
-        <p style={{ color: "#FE5D37", fontWeight: "bold" }}>Head Teacher</p>
-        <p style={{ maxWidth: "600px", margin: "10px auto", color: "#666" }}>
-          "আমাদের লক্ষ্য শিক্ষার্থীদের নৈতিক ও মানসম্মত শিক্ষায় গড়ে তোলা।"
-        </p>
-        {userRole === "admin" && headTeacher && (
-          <button
-            onClick={() => navigate(`/profile/${headTeacher.id}`)}
-            style={{
-              marginTop: "10px",
-              padding: "5px 15px",
-              background: "#103741",
-              color: "white",
-              borderRadius: "5px",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            Edit Profile
-          </button>
-        )}
-      </div>
-
       {/* ২. শিক্ষকদের তালিকা (Grid) */}
       <div
         style={{
@@ -301,8 +246,8 @@ export default function AboutUsPage() {
       >
         <h2
           style={{
-            color: "#103741",
-            borderLeft: "5px solid #FE5D37",
+          color: "#0F172A",
+          borderLeft: "5px solid #2563EB",
             paddingLeft: "15px",
             margin: 0,
           }}
@@ -340,22 +285,24 @@ export default function AboutUsPage() {
             >
               <img
                 src={t.picture || "https://i.pravatar.cc/150"}
+                onClick={() => navigate(`/profile/${t.id}?view=true`)}
                 style={{
                   width: "80px",
                   height: "80px",
                   borderRadius: "50%",
                   marginBottom: "10px",
                   objectFit: "cover",
+                  cursor: "pointer",
                 }}
                 alt={t.name}
               />
-              <h4 style={{ margin: "5px 0", color: "#103741" }}>
+          <h4 style={{ margin: "5px 0", color: "#0F172A" }}>
                 {t.name || "Unnamed Teacher"}
               </h4>
               <p
                 style={{
                   margin: "0",
-                  color: "#FE5D37",
+              color: "#2563EB",
                   fontSize: "14px",
                   fontWeight: "bold",
                 }}
@@ -374,7 +321,7 @@ export default function AboutUsPage() {
                 <button
                   onClick={() => navigate(`/profile/${t.id}?view=true`)}
                   style={{
-                    background: "#FE5D37",
+              background: "#2563EB",
                     color: "white",
                     border: "none",
                     borderRadius: "4px",
@@ -389,7 +336,7 @@ export default function AboutUsPage() {
                   <button
                     onClick={() => navigate(`/profile/${t.id}`)}
                     style={{
-                      background: "#103741",
+              background: "#0F172A",
                       color: "white",
                       border: "none",
                       borderRadius: "4px",
@@ -410,7 +357,7 @@ export default function AboutUsPage() {
       {/* ৩. অ্যাচিভমেন্ট সেকশন (Class 5 Result) */}
       <div
         style={{
-          background: "#103741",
+      background: "#0F172A",
           color: "#white",
           padding: "40px",
           borderRadius: "20px",
@@ -442,7 +389,7 @@ export default function AboutUsPage() {
       </div>
 
       {/* ৪. সেরা ১০ ছাত্রের তালিকা */}
-      <h2 style={{ color: "#103741", marginBottom: "20px" }}>
+      <h2 style={{ color: "#0F172A", marginBottom: "20px" }}>
         Top 10 Students (Class 5 - 2025)
       </h2>
       <div style={{ overflowX: "auto" }}>
@@ -456,7 +403,7 @@ export default function AboutUsPage() {
           <thead>
             <tr
               style={{
-                background: "#FE5D37",
+                background: "#2563EB",
                 color: "white",
                 textAlign: "left",
               }}
@@ -494,8 +441,8 @@ export default function AboutUsPage() {
         >
           <h2
             style={{
-              color: "#103741",
-              borderLeft: "5px solid #FE5D37",
+            color: "#0F172A",
+            borderLeft: "5px solid #2563EB",
               paddingLeft: "15px",
               margin: 0,
             }}
@@ -518,7 +465,7 @@ export default function AboutUsPage() {
             >
               <div
                 style={{
-                  background: "#103741",
+                  background: "#0F172A",
                   color: "white",
                   padding: "20px",
                   display: "flex",
@@ -531,7 +478,7 @@ export default function AboutUsPage() {
                 <h3 style={{ margin: 0, fontSize: "20px" }}>
                   📅 Year: {yearData.year}
                 </h3>
-                <h3 style={{ margin: 0, color: "#FE5D37", fontSize: "20px" }}>
+            <h3 style={{ margin: 0, color: "#2563EB", fontSize: "20px" }}>
                   📈 Passing Rate: {yearData.passingRate}
                 </h3>
                 <h3 style={{ margin: 0, fontSize: "20px" }}>
@@ -594,7 +541,7 @@ export default function AboutUsPage() {
                       />
                     </div>
                   </div>
-                  <h4 style={{ color: "#103741", marginBottom: "10px" }}>
+                  <h4 style={{ color: "#0F172A", marginBottom: "10px" }}>
                     Top 5 Students:
                   </h4>
                   <div style={{ display: "grid", gap: "10px" }}>
@@ -618,7 +565,7 @@ export default function AboutUsPage() {
                             style={{
                               fontWeight: "bold",
                               width: "30px",
-                              color: "#FE5D37",
+                            color: "#2563EB",
                             }}
                           >
                             #{studentIndex + 1}
@@ -730,7 +677,7 @@ export default function AboutUsPage() {
                               style={{
                                 ...tdStyle,
                                 fontWeight: "bold",
-                                color: "#FE5D37",
+                            color: "#2563EB",
                               }}
                             >
                               #{idx + 1}
@@ -742,7 +689,7 @@ export default function AboutUsPage() {
                               style={{
                                 ...tdStyle,
                                 fontWeight: "500",
-                                color: "#103741",
+                            color: "#0F172A",
                               }}
                             >
                               {s.name}
@@ -789,8 +736,8 @@ export default function AboutUsPage() {
         >
           <h2
             style={{
-              color: "#103741",
-              borderLeft: "5px solid #FE5D37",
+            color: "#0F172A",
+            borderLeft: "5px solid #2563EB",
               paddingLeft: "15px",
               margin: 0,
             }}
@@ -969,7 +916,7 @@ export default function AboutUsPage() {
                   <h3
                     style={{
                       margin: "0 0 5px 0",
-                      color: "#103741",
+                  color: "#0F172A",
                       fontSize: "22px",
                     }}
                   >
@@ -978,7 +925,7 @@ export default function AboutUsPage() {
                   <p
                     style={{
                       margin: "0 0 15px 0",
-                      color: "#FE5D37",
+                  color: "#2563EB",
                       fontWeight: "bold",
                       fontSize: "16px",
                     }}
@@ -1062,16 +1009,16 @@ export default function AboutUsPage() {
                 borderRadius: "50%",
                 objectFit: "cover",
                 marginBottom: "20px",
-                border: "4px solid #FE5D37",
+            border: "4px solid #2563EB",
               }}
               alt={selectedAchievement.name}
             />
-            <h2 style={{ color: "#103741", margin: "0 0 10px 0" }}>
+        <h2 style={{ color: "#0F172A", margin: "0 0 10px 0" }}>
               {selectedAchievement.name}
             </h2>
             <p
               style={{
-                color: "#FE5D37",
+            color: "#2563EB",
                 fontWeight: "bold",
                 fontSize: "18px",
                 margin: "0 0 20px 0",
@@ -1137,7 +1084,7 @@ export default function AboutUsPage() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 style={{ color: "#103741", marginTop: 0 }}>
+          <h2 style={{ color: "#0F172A", marginTop: 0 }}>
               Edit Student Details
             </h2>
 
@@ -1196,7 +1143,7 @@ export default function AboutUsPage() {
 
             <h4
               style={{
-                color: "#FE5D37",
+              color: "#2563EB",
                 borderBottom: "2px solid #eee",
                 paddingBottom: "5px",
                 marginBottom: "15px",
@@ -1366,7 +1313,7 @@ const statBox = {
 };
 const tdStyle = { padding: "15px", border: "none" };
 const adminBtnStyle = {
-  background: "#FE5D37",
+  background: "#2563EB",
   color: "white",
   padding: "10px 20px",
   border: "none",

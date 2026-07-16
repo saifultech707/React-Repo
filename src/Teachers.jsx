@@ -47,11 +47,11 @@ export default function Teachers() {
           marginBottom: "30px",
         }}
       >
-        <h1 style={{ color: "#103741" }}>Teachers Directory</h1>
+        <h1 style={{ color: "#0F172A" }}>Teachers Directory</h1>
         <button
           onClick={() => navigate("/dashboard")}
           style={{
-            background: "#FE5D37",
+            background: "#2563EB",
             color: "white",
             padding: "10px 20px",
             border: "none",
@@ -114,7 +114,7 @@ export default function Teachers() {
                 <button
                   onClick={() => navigate(`/profile/${teacher.id}?view=true`)}
                   style={{
-                    background: "#103741",
+                    background: "#0F172A",
                     color: "white",
                     padding: "8px 15px",
                     border: "none",
@@ -128,7 +128,7 @@ export default function Teachers() {
                   <button
                     onClick={() => navigate(`/profile/${teacher.id}`)}
                     style={{
-                      background: "#FE5D37",
+                      background: "#2563EB",
                       color: "white",
                       padding: "8px 15px",
                       border: "none",

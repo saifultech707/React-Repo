@@ -18,7 +18,7 @@ export default function Navbars() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "#06021b",
+        background: "#0F172A",
         padding: "12px 13px",
         width: "100%",
       }}

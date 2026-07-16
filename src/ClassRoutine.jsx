@@ -146,7 +146,7 @@ export default function ClassRoutine() {
   // Block Guest/User Access
   if (userRole === "guest" || userRole === "user") {
     return (
-      <div style={{ padding: "100px", textAlign: "center", color: "#103741" }}>
+      <div style={{ padding: "100px", textAlign: "center", color: "#0F172A" }}>
         <h2>🚫 Access Denied</h2>
         <p>
           You must be logged in as a Teacher or Admin to view the Class Routine.
@@ -298,7 +298,7 @@ export default function ClassRoutine() {
           gap: "20px",
         }}
       >
-        <h2 style={{ color: "#103741", margin: 0 }}>🗓️ Class Routine</h2>
+        <h2 style={{ color: "#0F172A", margin: 0 }}>🗓️ Class Routine</h2>
 
         {/* Search Bar Container */}
         <div
@@ -323,7 +323,7 @@ export default function ClassRoutine() {
             onClick={handleSearch}
             style={{
               padding: "10px 20px",
-              background: "#103741",
+              background: "#0F172A",
               color: "white",
               border: "none",
               borderRadius: "8px",
@@ -343,7 +343,7 @@ export default function ClassRoutine() {
             disabled={isSaving}
             style={{
               padding: "10px 20px",
-              background: isEditMode ? "#4CAF50" : "#FE5D37",
+              background: isEditMode ? "#4CAF50" : "#2563EB",
               color: "white",
               border: "none",
               borderRadius: "8px",
@@ -380,9 +380,9 @@ export default function ClassRoutine() {
           onClick={() => setViewMode("teacher")}
           style={{
             padding: "10px 20px",
-            background: viewMode === "teacher" ? "#103741" : "transparent",
-            color: viewMode === "teacher" ? "white" : "#103741",
-            border: viewMode === "teacher" ? "none" : "1px solid #103741",
+            background: viewMode === "teacher" ? "#0F172A" : "transparent",
+            color: viewMode === "teacher" ? "white" : "#0F172A",
+            border: viewMode === "teacher" ? "none" : "1px solid #0F172A",
             borderRadius: "8px",
             cursor: "pointer",
             fontWeight: "bold",
@@ -394,9 +394,9 @@ export default function ClassRoutine() {
           onClick={() => setViewMode("class")}
           style={{
             padding: "10px 20px",
-            background: viewMode === "class" ? "#FE5D37" : "transparent",
-            color: viewMode === "class" ? "white" : "#FE5D37",
-            border: viewMode === "class" ? "none" : "1px solid #FE5D37",
+            background: viewMode === "class" ? "#2563EB" : "transparent",
+            color: viewMode === "class" ? "white" : "#2563EB",
+            border: viewMode === "class" ? "none" : "1px solid #2563EB",
             borderRadius: "8px",
             cursor: "pointer",
             fontWeight: "bold",
@@ -415,7 +415,7 @@ export default function ClassRoutine() {
                 onClick={handleAddTeacher}
                 style={{
                   padding: "12px 24px",
-                  background: "#103741",
+                  background: "#0F172A",
                   color: "white",
                   border: "none",
                   borderRadius: "8px",
@@ -450,7 +450,7 @@ export default function ClassRoutine() {
             >
               <div
                 style={{
-                  borderBottom: "2px solid #FE5D37",
+                  borderBottom: "2px solid #2563EB",
                   paddingBottom: "15px",
                   marginBottom: "20px",
                   display: "flex",
@@ -476,7 +476,7 @@ export default function ClassRoutine() {
                         style={{
                           fontSize: "20px",
                           fontWeight: "bold",
-                          color: "#103741",
+                          color: "#0F172A",
                           padding: "5px",
                           border: "1px solid #ccc",
                           borderRadius: "4px",
@@ -514,7 +514,7 @@ export default function ClassRoutine() {
                       onClick={() => setSelectedTeacher(teacher)}
                       style={{
                         margin: 0,
-                        color: "#103741",
+                        color: "#0F172A",
                         fontSize: "24px",
                         cursor: "pointer",
                         textDecoration: "underline",
@@ -564,7 +564,7 @@ export default function ClassRoutine() {
                   }}
                 >
                   <thead>
-                    <tr style={{ background: "#F1F8FF", color: "#103741" }}>
+                    <tr style={{ background: "#F1F8FF", color: "#0F172A" }}>
                       <th
                         style={{
                           padding: "15px",
@@ -607,7 +607,7 @@ export default function ClassRoutine() {
                           border: "1px solid #ddd",
                           width: "14%",
                           background: "#FFF5F3",
-                          color: "#FE5D37",
+                          color: "#2563EB",
                         }}
                       >
                         01:00 - 02:00 PM
@@ -647,7 +647,7 @@ export default function ClassRoutine() {
                               padding: "15px",
                               fontWeight: "bold",
                               border: "1px solid #ddd",
-                              color: "#FE5D37",
+                              color: "#2563EB",
                             }}
                           >
                             {row.day}
@@ -763,12 +763,12 @@ export default function ClassRoutine() {
             >
               <div
                 style={{
-                  borderBottom: "2px solid #FE5D37",
+                  borderBottom: "2px solid #2563EB",
                   paddingBottom: "15px",
                   marginBottom: "20px",
                 }}
               >
-                <h3 style={{ margin: 0, color: "#103741", fontSize: "24px" }}>
+                <h3 style={{ margin: 0, color: "#0F172A", fontSize: "24px" }}>
                   🎒 {cls} Routine
                 </h3>
               </div>
@@ -783,7 +783,7 @@ export default function ClassRoutine() {
                   }}
                 >
                   <thead>
-                    <tr style={{ background: "#F1F8FF", color: "#103741" }}>
+                    <tr style={{ background: "#F1F8FF", color: "#0F172A" }}>
                       <th
                         style={{
                           padding: "15px",
@@ -826,7 +826,7 @@ export default function ClassRoutine() {
                           border: "1px solid #ddd",
                           width: "14%",
                           background: "#FFF5F3",
-                          color: "#FE5D37",
+                          color: "#2563EB",
                         }}
                       >
                         01:00 - 02:00 PM
@@ -866,7 +866,7 @@ export default function ClassRoutine() {
                               padding: "15px",
                               fontWeight: "bold",
                               border: "1px solid #ddd",
-                              color: "#FE5D37",
+                              color: "#2563EB",
                             }}
                           >
                             {row.day}
@@ -1014,12 +1014,12 @@ export default function ClassRoutine() {
               ✖
             </button>
             <div style={{ fontSize: "60px", marginBottom: "15px" }}>👨‍🏫</div>
-            <h2 style={{ color: "#103741", margin: "0 0 10px 0" }}>
+            <h2 style={{ color: "#0F172A", margin: "0 0 10px 0" }}>
               {selectedTeacher.name}
             </h2>
             <p
               style={{
-                color: "#FE5D37",
+                color: "#2563EB",
                 fontSize: "18px",
                 margin: "0 0 20px 0",
                 fontWeight: "bold",
@@ -1045,7 +1045,7 @@ export default function ClassRoutine() {
               style={{
                 marginTop: "20px",
                 padding: "12px 24px",
-                background: "#103741",
+                background: "#0F172A",
                 color: "white",
                 border: "none",
                 borderRadius: "8px",

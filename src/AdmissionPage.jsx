@@ -72,7 +72,7 @@ export default function AdmissionPage() {
       >
         <div style={{ textAlign: "center", marginBottom: "30px" }}>
           <h2
-            style={{ fontSize: "32px", color: "#103741", margin: "0 0 10px 0" }}
+            style={{ fontSize: "32px", color: "#0F172A", margin: "0 0 10px 0" }}
           >
             📝 Student Admission Form
           </h2>
@@ -261,7 +261,7 @@ export default function AdmissionPage() {
             <button
               type="submit"
               style={{
-                background: "#FE5D37",
+                background: "#2563EB",
                 color: "white",
                 border: "none",
                 padding: "14px 40px",
@@ -271,7 +271,7 @@ export default function AdmissionPage() {
                 cursor: "pointer",
                 width: "100%",
                 maxWidth: "300px",
-                boxShadow: "0 4px 15px rgba(254, 93, 55, 0.3)",
+                boxShadow: "0 4px 15px rgba(37, 99, 235, 0.3)",
               }}
             >
               Submit Application

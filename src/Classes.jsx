@@ -86,7 +86,7 @@ export default function Classes() {
       const name = isApplication ? student.studentName : student.name;
       const cls = isApplication ? student.applyClass : `Class ${student.class}`;
 
-      pdf.setFillColor(16, 55, 65);
+      pdf.setFillColor(15, 23, 42);
       pdf.rect(0, 0, 210, 40, "F");
       pdf.setTextColor(255, 255, 255);
       pdf.setFontSize(18);
@@ -95,11 +95,11 @@ export default function Classes() {
       pdf.setFontSize(11);
       pdf.setFont("helvetica", "normal");
       pdf.text("School Management System", 105, 30, { align: "center" });
-      pdf.setTextColor(16, 55, 65);
+      pdf.setTextColor(15, 23, 42);
       pdf.setFontSize(16);
       pdf.setFont("helvetica", "bold");
       pdf.text(name, 105, 58, { align: "center" });
-      pdf.setFillColor(254, 93, 55);
+      pdf.setFillColor(37, 99, 235);
       pdf.roundedRect(80, 63, 50, 10, 3, 3, "F");
       pdf.setTextColor(255, 255, 255);
       pdf.setFontSize(10);
@@ -139,14 +139,14 @@ export default function Classes() {
         pdf.setFontSize(9);
         pdf.setFont("helvetica", "normal");
         pdf.text(label, 25, y);
-        pdf.setTextColor(16, 55, 65);
+        pdf.setTextColor(15, 23, 42);
         pdf.setFontSize(10);
         pdf.setFont("helvetica", "bold");
         pdf.text(String(value), 100, y);
         y += 14;
       });
 
-      pdf.setFillColor(16, 55, 65);
+      pdf.setFillColor(15, 23, 42);
       pdf.rect(0, 280, 210, 17, "F");
       pdf.setTextColor(180, 180, 180);
       pdf.setFontSize(8);
@@ -257,7 +257,7 @@ export default function Classes() {
                         style={{
                           margin: 0,
                           fontWeight: "700",
-                          color: "#103741",
+                          color: "#0F172A",
                           fontSize: "15px",
                         }}
                       >
@@ -312,7 +312,7 @@ export default function Classes() {
               onClick={(e) => e.stopPropagation()}
             >
               <div style={modalHeaderStyle}>
-                <h3 style={{ margin: 0, color: "#103741" }}>
+                <h3 style={{ margin: 0, color: "#0F172A" }}>
                   Application Details
                 </h3>
                 <button
@@ -336,7 +336,7 @@ export default function Classes() {
                       margin: 0,
                       fontSize: "18px",
                       fontWeight: "700",
-                      color: "#103741",
+                      color: "#0F172A",
                     }}
                   >
                     {selectedApp.studentName}
@@ -364,7 +364,7 @@ export default function Classes() {
                     </span>
                     <span
                       style={{
-                        color: "#103741",
+                        color: "#0F172A",
                         fontSize: "14px",
                         fontWeight: "500",
                         flex: 1,
@@ -539,7 +539,7 @@ export default function Classes() {
             onClick={(e) => e.stopPropagation()}
           >
             <div style={modalHeaderStyle}>
-              <h3 style={{ margin: 0, color: "#103741" }}>Student Profile</h3>
+              <h3 style={{ margin: 0, color: "#0F172A" }}>Student Profile</h3>
               <button
                 onClick={() => setSelectedStudent(null)}
                 style={closeXBtnStyle}
@@ -561,7 +561,7 @@ export default function Classes() {
                     margin: 0,
                     fontSize: "20px",
                     fontWeight: "700",
-                    color: "#103741",
+                    color: "#0F172A",
                   }}
                 >
                   {selectedStudent.name}
@@ -601,7 +601,7 @@ export default function Classes() {
                   </span>
                   <span
                     style={{
-                      color: "#103741",
+                      color: "#0F172A",
                       fontSize: "14px",
                       fontWeight: "500",
                       flex: 1,
@@ -618,7 +618,7 @@ export default function Classes() {
                 <p
                   style={{
                     fontWeight: "700",
-                    color: "#103741",
+                    color: "#0F172A",
                     marginBottom: "8px",
                   }}
                 >
@@ -686,7 +686,7 @@ export default function Classes() {
 }
 
 const adminOpenBtnStyle = {
-  background: "#103741",
+  background: "#0F172A",
   color: "white",
   border: "none",
   padding: "10px 20px",
@@ -700,7 +700,7 @@ const adminOpenBtnStyle = {
   position: "relative",
 };
 const notifBadgeStyle = {
-  background: "#FE5D37",
+  background: "#2563EB",
   color: "white",
   borderRadius: "999px",
   padding: "2px 8px",
@@ -708,7 +708,7 @@ const notifBadgeStyle = {
   fontWeight: "700",
 };
 const adminTopBarStyle = {
-  background: "#103741",
+  background: "#0F172A",
   padding: "16px 24px",
   display: "flex",
   justifyContent: "space-between",
@@ -727,7 +727,7 @@ const backBtnStyle = {
   fontSize: "14px",
 };
 const totalBadgeStyle = {
-  background: "#FE5D37",
+  background: "#2563EB",
   color: "white",
   padding: "6px 16px",
   borderRadius: "20px",
@@ -759,7 +759,7 @@ const classGroupHeaderStyle = {
   gap: "10px",
 };
 const countBadgeStyle = {
-  background: "#FE5D37",
+  background: "#2563EB",
   color: "white",
   borderRadius: "999px",
   padding: "3px 12px",
@@ -887,8 +887,8 @@ const detailRowStyle = {
   gap: "5px",
 };
 const classBadgeStyle = {
-  background: "#fff0eb",
-  color: "#FE5D37",
+  background: "#EFF6FF",
+  color: "#2563EB",
   fontSize: "12px",
   padding: "3px 10px",
   borderRadius: "20px",
@@ -900,7 +900,7 @@ const tabStyle = (active) => ({
   padding: "8px 16px",
   borderRadius: "20px",
   border: "none",
-  background: active ? "#FE5D37" : "#eee",
+  background: active ? "#2563EB" : "#eee",
   color: active ? "white" : "#333",
   cursor: "pointer",
   fontWeight: active ? "600" : "400",
@@ -917,7 +917,7 @@ const tabCountStyle = {
 const thStyle = {
   padding: "8px 12px",
   textAlign: "left",
-  color: "#FE5D37",
+  color: "#2563EB",
   fontWeight: "600",
   fontSize: "13px",
 };
